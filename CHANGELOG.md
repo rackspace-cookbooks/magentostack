@@ -1,0 +1,2 @@
+magentostack CHANGELOG
+==================

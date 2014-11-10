@@ -1,0 +1,65 @@
+{
+  "name": "app_node-01",
+  "chef_environment": "_default",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "recipes": [
+      "phpstack::application_php"
+    ],
+    "roles": [
+    ],
+    "ipaddress": "192.168.0.52"
+  },
+  "tags": [
+    "php_app_node"
+  ],
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+    "phpstack": {
+      "nginx": {
+        "sites": {
+          "80": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
+            }
+          },
+          "8080": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
+            }
+          }
+        }
+      },
+      "apache": {
+        "sites": {
+          "80": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
+            }
+          },
+          "8080": {
+            "example.com": {
+              "databases": {
+                "foobar": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "override": {
+  },
+  "run_list": [
+    "recipe[phpstack::application_php]"
+  ]
+}
