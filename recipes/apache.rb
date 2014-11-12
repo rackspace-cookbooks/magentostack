@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: phpstack
+# Cookbook Name:: magentostack
 # Recipe:: apache
 #
 # Copyright 2014, Rackspace Hosting
@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-stackname = 'phpstack'
+stackname = 'magentostack'
 return 0 unless node[stackname]['webserver_deployment']['enabled']
 
 include_recipe 'chef-sugar'

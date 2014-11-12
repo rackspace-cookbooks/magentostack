@@ -5,7 +5,7 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
-      "phpstack::application_php"
+      "magentostack::application_php"
     ],
     "roles": [
     ],
@@ -18,7 +18,7 @@
   },
   "chef_type": "node",
   "default": {
-    "phpstack": {
+    "magentostack": {
       "nginx": {
         "sites": {
           "80": {
@@ -60,6 +60,6 @@
   "override": {
   },
   "run_list": [
-    "recipe[phpstack::application_php]"
+    "recipe[magentostack::application_php]"
   ]
 }

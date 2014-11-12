@@ -6,7 +6,7 @@
     "hostname": "vagrant.vm",
     "ipaddress": "192.168.0.23",
     "recipes": [
-      "phpstack::mysql_master"
+      "magentostack::mysql_master"
     ]
   },
   "normal": {
@@ -16,7 +16,7 @@
     "mysql": {
       "port": "3306"
     },
-    "phpstack": {
+    "magentostack": {
       "webserver": "apache",
       "demo": {
         "enabled": true
@@ -45,7 +45,7 @@
   "override": {
   },
   "run_list": [
-    "recipe[phpstack::mysql_master]"
+    "recipe[magentostack::mysql_master]"
   ],
   "tags": [ "mysql_master" ]
 }

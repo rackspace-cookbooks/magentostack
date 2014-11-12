@@ -4,14 +4,13 @@
 #
 # Copyright 2014, Rackspace
 #
-#
+
+# This wrapper's default recipe is intended to build a single node magento installation.
+
 %w(
-  phpstack::mysql_base
-  phpstack::mongodb_standalone
-  phpstack::memcache
-  phpstack::varnish
-  phpstack::redis_single
-  phpstack::application_php
+  magentostack::mysql_base
+  magentostack::redis_single
+  magentostack::application_php
 ).each do |recipe|
   include_recipe recipe
 end

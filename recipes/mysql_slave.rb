@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: phpstack
+# Cookbook Name:: magentostack
 # Recipe:: mysql_slave
 #
 # Copyright 2014, Rackspace Hosting

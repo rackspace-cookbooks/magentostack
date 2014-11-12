@@ -73,6 +73,6 @@ describe port(6379) do
 end
 
 # php
-describe file('/etc/phpstack.ini') do
+describe file('/etc/magentostack.ini') do
   it { should be_file }
 end

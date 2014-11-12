@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: phpstack
+# Cookbook Name:: magentostack
 # Recipe:: application_php
 #
 # Copyright 2014, Rackspace Hosting
@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-stackname = 'phpstack'
+stackname = 'magentostack'
 
 # plugin depends
 if platform_family?('rhel')
@@ -52,7 +52,7 @@ else
   node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 end
 
-node['phpstack']['pear']['modules'].each do |mod|
+node['magentostack']['pear']['modules'].each do |mod|
   php_pear mod do
     action 'install'
   end
