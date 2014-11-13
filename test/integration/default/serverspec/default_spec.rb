@@ -17,45 +17,11 @@ end
 describe port(80) do
   it { should be_listening }
 end
+describe port(443) do
+  it { should be_listening }
+end
 describe command("#{apache2ctl} -M") do
   its(:stdout) { should match(/^ ssl_module/) }
-end
-describe 'the app returns the expected content' do
-  it { expect(page_returns).to match(/MySQL Service/) }
-end
-
-# memcache
-describe service('memcached') do
-  it { should be_enabled }
-  it { should be_running }
-end
-describe port(11_211) do
-  it { should be_listening }
-end
-
-# postgresql base
-if os[:family] == 'redhat'
-  # process is named postgres
-  describe service('postgres') do
-    it { should be_running }
-  end
-  # service is named postgresql...
-  describe service('postgresql') do
-    it { should be_enabled }
-  end
-else
-  describe service('postgres') do
-    it { should be_enabled }
-    it { should be_running }
-  end
-end
-describe port(5432) do
-  it { should be_listening }
-end
-
-# mongo
-describe port(27_017) do
-  it { should be_listening }
 end
 
 # redis
@@ -70,9 +36,4 @@ if os[:family] == 'redhat'
 end
 describe port(6379) do
   it { should be_listening }
-end
-
-# php
-describe file('/etc/magentostack.ini') do
-  it { should be_file }
 end
