@@ -18,4 +18,6 @@
 # limitations under the License.
 #
 
-directory '/var/www/current'
+directory '/var/www/current' do
+  recursive true
+end
