@@ -28,7 +28,6 @@ end
 
 # mod_ssl recipe uses node.set, so we do too
 node[stackname]['apache']['sites'].each do |port, sites|
-  listen_ports |= [port]
   node.set['apache']['listen_ports'] = node['apache']['listen_ports'] + [port]
 end
 
