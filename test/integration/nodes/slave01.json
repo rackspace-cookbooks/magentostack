@@ -6,14 +6,14 @@
     "hostname": "vagrant.vm",
     "ipaddress": "192.168.0.23",
     "recipes": [
-      "phpstack::mysql_slave"
+      "magentostack::mysql_slave"
     ]
   },
   "normal": {
   },
   "chef_type": "node",
   "default": {
-    "phpstack": {
+    "magentostack": {
       "demo": {
         "enabled": true
       }
@@ -22,7 +22,7 @@
   "override": {
   },
   "run_list": [
-    "recipe[phpstack::mysql_slave]"
+    "recipe[magentostack::mysql_slave]"
   ],
   "tags": [ "mysql_slave" ]
 }

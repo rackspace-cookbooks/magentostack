@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: phpstack
+# Cookbook Name:: magentostack
 # Recipe:: redis_sentinel
 #
 # Copyright 2014, Rackspace US, Inc.
@@ -18,6 +18,6 @@
 # limitations under the License.
 #
 
-stackname = 'phpstack'
+stackname = 'magentostack'
 include_recipe 'stack_commons::redis_sentinel'
 tag("#{stackname}-redis_sentinel")

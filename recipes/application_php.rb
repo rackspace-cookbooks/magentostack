@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: phpstack
+# Cookbook Name:: magentostack
 # Recipe:: application_php
 #
 # Copyright 2014, Rackspace Hosting
@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-stackname = 'phpstack'
+stackname = 'magentostack'
 
 # plugin depends
 if platform_family?('rhel')
@@ -30,9 +30,12 @@ elsif platform_family?('debian')
 end
 include_recipe 'build-essential'
 include_recipe 'git'
+include_recipe 'chef-sugar'
 
-# set demo if needed
-node.default[stackname][node[stackname]['webserver']]['sites'] = node[stackname]['demo'][node[stackname]['webserver']]['sites'] if node[stackname]['demo']['enabled']
+# check if they exist, then set demo attributes if needed
+# -- it seems bad to be touching webserver attributes here.
+webserver = node.deep_fetch(stackname, 'webserver')
+node.default[stackname][webserver]['sites'] = node.deep_fetch(stackname, 'demo', webserver, 'sites') if webserver && node.deep_fetch(stackname, 'demo', 'enabled')
 
 # we need to run this before apache to pull in the correct version of php
 include_recipe 'php'
@@ -52,7 +55,7 @@ else
   node.default_unless[stackname]['gluster_mountpoint'] = '/var/www'
 end
 
-node['phpstack']['pear']['modules'].each do |mod|
+node['magentostack']['pear']['modules'].each do |mod|
   php_pear mod do
     action 'install'
   end
@@ -125,58 +128,13 @@ if node.deep_fetch(stackname, 'code-deployment', 'enabled')
 end
 
 # the template handles nil, so this is an exception where it's okay to default to nil
-mysql_node = nil
-rabbit_node = nil
-
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
   mysql_node = search('node', "recipes:#{stackname}\\:\\:mysql_master AND chef_environment:#{node.chef_environment}").first
-  rabbit_node = search('node', "recipes:#{stackname}\\:\\:rabbitmq AND chef_environment:#{node.chef_environment}").first
 end
-template "#{stackname}.ini" do
-  path "/etc/#{stackname}.ini"
-  cookbook node[stackname]['ini']['cookbook']
-  source "#{stackname}.ini.erb"
-  owner 'root'
-  group node[node[stackname]['webserver']]['group']
-  mode '00640'
-  variables(
-    cookbook_name: cookbook_name,
-    # if it responds then we will create the config section in the ini file, it means seach found something
-    mysql: if mysql_node.respond_to?('deep_fetch')
-             # if we don't define our own databases
-             if mysql_node[stackname]['mysql']['databases'].empty?
-               # if we define sites, does it actually have content?
-               if mysql_node[stackname][node[stackname]['webserver']]['sites'].empty?
-                 nil
-               # if we have content do we have a database defined with a password, then return with the node
-               elsif mysql_node[stackname][node[stackname]['webserver']]['sites'].values[0].values[0].key?('mysql_password')
-                 mysql_node
-               # previous elsif returning false means that db auto generation is disabled
-               else
-                 nil
-               end
-             # we defined our own database so return with the ndoe
-             else
-               mysql_node
-             end
-           end,
-    # need to do here because sugar is not available inside the template
-    rabbit: if rabbit_node.respond_to?('deep_fetch')
-              if rabbit_node.deep_fetch(stackname, node[stackname]['webserver'], 'sites').nil?
-                nil
-              else
-                rabbit_node.deep_fetch(stackname, 'rabbitmq', 'passwords').values[0].nil? ? nil : rabbit_node
-              end
-            else
-              nil
-            end
-  )
-  action 'create'
-  # For Nginx the service Uwsgi subscribes to the template, as we need to restart each Uwsgi service
-  notifies 'restart', 'service[apache2]', 'delayed' if node[stackname]['webserver'] == 'apache'
-end
+
+Chef::Log.warn("Found #{mysql_node} mysql node")
 
 # backups
 node.default['rackspace']['datacenter'] = node['rackspace']['region']
