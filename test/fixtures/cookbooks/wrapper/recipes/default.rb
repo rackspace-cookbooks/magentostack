@@ -12,8 +12,8 @@
   magentostack::magento
   magentostack::mysql_base
   magentostack::redis_single
-  magentostack::apache
   magentostack::application_php
+  magentostack::apache
 ).each do |recipe|
   include_recipe recipe
 end
