@@ -19,9 +19,8 @@
 #
 
 stackname = 'magentostack'
-return 0 unless node[stackname]['webserver_deployment']['enabled']
-
 include_recipe 'chef-sugar'
+return 0 unless node.deep_fetch(stackname, 'webserver_deployment', 'enabled')
 
 if rhel?
   include_recipe 'yum-epel'
@@ -62,6 +61,7 @@ node[stackname]['apache']['sites'].each do |port, sites|
       customlog site_opts['customlog']
       loglevel site_opts['loglevel']
     end
+
     template "http-monitor-#{site_opts['server_name']}-#{port}" do
       cookbook stackname
       source 'monitoring-remote-http.yaml.erb'
