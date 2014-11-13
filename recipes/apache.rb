@@ -20,20 +20,17 @@
 
 stackname = 'magentostack'
 include_recipe 'chef-sugar'
-return 0 unless node.deep_fetch(stackname, 'webserver_deployment', 'enabled')
 
 if rhel?
   include_recipe 'yum-epel'
   include_recipe 'yum-ius'
 end
 
-listen_ports = []
-
+# mod_ssl recipe uses node.set, so we do too
 node[stackname]['apache']['sites'].each do |port, sites|
   listen_ports |= [port]
+  node.set['apache']['listen_ports'] = node['apache']['listen_ports'] + [port]
 end
-
-node.default['apache']['listen_ports'] = listen_ports
 
 %w(
   platformstack::monitors
