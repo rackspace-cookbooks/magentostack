@@ -24,10 +24,7 @@ stackname = 'magentostack'
 # should not be changed
 default['stack_commons']['stackname'] = stackname
 default[stackname]['db-autocreate']['enabled'] = false
-# Stack_commons attributes requirement
-# should not be changed
-default[stackname]['webserver'] = 'apache'
-default[stackname]['apache']['sites'] = {}
+
 default[stackname]['mysql']['databases'] = {}
 default[stackname]['varnish']['backend_nodes'] = {}
 default[stackname]['varnish']['multi'] = true
@@ -35,7 +32,7 @@ default[stackname]['varnish']['multi'] = true
 # Toggle newrelic application monitoring
 default[stackname]['newrelic']['application_monitoring']['php']['enabled'] = 'false'
 
-# apache-fpm
+# Apache-fpm
 default['magentostack']['web']['domain'] = 'mymagento.com'
 default['magentostack']['web']['http_port'] = '80'
 default['magentostack']['web']['https_port'] = '443'

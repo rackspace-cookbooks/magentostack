@@ -1,9 +1,9 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: redis_base
+# Recipe:: magento
 #
-# Copyright 2014, Rackspace US, Inc.
+# Copyright 2014, Rackspace Hosting
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,6 @@
 # limitations under the License.
 #
 
-stackname = 'magentostack'
-include_recipe 'stack_commons::redis_base'
-tag("#{stackname}-redis")
+directory '/var/www/current' do
+  recursive true
+end
