@@ -18,19 +18,17 @@
 # limitations under the License.
 #
 
-stackname = 'magentostack'
-
 # Stack_commons configuration attributes
 # should not be changed
-default['stack_commons']['stackname'] = stackname
-default[stackname]['db-autocreate']['enabled'] = false
-
-default[stackname]['mysql']['databases'] = {}
-default[stackname]['varnish']['backend_nodes'] = {}
-default[stackname]['varnish']['multi'] = true
+default['stack_commons']['stackname'] = 'magentostack'
+default['magentostack']['db-autocreate']['enabled'] = false
+default['magentostack']['demo']['enabled'] = false
+default['magentostack']['mysql']['databases'] = {}
+default['magentostack']['varnish']['backend_nodes'] = {}
+default['magentostack']['varnish']['multi'] = true
 
 # Toggle newrelic application monitoring
-default[stackname]['newrelic']['application_monitoring']['php']['enabled'] = 'false'
+default['magentostack']['newrelic']['application_monitoring']['php']['enabled'] = 'false'
 
 # Apache-fpm
 default['magentostack']['web']['domain'] = 'mymagento.com'
