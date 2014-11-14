@@ -1,0 +1,52 @@
+<%- if @params[:ssl] %>
+<VirtualHost *:<%= @params[:https_port] %>>
+
+  SSLEngine on
+  SSLCertificateFile <%= @params[:ssl_cert] %>
+  SSLCertificateKeyFile <%= @params[:ssl_key] %>
+<%- else %>
+<VirtualHost *:<%= @params[:http_port] %>>
+<%- end %>
+
+  ServerName <%= @params[:server_name] %>
+  <% if @params[:server_aliases] %>ServerAlias <%= @params[:server_aliases] %><% end %>
+  DocumentRoot <%= @params[:docroot] %>
+  DirectoryIndex index.php
+
+  # Enable this line if you are terminating your SSL on a load-balancer.
+  # SetEnvIf X-Forwarded-Proto https HTTPS=on
+
+  <Directory <%= @params[:docroot] %>/>
+    Options +FollowSymLinks
+    AllowOverride All
+    <%- if @params[:ssl] %>SSLRequire %{SSL_CIPHER_USEKEYSIZE} >= 128<%- end %>
+    <IfModule mod_deflate.c>
+      SetOutputFilter DEFLATE
+      BrowserMatch ^Mozilla/4 gzip-only-text/html
+      BrowserMatch ^Mozilla/4\.0[678] no-gzip
+      BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+      SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+      Header append Vary User-Agent env=!dont-vary
+    </IfModule>
+    <ifModule mod_expires.c>
+      ExpiresActive On
+      ExpiresDefault "access plus 1 month"
+    </IfModule>
+  </Directory>
+
+  #Log settings
+  CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:server_name] %>-<% if @params[:ssl] %>ssl_<% end %>access_log combined
+  ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:server_name] %>-<% if @params[:ssl] %>ssl_<% end %>error_log
+
+  <Location /server-status>
+    SetHandler server-status
+
+    <% if node['apache']['version'] == '2.2' -%>
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require host 127.0.0.1
+    <% end -%>
+  </Location>
+</VirtualHost>

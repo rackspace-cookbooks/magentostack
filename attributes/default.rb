@@ -34,3 +34,19 @@ default[stackname]['varnish']['multi'] = true
 
 # Toggle newrelic application monitoring
 default[stackname]['newrelic']['application_monitoring']['php']['enabled'] = 'false'
+
+# apache-fpm
+default['magentostack']['web']['domain'] = 'mymagento.com'
+default['magentostack']['web']['http_port'] = '80'
+default['magentostack']['web']['https_port'] = '443'
+default['magentostack']['web']['server_aliases'] = node.fqdn
+default['magentostack']['web']['ssl_autosigned'] = true
+default['magentostack']['web']['cookbook'] = 'magentostack'
+default['magentostack']['web']['template'] = 'apache2/magento_vhost.erb'
+default['magentostack']['web']['fastcgi_cookbook'] = 'magentostack'
+default['magentostack']['web']['fastcgi_template'] = 'apache2/fastcgi.conf'
+default['magentostack']['web']['dir'] = "#{node['apache']['docroot_dir']}/magento"
+
+site_name = node['magentostack']['web']['domain']
+default['magentostack']['web']['ssl_key'] = "#{node['apache']['dir']}/ssl/#{site_name}.key"
+default['magentostack']['web']['ssl_cert'] = "#{node['apache']['dir']}/ssl/#{site_name}.pem"
