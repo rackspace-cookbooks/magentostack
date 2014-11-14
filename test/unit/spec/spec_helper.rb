@@ -21,9 +21,9 @@ def stub_resources
   stub_command('/usr/sbin/httpd -t').and_return(0)
   stub_command('/usr/sbin/apache2 -t').and_return(0)
   stub_command('which php').and_return('/usr/bin/php')
-  stub_command("test -f /etc/httpd/mods-available/fastcgi.conf").and_return(0)
-  stub_command("test -d /etc/php5/fpm/pool.d || mkdir -p /etc/php5/fpm/pool.d").and_return(0)
-  stub_command("test -d /etc/php-fpm.d || mkdir -p /etc/php-fpm.d").and_return(0)
+  stub_command('test -f /etc/httpd/mods-available/fastcgi.conf').and_return(0)
+  stub_command('test -d /etc/php5/fpm/pool.d || mkdir -p /etc/php5/fpm/pool.d').and_return(0)
+  stub_command('test -d /etc/php-fpm.d || mkdir -p /etc/php-fpm.d').and_return(0)
 end
 
 def stub_nodes(platform, version, server)

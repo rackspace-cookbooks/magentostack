@@ -34,7 +34,7 @@ default['magentostack']['newrelic']['application_monitoring']['php']['enabled'] 
 default['magentostack']['web']['domain'] = 'mymagento.com'
 default['magentostack']['web']['http_port'] = '80'
 default['magentostack']['web']['https_port'] = '443'
-default['magentostack']['web']['server_aliases'] = node.fqdn
+default['magentostack']['web']['server_aliases'] = node['fqdn']
 default['magentostack']['web']['ssl_autosigned'] = true
 default['magentostack']['web']['cookbook'] = 'magentostack'
 default['magentostack']['web']['template'] = 'apache2/magento_vhost.erb'

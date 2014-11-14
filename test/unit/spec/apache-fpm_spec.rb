@@ -46,7 +46,7 @@ describe 'magentostack::apache-fpm' do
           end
         end
         shared_examples_for 'apache modules' do
-          it "enables apache modules" do
+          it 'enables apache modules' do
             %w(
               status actions alias auth_basic
               authn_file authz_default
@@ -55,7 +55,7 @@ describe 'magentostack::apache-fpm' do
               negotiation setenvif ssl headers
               expires log_config logio
             ).each do |mod|
-                expect(chef_run).to run_execute("a2enmod #{mod}")
+              expect(chef_run).to run_execute("a2enmod #{mod}")
             end
           end
         end
@@ -63,30 +63,30 @@ describe 'magentostack::apache-fpm' do
         case property[:platform_family]
         # CENTOS
         when 'rhel'
-         it 'includes recipes (yum/yum-epel/yum-ius) to set up sources repositories' do
-          expect(chef_run).to include_recipe('yum')
-          expect(chef_run).to include_recipe('yum-epel')
-          expect(chef_run).to include_recipe('yum-ius')
-         end
-         it_should_behave_like 'all platforms'
-         it 'creates document root' do
-           expect(chef_run).to create_directory('/var/www/html/magento')
-         end
-         it_should_behave_like 'apache modules'
-         it_should_behave_like 'magento vhosts', '/etc/httpd/sites-available', property[:platform_family]
+          it 'includes recipes (yum/yum-epel/yum-ius) to set up sources repositories' do
+            expect(chef_run).to include_recipe('yum')
+            expect(chef_run).to include_recipe('yum-epel')
+            expect(chef_run).to include_recipe('yum-ius')
+          end
+          it_should_behave_like 'all platforms'
+          it 'creates document root' do
+            expect(chef_run).to create_directory('/var/www/html/magento')
+          end
+          it_should_behave_like 'apache modules'
+          it_should_behave_like 'magento vhosts', '/etc/httpd/sites-available', property[:platform_family]
         # UBUNTU
         when 'ubuntu'
-         it 'includes recipes (apt) to set up sources repositories' do
-          expect(chef_run).to include_recipe('apt')
-         end
-         it_should_behave_like 'all platforms'
-         it 'creates document root' do
-           expect(chef_run).to create_directory('/var/www/magento')
-         end
-         it_should_behave_like 'apache modules', '/etc/apache2'
-         describe 'configures a vhost for magento' do
-           it_should_behave_like 'magento vhosts', '/etc/apache2/sites-available', property[:platform_family]
-         end
+          it 'includes recipes (apt) to set up sources repositories' do
+            expect(chef_run).to include_recipe('apt')
+          end
+          it_should_behave_like 'all platforms'
+          it 'creates document root' do
+            expect(chef_run).to create_directory('/var/www/magento')
+          end
+          it_should_behave_like 'apache modules', '/etc/apache2'
+          describe 'configures a vhost for magento' do
+            it_should_behave_like 'magento vhosts', '/etc/apache2/sites-available', property[:platform_family]
+          end
         end
       end
     end

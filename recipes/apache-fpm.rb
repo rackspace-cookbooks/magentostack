@@ -45,32 +45,30 @@ node.default['apache']['default_modules'] = %w(
   include_recipe recipe
 end
 
-
 # create self signed certificate (enable by default)
-if node['magentostack']['web']['ssl_autosigned']
-  openssl_x509 node['magentostack']['web']['ssl_cert'] do
-    common_name node.name
-    org 'Magento'
-    org_unit 'Magento'
-    country 'US'
-    key_file node['magentostack']['web']['ssl_key']
-  end
+openssl_x509 node['magentostack']['web']['ssl_cert'] do
+  common_name node.name
+  org 'Magento'
+  org_unit 'Magento'
+  country 'US'
+  key_file node['magentostack']['web']['ssl_key']
+  not_if node['magentostack']['web']['ssl_autosigned']
 end
 
 # Fast-cgi configuration
-apache_conf "fastcgi" do
+apache_conf 'fastcgi' do
   enable true
 end
 
 # Create documentroot
 directory node['magentostack']['web']['dir'] do
   action :create
-  not_if {File.exists?(node['magentostack']['web']['dir'])}
+  not_if { File.exist?(node['magentostack']['web']['dir']) }
 end
 
 # Create vhost
 %w(default ssl).each do |site|
-  web_app "#{site}" do
+  web_app site do
     template node['magentostack']['web']['template']
     cookbook node['magentostack']['web']['cookbook']
     http_port node['magentostack']['web']['http_port']
@@ -84,10 +82,8 @@ end
   end
 end
 
-
-
 # to add to include_recipe  platformstack::monitors
-#template "http-monitor-#{site_opts['server_name']}-#{port}" do
+# template "http-monitor-#{site_opts['server_name']}-#{port}" do
 #  cookbook stackname
 #  source 'monitoring-remote-http.yaml.erb'
 #  path "/etc/rackspace-monitoring-agent.conf.d/#{site_opts['server_name']}-#{port}-http-monitor.yaml"
@@ -101,4 +97,4 @@ end
 #  notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
 #  action 'create'
 #  only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
-#end
+# end
