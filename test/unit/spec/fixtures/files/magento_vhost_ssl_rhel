@@ -1,0 +1,44 @@
+<VirtualHost *:443>
+
+  SSLEngine on
+  SSLCertificateFile /etc/httpd/ssl/mymagento.com.pem
+  SSLCertificateKeyFile /etc/httpd/ssl/mymagento.com.key
+
+  ServerName mymagento.com
+  ServerAlias fauxhai.local
+  DocumentRoot /var/www/html/magento
+  DirectoryIndex index.php
+
+  # Enable this line if you are terminating your SSL on a load-balancer.
+  # SetEnvIf X-Forwarded-Proto https HTTPS=on
+
+  <Directory /var/www/html/magento/>
+    Options +FollowSymLinks
+    AllowOverride All
+    SSLRequire %{SSL_CIPHER_USEKEYSIZE} >= 128
+    <IfModule mod_deflate.c>
+      SetOutputFilter DEFLATE
+      BrowserMatch ^Mozilla/4 gzip-only-text/html
+      BrowserMatch ^Mozilla/4\.0[678] no-gzip
+      BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+      SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+      Header append Vary User-Agent env=!dont-vary
+    </IfModule>
+    <ifModule mod_expires.c>
+      ExpiresActive On
+      ExpiresDefault "access plus 1 month"
+    </IfModule>
+  </Directory>
+
+  #Log settings
+  CustomLog /var/log/httpd/mymagento.com-ssl_access_log combined
+  ErrorLog /var/log/httpd/mymagento.com-ssl_error_log
+
+  <Location /server-status>
+    SetHandler server-status
+
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+</VirtualHost>
