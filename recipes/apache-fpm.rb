@@ -65,7 +65,7 @@ end
 # Create documentroot
 directory node['magentostack']['web']['dir'] do
   action :create
-  not_if File.exists?(node['magentostack']['web']['dir'])
+  not_if {File.exists?(node['magentostack']['web']['dir'])}
 end
 
 # Create vhost
