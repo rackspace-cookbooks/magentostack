@@ -52,7 +52,7 @@ openssl_x509 node['magentostack']['web']['ssl_cert'] do
   org_unit 'Magento'
   country 'US'
   key_file node['magentostack']['web']['ssl_key']
-  not_if node['magentostack']['web']['ssl_autosigned']
+  only_if { node['magentostack']['web']['ssl_autosigned'] }
 end
 
 # Fast-cgi configuration
