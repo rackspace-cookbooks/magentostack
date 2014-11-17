@@ -8,12 +8,22 @@ if os[:family] == 'redhat'
     it { should be_enabled }
     it { should be_running }
   end
+  describe service('php-fpm') do
+    it { should be_enabled }
+    it { should be_running }
+  end
+
   apache2ctl = '/usr/sbin/apachectl'
 else
   describe service('apache2') do
     it { should be_enabled }
     it { should be_running }
   end
+  describe service('php5-fpm') do
+    it { should be_enabled }
+    it { should be_running }
+  end
+
   apache2ctl = '/usr/sbin/apache2ctl'
 end
 describe port(80) do
@@ -23,19 +33,16 @@ describe port(443) do
   it { should be_listening }
 end
 
-describe service('php-fpm') do
-  it { should be_enabled }
-  it { should be_running }
-end
-
-%w(
+modules = %w(
   status actions alias auth_basic
-  authn_file authz_default
-  authz_groupfile authz_host
+  authn_file authz_groupfile authz_host
   authz_user autoindex dir env mime
   negotiation setenvif ssl headers
   expires log_config logio fastcgi
-).each do |mod|
+)
+# Apache 2.4(default on Ubuntu 14) doesn't have the authz_default module
+modules << 'authz_default' unless os[:release] == '14.04'
+modules.each do |mod|
   describe command("#{apache2ctl} -M") do
     its(:stdout) { should match(/^ #{mod}_module/) }
   end
@@ -49,9 +56,17 @@ describe command("#{apache2ctl} -t") do
   its(:exit_status) { should eq 0 }
 end
 
-describe command("#{apache2ctl} -S") do
-  its(:stdout) { should match(/port 443 namevhost mymagento.com/) }
-  its(:stdout) { should match(/port 80 namevhost mymagento.com/) }
+# Apache 2.4(default on Ubuntu 14) has a different output
+if os[:release] == '14.04'
+  describe command("#{apache2ctl} -S") do
+    its(:stdout) { should match(/\*:443                  mymagento.com/) }
+    its(:stdout) { should match(/\*:80                   mymagento.com/) }
+  end
+else
+  describe command("#{apache2ctl} -S") do
+    its(:stdout) { should match(/port 443 namevhost mymagento.com/) }
+    its(:stdout) { should match(/port 80 namevhost mymagento.com/) }
+  end
 end
 
 if os[:family] == 'redhat'
