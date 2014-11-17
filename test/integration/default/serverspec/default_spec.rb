@@ -4,27 +4,25 @@ require_relative 'spec_helper'
 
 # Apache-fpm
 if os[:family] == 'redhat'
-  describe service('httpd') do
-    it { should be_enabled }
-    it { should be_running }
-  end
-  describe service('php-fpm') do
-    it { should be_enabled }
-    it { should be_running }
-  end
-
+  docroot = '/var/www/html/magento'
+  apache_service_name = 'httpd'
+  fpm_service_name = 'php-fpm'
   apache2ctl = '/usr/sbin/apachectl'
 else
-  describe service('apache2') do
-    it { should be_enabled }
-    it { should be_running }
-  end
-  describe service('php5-fpm') do
-    it { should be_enabled }
-    it { should be_running }
-  end
-
+  docroot = '/var/www/magento'
+  apache_service_name = 'apache2'
+  fpm_service_name = 'php5-fpm'
   apache2ctl = '/usr/sbin/apache2ctl'
+end
+
+describe service(apache_service_name) do
+  it { should be_enabled }
+  it { should be_running }
+end
+
+describe service(fpm_service_name) do
+  it { should be_enabled }
+  it { should be_running }
 end
 describe port(80) do
   it { should be_listening }
@@ -48,15 +46,12 @@ modules.each do |mod|
   end
 end
 
-describe command("#{apache2ctl} -M") do
-  its(:stdout) { should match(/^ ssl_module/) }
-end
-
+## test configuration syntax
 describe command("#{apache2ctl} -t") do
   its(:exit_status) { should eq 0 }
 end
 
-# Apache 2.4(default on Ubuntu 14) has a different output
+## apachectl -S on Apache 2.4(default on Ubuntu 14) has a different output
 if os[:release] == '14.04'
   describe command("#{apache2ctl} -S") do
     its(:stdout) { should match(/\*:443                  mymagento.com/) }
@@ -69,13 +64,19 @@ else
   end
 end
 
-if os[:family] == 'redhat'
-  describe file('/var/www/html/magento') do
-    it { should be_directory }
+describe file(docroot) do
+  it { should be_directory }
+end
+
+## Create an index.php for testing purpose
+## using wget because curl is nto there by default on ubuntu
+describe command('wget -qO- localhost') do
+  before do
+    File.open("#{docroot}/index.php", 'w') { |file| file.write('<?php phpinfo(); ?>') }
   end
-else
-  describe file('/var/www/magento') do
-    it { should be_directory }
+  its(:stdout) { should match(/FPM\/FastCGI/) }
+  after do
+    File.delete("#{docroot}/index.php")
   end
 end
 
