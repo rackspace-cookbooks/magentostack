@@ -15,6 +15,7 @@ Dir['./test/unit/spec/support/**/*.rb'].sort.each { |f| require f }
 def node_resources(node)
   # for chefspec, so we don't have to converge elkstack
   node.default['elkstack']['config']['additional_logstash_templates'] = []
+  node.default['magentostack']['demo']['enabled'] = false
 end
 
 def stub_resources
