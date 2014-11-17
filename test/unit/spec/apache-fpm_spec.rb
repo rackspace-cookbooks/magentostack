@@ -45,6 +45,13 @@ describe 'magentostack::apache-fpm' do
             expect(chef_run).to render_file("#{vhost_path}/ssl.conf").with_content(fixture_files("magento_vhost_ssl_#{platform_family}"))
           end
         end
+
+        shared_examples_for 'fastcgi configuration' do |apache_config|
+          it 'configures fastcgi' do
+            expect(chef_run).to render_file("#{apache_config}/conf-available/fastcgi.conf").with_content(fixture_files('fastcgi'))
+          end
+        end
+
         shared_examples_for 'apache modules' do
           it 'enables apache modules' do
             %w(
@@ -74,6 +81,7 @@ describe 'magentostack::apache-fpm' do
           end
           it_should_behave_like 'apache modules'
           it_should_behave_like 'magento vhosts', '/etc/httpd/sites-available', property[:platform_family]
+          it_should_behave_like 'fastcgi configuration', '/etc/httpd'
         # UBUNTU
         when 'ubuntu'
           it 'includes recipes (apt) to set up sources repositories' do
@@ -86,6 +94,14 @@ describe 'magentostack::apache-fpm' do
           it_should_behave_like 'apache modules', '/etc/apache2'
           describe 'configures a vhost for magento' do
             it_should_behave_like 'magento vhosts', '/etc/apache2/sites-available', property[:platform_family]
+          end
+          # we test a different configuration for Apache 2.4
+          if property[:platform_version] == '14.04'
+            it 'configures fastcgi' do
+              expect(chef_run).to render_file('/etc/apache2/conf-available/fastcgi.conf').with_content(fixture_files('fastcgi_apache2-4'))
+            end
+          else
+            it_should_behave_like 'fastcgi configuration', '/etc/apache2'
           end
         end
       end
