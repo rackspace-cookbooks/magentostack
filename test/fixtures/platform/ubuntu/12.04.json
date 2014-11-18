@@ -4,8 +4,6 @@
   "platform_version": "12.04",
   "version": "12.04",
   "lsb": {
-    "codename": "lucid"
+    "codename": "precise"
   }
 }
-
-

@@ -1,0 +1,40 @@
+<VirtualHost *:80>
+
+  ServerName mymagento.com
+  ServerAlias fauxhai.local
+  DocumentRoot /var/www/magento
+  DirectoryIndex index.php
+
+  # Enable this line if you are terminating your SSL on a load-balancer.
+  # SetEnvIf X-Forwarded-Proto https HTTPS=on
+
+  <Directory /var/www/magento/>
+    Options +FollowSymLinks
+    AllowOverride All
+    
+    <IfModule mod_deflate.c>
+      SetOutputFilter DEFLATE
+      BrowserMatch ^Mozilla/4 gzip-only-text/html
+      BrowserMatch ^Mozilla/4\.0[678] no-gzip
+      BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+      SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+      Header append Vary User-Agent env=!dont-vary
+    </IfModule>
+    <ifModule mod_expires.c>
+      ExpiresActive On
+      ExpiresDefault "access plus 1 month"
+    </IfModule>
+  </Directory>
+
+  #Log settings
+  CustomLog /var/log/apache2/mymagento.com-access_log combined
+  ErrorLog /var/log/apache2/mymagento.com-error_log
+
+  <Location /server-status>
+    SetHandler server-status
+
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+</VirtualHost>

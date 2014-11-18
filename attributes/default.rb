@@ -18,27 +18,30 @@
 # limitations under the License.
 #
 
-stackname = 'magentostack'
-
 # Stack_commons configuration attributes
 # should not be changed
-default['stack_commons']['stackname'] = stackname
-default[stackname]['db-autocreate']['enabled'] = false
-
-default[stackname]['mysql']['databases'] = {}
-default[stackname]['varnish']['backend_nodes'] = {}
-default[stackname]['varnish']['multi'] = true
+default['stack_commons']['stackname'] = 'magentostack'
+default['magentostack']['db-autocreate']['enabled'] = false
+default['magentostack']['demo']['enabled'] = false
+default['magentostack']['mysql']['databases'] = {}
+default['magentostack']['varnish']['backend_nodes'] = {}
+default['magentostack']['varnish']['multi'] = true
 
 # Toggle newrelic application monitoring
-default[stackname]['newrelic']['application_monitoring']['php']['enabled'] = 'false'
+default['magentostack']['newrelic']['application_monitoring']['php']['enabled'] = 'false'
 
-# apache settings
-default[stackname]['webserver'] = 'apache'
-default[stackname]['apache']['sites'] = {}
+# Apache-fpm
+default['magentostack']['web']['domain'] = 'mymagento.com'
+default['magentostack']['web']['http_port'] = '80'
+default['magentostack']['web']['https_port'] = '443'
+default['magentostack']['web']['server_aliases'] = node['fqdn']
+default['magentostack']['web']['ssl_autosigned'] = true
+default['magentostack']['web']['cookbook'] = 'magentostack'
+default['magentostack']['web']['template'] = 'apache2/magento_vhost.erb'
+default['magentostack']['web']['fastcgi_cookbook'] = 'magentostack'
+default['magentostack']['web']['fastcgi_template'] = 'apache2/fastcgi.conf'
+default['magentostack']['web']['dir'] = "#{node['apache']['docroot_dir']}/magento"
 
-default[stackname]['apache']['sites']['80']['example.com'] = {
-  'server_name' => 'example.com',
-  'server_alias' => ['www.example.com'],
-  'docroot' => '/var/www/current',
-  'template' => 'apache2/sites/magento_vhost.erb'
-}
+site_name = node['magentostack']['web']['domain']
+default['magentostack']['web']['ssl_key'] = "#{node['apache']['dir']}/ssl/#{site_name}.key"
+default['magentostack']['web']['ssl_cert'] = "#{node['apache']['dir']}/ssl/#{site_name}.pem"
