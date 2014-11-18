@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: mysql_slave
+# Recipe:: application_magento
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -17,5 +17,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-include_recipe 'stack_commons::mysql_slave' # ~RACK002

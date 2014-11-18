@@ -22,6 +22,9 @@ def stub_resources
   stub_command('/usr/sbin/httpd -t').and_return(0)
   stub_command('/usr/sbin/apache2 -t').and_return(0)
   stub_command('which php').and_return('/usr/bin/php')
+  stub_command('test -f /etc/httpd/mods-available/fastcgi.conf').and_return(0)
+  stub_command('test -d /etc/php5/fpm/pool.d || mkdir -p /etc/php5/fpm/pool.d').and_return(0)
+  stub_command('test -d /etc/php-fpm.d || mkdir -p /etc/php-fpm.d').and_return(0)
 
   # Stubs and mocks for mysql_add_drive
   shellout = double
@@ -47,6 +50,10 @@ def stub_nodes(platform, version, server)
     env_name = env_data['name']
     server.create_environment(env_name, env_data)
   end
+end
+
+def fixture_files(file_path)
+  File.read(File.join('test', 'unit', 'spec', 'fixtures', 'files', file_path))
 end
 
 at_exit { ChefSpec::Coverage.report! }

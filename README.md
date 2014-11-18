@@ -11,23 +11,13 @@
 ### Cookbooks
 
 - `apache2`
-- `application`
-- `application_php`
 - `apt`
 - `build-essential`
 - `chef-sugar`
-- `database`
 - `git`
-- `memcached`
-- `mysql`
-- `mysql-multi`
 - `openssl`
-- `php`
 - `php-fpm`
 - `platformstack`
-- `rackspace_gluster`
-- `redis-multi`
-- `varnish`
 - `yum`
 - `yum-ius`
 - `yum-epel`
@@ -40,27 +30,16 @@
 - toggles
   - nothing
 
-### apache
+### apache-fpm
+This recipe sets Apache2 configuration so you can deploy your Magento code.
 - what it does
-  - Creates sites coming from `node['magentostack']['apache']['sites']` array
-  - Creates monitoring check for each site if `node[platformstack][cloud_monitoring]['enabled'] = true`.
+  - configures Apache with PHP FPM
+  - enables magento required modules
+  - create a self-signed certificate if node['magentostack']['web']['ssl_autosigned'] (default to true)
+  - create a Vhost for Magento (non-SSL)
+  - create a Vhost for Magento (SSL)
 - toggles
-  - can be disabled by setting `node['magentostack']['webserver_deployment']['enabled']` to false
-
-### application_php
-- what it does
-  - installs php and some libraries
-  - includes the nginx or apache recipe if `node['magentostack']['webserver']` is either apache or nginx
-  - if glusterfs is set up via `node['rackspace_gluster']['config']['server']['glusters']` glusterfs will be set up as a client
-  - deploys your apps, from attributes, depending on what `node['magentostack']['webserver']` is set to
-    - deploys from `node['magentostack'][node['magentostack']['webserver']]['sites']`
-  - creates a `/etc/magentostack.ini` file with authentication info for the other nodes in the environment
-    - only finding mysql and rabbitmq nodes right now
-  - creates a backup job that backs up `/var/www` by default
-    - only runs if `node['magentostack']['rackspace_cloudbackup']['http_docroot']['enable']` is set
-  - tags the node with the `php_app_node` tag
-- toggles
-  - application deployment can be disabled via the `node['magentostack']['code-deployment']['enabled']` flag
+  - certificate generation node['magentostack']['web']['ssl_autosigned']
 
 ### gluster
 - what it does
@@ -158,8 +137,24 @@ No Data_Bag configured for this cookbook
 - `default['magentostack']['mysql']['databases'] = {}`
   - contains a list of databases to set up (along with users / passwords)
 - `default['magentostack']['apache']['sites'] = {}`
-  - contains a list of ports and vhosts to set up for apache
+  - Default attribute required by stack_commons *not used by Magentostack*
 
+### Apache-fpm
+- `default['magentostack']['web']['domain']`
+  - Vhost Servername
+- `default['magentostack']['web']['http_port']`
+  - port for non-SSL vhost
+- `default['magentostack']['web']['https_port']`
+  - port for SSL vhost
+default['magentostack']['web']['server_aliases'] = node['fqdn']
+- `default['magentostack']['web']['cookbook']` and `default['magentostack']['web']['template']`
+  - where to find the Vhost templates
+- `default['magentostack']['web']['fastcgi_cookbook']` and `default['magentostack']['web']['fastcgi_template']`
+  - where to find the Fast-cgi templates
+- `default['magentostack']['web']['dir']`
+  - Documenent root (where to put Magento code)
+- `default['magentostack']['web']['ssl_key']` and `default['magentostack']['web']['ssl_cert']`
+  - where are the certificates and keys (might be useful when disabling self-signed)
 
 ### gluster
 
@@ -168,11 +163,6 @@ contains attributes used in setting up gluster, node the commented out section, 
 ### monitoring
 
 controls how cloud_monitoring is used within magentostack
-
-### php
-
-- `default['php']['packages'] = []`
-  - list of packages needed based on platform_family
 
 ### php_fpm
 

@@ -9,11 +9,10 @@
 # Add more recipes in the wrapper for other topologies/configurations of magentostack.
 
 %w(
-  magentostack::magento
   magentostack::mysql_base
   magentostack::redis_single
-  magentostack::application_php
-  magentostack::apache
+  magentostack::apache-fpm
+  magentostack::magento
 ).each do |recipe|
   include_recipe recipe
 end
