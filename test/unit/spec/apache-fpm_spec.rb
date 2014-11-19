@@ -41,6 +41,7 @@ describe 'magentostack::apache-fpm' do
 
         shared_examples_for 'magento vhosts' do |vhost_path, platform_family|
           it 'configures a vhost for magento' do
+            platform_family = 'ubuntu_14' if platform_family == 'debian' && property[:platform_version] == '14.04'
             expect(chef_run).to render_file("#{vhost_path}/default.conf").with_content(fixture_files("magento_vhost_#{platform_family}"))
             expect(chef_run).to render_file("#{vhost_path}/ssl.conf").with_content(fixture_files("magento_vhost_ssl_#{platform_family}"))
           end
@@ -60,14 +61,22 @@ describe 'magentostack::apache-fpm' do
 
         shared_examples_for 'apache modules' do
           it 'enables apache modules' do
-            %w(
+            apache_modules = %w(
               status actions alias auth_basic
-              authn_file authz_default
-              authz_groupfile authz_host
+              authn_file authz_groupfile authz_host
               authz_user autoindex dir env mime
               negotiation setenvif ssl headers
-              expires log_config logio
-            ).each do |mod|
+              expires
+            )
+            # Ubuntu 14.04 use authz_core rather than authz_default
+            if property[:platform_version] == '14.04'
+              apache_modules.concat %w( authz_core )
+            else
+              apache_modules.concat %w( authz_default )
+            end
+            # Some modules need to be manually enable don Rhel
+            apache_modules.concat %w( log_config logio) if property[:platform_family] == 'rhel'
+            apache_modules.each do |mod|
               expect(chef_run).to run_execute("a2enmod #{mod}")
             end
           end
