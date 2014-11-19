@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-stackname = 'magentostack'
-
 # Stack_commons configuration attributes
 # should not be changed
 default['stack_commons']['stackname'] = 'magentostack'
