@@ -18,4 +18,9 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::redis_slave' # ~RACK002
+bind_port = node['magentostack']['redis']['bind_port_page']
+server_name = "#{bind_port}-page-master"
+node.set['magentostack']['redis']['servers'][server_name] = { 'name' => server_name, 'port' => bind_port }
+MagentostackUtil.recompute_redis(node)
+tag('magentostack_redis')
+tag('magentostack_redis_page')
