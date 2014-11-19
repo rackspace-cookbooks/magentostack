@@ -24,6 +24,15 @@ def stub_resources
   stub_command('test -f /etc/httpd/mods-available/fastcgi.conf').and_return(0)
   stub_command('test -d /etc/php5/fpm/pool.d || mkdir -p /etc/php5/fpm/pool.d').and_return(0)
   stub_command('test -d /etc/php-fpm.d || mkdir -p /etc/php-fpm.d').and_return(0)
+
+  # Stubs and mocks for mysql_add_drive
+  shellout = double
+  stub_command('mkfs -t ext4 /dev/xvde1').and_return(true)
+  allow(File).to receive(:blockdev?).with('/dev/xvde1').and_return(true)
+  allow(Mixlib::ShellOut).to receive(:new).with('blkid -s TYPE -o value /dev/xvde1').and_return(shellout)
+  allow(shellout).to receive(:run_command).and_return(shellout)
+  allow(shellout).to receive(:error!).and_return(true)
+  allow(shellout).to receive(:error?).and_return(true)
 end
 
 def stub_nodes(platform, version, server)
