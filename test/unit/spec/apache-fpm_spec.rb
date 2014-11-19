@@ -52,6 +52,12 @@ describe 'magentostack::apache-fpm' do
           end
         end
 
+        shared_examples_for 'fastcgi patched version' do
+          it 'gets the patched mod_fastcgi' do
+            expect(chef_run).to create_remote_file('download fastcgi source').with(source: 'http://www.fastcgi.com/dist/mod_fastcgi-SNAP-0910052141.tar.gz')
+          end
+        end
+
         shared_examples_for 'apache modules' do
           it 'enables apache modules' do
             %w(
@@ -81,6 +87,7 @@ describe 'magentostack::apache-fpm' do
           end
           it_should_behave_like 'apache modules'
           it_should_behave_like 'magento vhosts', '/etc/httpd/sites-available', property[:platform_family]
+          it_should_behave_like 'fastcgi patched version'
           it_should_behave_like 'fastcgi configuration', '/etc/httpd'
         # UBUNTU
         when 'ubuntu'
