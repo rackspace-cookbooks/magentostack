@@ -32,4 +32,8 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[wrapper]
+      - recipe[wrapper::default]
+
+  - name: default-expanded
+    run_list:
+      - recipe[wrapper::default_expanded]

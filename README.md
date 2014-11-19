@@ -87,30 +87,30 @@ This recipe sets Apache2 configuration so you can deploy your Magento code.
 - what it does
   - sets up newrelic and the php agent for newrelic
 
-### redis_base
+### redis_single
 - what it does
-  - sets up redis (basic)
-  - allows nodes tagged as `php_app_node` to connect (via iptables)
-  - allows nodes tagged as `magentostack-redis` to connect (via iptables)
+  - configures a standalone redis server in `node['redisio']['servers']`
+  - redis server bound to `node['magentostack']['redis']['bind_port_single']`
+  - tags node with `magentostack_redis` and `magentostack_redis_single` for discovery
 
-### redis_master
+### redis_object, redis_page, redis_session
 - what it does
-  - sets up redis in a master capacity
+  - configures a redis server in `node['redisio']['servers']`
+  - instance is bound to `node['magentostack']['redis']['bind_port_X']` where X is object, page, or session
+  - tags node with `magentostack_redis` and `magentostack_redis_X` for later discovery
 
 ### redis_sentinel
 - what it does
-  - sets up redis sentinel
-  - allows nodes tagged as `php_app_node` to connect (via iptables)
-  - allows nodes tagged as `magentostack-redis_sentinel` to connect (via iptables)
-  - allows nodes tagged as `magentostack-redis` to connect (via iptables)
+  - sets up redis sentinel bound to `node['magentostack']['redis']['bind_port_sentinel']`
+  - uses discovery in `libraries/util.rb` to find all redis servers in current chef environment
+  - discovery is based on tags and chef environment, see `node['magentostack']['redis']['discovery_query']` to override
+  - determines a master (using tags) in this order: redis_session.rb, redis_single.rb, `none`
+  - assumes a session store is the most important to monitor (upstream only supports configuring sentinel to monitor one master)
 
-### redis_single
+### redis_configure
 - what it does
-  - sets up redis in a standalone capacity
-
-### redis_slave
-- what it does
-  - sets up redis in a slave capacity
+  - shortcut to run all of the redisio recipes needed to install & configure redis
+  - should be used after any calls to the redis_(single/object/page/session/sentinel) recipes
 
 ### varnish
 - what it does
@@ -121,7 +121,6 @@ This recipe sets Apache2 configuration so you can deploy your Magento code.
 - toggles
   - `node['varnish']['multi']` controls if varnish is simple or complex (multi backend or not)
     - it is also controled by if any backend nodes are found
-
 
 ## Data_Bags
 

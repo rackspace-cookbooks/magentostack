@@ -43,7 +43,9 @@ def stub_nodes(platform, version, server)
     platform.to_s # pacify rubocop
     version.to_s # pacify rubocop
   end
+end
 
+def stub_environments(server)
   Dir['./test/integration/environments/*.json'].sort.each do |f|
     env_data = JSON.parse(IO.read(f), symbolize_names: false)
     env_name = env_data['name']
