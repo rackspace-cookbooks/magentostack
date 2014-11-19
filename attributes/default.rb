@@ -18,14 +18,11 @@
 # limitations under the License.
 #
 
-<<<<<<< HEAD
 stackname = 'magentostack'
 
 # Disbale demo for this stack entirely
 default[stackname]['demo']['enabled'] = false
 
-=======
->>>>>>> master
 # Stack_commons configuration attributes
 # should not be changed
 default['stack_commons']['stackname'] = 'magentostack'
