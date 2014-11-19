@@ -90,7 +90,7 @@ describe 'magentostack::apache-fpm' do
           it_should_behave_like 'fastcgi patched version'
           it_should_behave_like 'fastcgi configuration', '/etc/httpd'
         # UBUNTU
-        when 'ubuntu'
+        when 'debian'
           it 'includes recipes (apt) to set up sources repositories' do
             expect(chef_run).to include_recipe('apt')
           end
