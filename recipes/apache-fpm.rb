@@ -18,24 +18,28 @@
 # limitations under the License.
 #
 
-# repo dependencies for php-fpm
-if platform_family?('rhel')
-  include_recipe 'yum'
-  include_recipe 'yum-epel'
-  include_recipe 'yum-ius'
-elsif platform_family?('debian')
-  include_recipe 'apt'
-end
-
-# Modules depedencies (Magento/Php-fpm)
-node.default['apache']['default_modules'] = %w(
+# Modules dependencies (Magento/Php-fpm)
+apache_modules = %w(
   status actions alias auth_basic
   authn_file authz_default
   authz_groupfile authz_host
   authz_user autoindex dir env mime
   negotiation setenvif ssl headers
-  expires log_config logio
+  expires
 )
+
+# repo dependencies for php-fpm
+if platform_family?('rhel')
+  include_recipe 'yum'
+  include_recipe 'yum-epel'
+  include_recipe 'yum-ius'
+  # manually installed modules for rhel only
+  apache_modules.concat %w( log_config logio)
+elsif platform_family?('debian')
+  include_recipe 'apt'
+end
+
+node.default['apache']['default_modules'] = apache_modules
 
 %w(
   apache2
