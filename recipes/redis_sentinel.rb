@@ -73,6 +73,6 @@ node.set['magentostack']['redis']['sentinels'][server_name] = {
   'master_ip' => master_ip,
   'master_port' => master_port
 }
-MagentostackUtil.recompute_redis(node, 'sentinels')
 tag('magentostack_redis')
 tag('magentostack_redis_sentinel')
+MagentostackUtil.recompute_redis(node, 'sentinels')

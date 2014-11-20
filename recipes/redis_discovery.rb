@@ -59,6 +59,7 @@ else
     if n['magentostack'] && n['magentostack']['redis'] && n['magentostack']['redis']['servers']
       n['magentostack']['redis']['servers'].each do |redis_name, redis_instance|
         discovered_nodes[redis_name] = redis_instance
+        Chef::Log.debug("Discovery found redis instance #{redis_name}:#{redis_instance}")
       end
     else
       Chef::Log.warn("Found node #{n.name} but didn't see any data under its ['magentostack']['redis']['servers'] attribute")

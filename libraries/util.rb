@@ -15,6 +15,10 @@ module MagentostackUtil
       redis_instances.push(value)
     end
     current_node.set['redisio'][key_name] = redis_instances
+
+    # we must save so that search works during the same chef run
+    # or a sentinel will require 2 runs to converge
+    current_node.save unless Chef::Config[:solo]
     redis_instances
   end
 

@@ -23,6 +23,6 @@ include_recipe 'redisio::install'
 bind_port = node['magentostack']['redis']['bind_port_single']
 server_name ="#{bind_port}-single-master"
 node.set['magentostack']['redis']['servers'][server_name] = { 'name' => server_name, 'port' => bind_port }
-MagentostackUtil.recompute_redis(node)
 tag('magentostack_redis')
 tag('magentostack_redis_single')
+MagentostackUtil.recompute_redis(node)

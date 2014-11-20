@@ -14,10 +14,12 @@
   magentostack::redis_object
   magentostack::redis_page
   magentostack::redis_session
-  magentostack::redis_sentinel
   redisio::install
   redisio::configure
   redisio::enable
+  magentostack::redis_sentinel
+  redisio::sentinel
+  redisio::sentinel_enable
   magentostack::mysql_base
   magentostack::apache-fpm
   magentostack::magento

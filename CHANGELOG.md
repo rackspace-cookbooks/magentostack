@@ -4,7 +4,10 @@ magentostack CHANGELOG
 
 0.0.1
 -----
-- @martinb3 - Add redisio as a direct dependency. redis-multi is too simplistic for this deployment.
+- @martinb3 - Add 'expanded' default that converges separate redis instances instead of a single one. This should now handle any configuration of runlist thrown at it.
+- @martinb3 - Add tags to node before saving node, so tags are findable on node.save
+- @martinb3 - Have utility library call node.save so we don't need 2 converges to find ourselves on a search
+- @martinb3 - Add redisio as a direct dependency, and in Berksfile until release. redis-multi is too simplistic for this deployment, and some bugs are fixed in git that aren't released yet.
 - @martinb3 - Add a redis discovery recipe that finds any redis instances in the same chef environment
 - @martinb3 - Modify redis_single recipe to no longer rely on redis-multi
 - @martinb3 - Add separate redis recipes for session store and page, object caches

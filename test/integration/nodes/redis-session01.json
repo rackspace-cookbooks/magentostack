@@ -1,0 +1,29 @@
+{
+  "name": "redis-slave-01",
+  "chef_environment": "_default",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "os": "centos",
+    "recipes": [
+      "redis-multi::slave"
+    ],
+    "roles": [
+      "redis_slave"
+    ],
+    "tags": [
+      "magentostack_redis_session"
+    ],
+    "ipaddress": "192.168.0.23"
+  },
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+  },
+  "override": {
+  },
+  "run_list": [
+    "role[redis_slave]"
+  ]
+}
