@@ -41,6 +41,8 @@ This recipe sets Apache2 configuration so you can deploy your Magento code.
 - toggles
   - certificate generation node['magentostack']['web']['ssl_autosigned']
 
+> apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore it will not use the mod_fastcgi patched version. It means Ubuntu with Magento CE <1.9 or EE < 1.14 might have some bugs. [References](http://www.magentocommerce.com/boards/m/viewthread/229253/)
+
 ### gluster
 - what it does
   - sets up glusterfs based on the `node['rackspace_gluster']['config']['server']['glusters']` attribute
