@@ -87,19 +87,55 @@ This recipe sets Apache2 configuration so you can deploy your Magento code.
 - what it does
   - sets up newrelic and the php agent for newrelic
 
-### redis_single
+### redis recipes
+
+Please note that the redis recipes use an accumulator pattern, just like their
+upstream cookbook. This means you must include all redis recipes for instances
+and they will build on to the data structure containing all redis instances.
+
+Once all redis instances have been defined, call `magentostack::redis_configure`
+to actually install and configure all redis masters, slaves, or sentinels that
+were previously declared using the individual recipes below.
+
+For example, this would an appropriate runlist for a single instance, a single
+slave, and the appropriate sentinel:
+```
+  magentostack::redis_single
+  magentostack::redis_single_slave
+  magentostack::redis_sentinel
+  magentostack::redis_configure
+```
+
+Example for installing just the session instance:
+```
+  magentostack::redis_session
+  magentostack::redis_configure
+```
+or only its slave:
+```
+  magentostack::redis_session_slave
+  magentostack::redis_configure
+```
+
+Example to get a sentinel only:
+```
+  magentostack::redis_sentinel
+  magentostack::redis_configure
+```
+
+#### redis_single
 - what it does
   - configures a standalone redis server in `node['redisio']['servers']`
   - redis server bound to `node['magentostack']['redis']['bind_port_single']`
   - tags node with `magentostack_redis` and `magentostack_redis_single` for discovery
 
-### redis_object, redis_page, redis_session
+#### redis_object, redis_page, redis_session
 - what it does
   - configures a redis server in `node['redisio']['servers']`
   - instance is bound to `node['magentostack']['redis']['bind_port_X']` where X is object, page, or session
   - tags node with `magentostack_redis` and `magentostack_redis_X` for later discovery
 
-### redis_sentinel
+#### redis_sentinel
 - what it does
   - sets up redis sentinel bound to `node['magentostack']['redis']['bind_port_sentinel']`
   - uses discovery in `libraries/util.rb` to find all redis servers in current chef environment
@@ -107,7 +143,7 @@ This recipe sets Apache2 configuration so you can deploy your Magento code.
   - determines a master (using tags) in this order: redis_session.rb, redis_single.rb, `none`
   - assumes a session store is the most important to monitor (upstream only supports configuring sentinel to monitor one master)
 
-### redis_configure
+#### redis_configure
 - what it does
   - shortcut to run all of the redisio recipes needed to install & configure redis
   - should be used after any calls to the redis_(single/object/page/session/sentinel) recipes
