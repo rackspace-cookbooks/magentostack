@@ -25,7 +25,7 @@ end
 describe service('redis6380-single-slave') do
   it { should be_enabled }
 end
-describe port(6379) do
+describe port(6380) do
   it { should be_listening }
 end
 describe file('/etc/redis/6380-single-slave.conf') do
