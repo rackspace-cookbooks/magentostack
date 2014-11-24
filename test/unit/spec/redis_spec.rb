@@ -46,7 +46,7 @@ describe 'magentostack all in one demo' do
         it 'should generate appropriate rackspace_iptables calls' do
           node = chef_run.node
           ipt = node['rackspace_iptables']['config']['chains']['INPUT']
-          
+
           expect(ipt['-m tcp -p tcp -s 10.0.0.2 --dport 6379 -j ACCEPT']).to be_truthy
         end
 
