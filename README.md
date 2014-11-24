@@ -95,7 +95,9 @@ and they will build on to the data structure containing all redis instances.
 
 Once all redis instances have been defined, call `magentostack::redis_configure`
 to actually install and configure all redis masters, slaves, or sentinels that
-were previously declared using the individual recipes below.
+were previously declared using the individual recipes below, as well as
+configure any iptables rules that are required (assuming platformstack has
+iptables turned on).
 
 For example, this would an appropriate runlist for a single instance, a single
 slave, and the appropriate sentinel:
@@ -147,6 +149,7 @@ Example to get a sentinel only:
 - what it does
   - shortcut to run all of the redisio recipes needed to install & configure redis
   - should be used after any calls to the redis_(single/object/page/session/sentinel) recipes
+  - build any iptables rules and call `add_iptables_rule` on them
 
 ### varnish
 - what it does

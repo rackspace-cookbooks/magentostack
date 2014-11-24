@@ -29,3 +29,6 @@
 ).each do |recipe|
   include_recipe recipe
 end
+MagentostackUtil.build_iptables(node) do |type, str, pri, comment|
+  add_iptables_rule(type, str, pri, comment)
+end
