@@ -3,7 +3,12 @@
 require_relative 'spec_helper'
 
 describe 'magentostack all in one demo' do
-  recipes_for_demo = %w(redis_single redis_single_slave redis_sentinel redis_configure).map { |r| "magentostack::#{r}" }
+  recipes_for_demo = %w(
+    redis_single
+    redis_single_slave
+    redis_sentinel
+    redis_configure).map { |r| "magentostack::#{r}" }
+
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|
