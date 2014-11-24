@@ -4,13 +4,44 @@
 #  within this library.
 # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
 module MagentostackUtil
+  # Determine each required iptables rule and call my_proc on it, considering
+  # any slaves or sentinels that must connect inbound to this node
+  def self.build_iptables(current_node, &my_proc)
+    # just exit if there aren't any redis instances configured here
+    return unless current_node &&
+                  current_node['magentostack'] &&
+                  current_node['magentostack']['redis'] &&
+                  current_node['magentostack']['redis']['servers']
+
+    # get all redis nodes in the current chef environment (or custom query for it)
+    redis_nodes = redis_discovery(current_node)
+
+    # get all my redis instances (sentinels don't receive connections, so ignore them)
+    local_redis_instances = servers_info([current_node], current_node)
+    local_redis_instances.each do |instance_name, instance_config|
+      next unless instance_config['port']
+      dest_port = instance_config['port']
+
+      # loop through every remote instance
+      redis_nodes.each do |other_node|
+        other_node_ip = Chef::Sugar::IP.best_ip_for(current_node, other_node)
+        comment = "Allow redis from #{other_node.name}/#{instance_name}:#{dest_port}"
+        my_proc.call('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport #{dest_port} -j ACCEPT", 9998, comment)
+      end
+    end
+  end
+
   # Discover redis instances and apply filter_proc for locating a single instance
   #  While this is called find_masters, it technically could be used on any
   #  search terms. It is master-specific in the data it returns about a particular
   #  redis instance (just what the master needs to connect)
   def self.redis_find_masters(current_node, &filter_proc)
     # find redis instances in the same chef environment
-    found_instances = MagentostackUtil.redis_discovery(current_node)
+    redis_instances = MagentostackUtil.redis_discovery(current_node)
+
+    # lookup their redis data structure
+    found_instances = MagentostackUtil.servers_info(redis_instances, current_node)
+
     if found_instances && !found_instances.empty?
       Chef::Log.debug("Master disco found the following instances: #{found_instances.keys.join(',')}")
     else
@@ -67,7 +98,6 @@ module MagentostackUtil
     end
 
     # otherwise, do the search we want to discover other redis nodes
-    discovered_nodes = {}
     redis_nodes = []
     query = current_node['magentostack']['redis']['discovery_query']
     Chef::Search::Query.new.search('node', query) { |o| redis_nodes << o }
@@ -78,19 +108,37 @@ module MagentostackUtil
       redis_nodes = [] # so loop below exits
     end
 
-    redis_nodes.each do |n|
+    return redis_nodes
+  end
+
+  # Given a list of node objects, produce a hash of redis instance that maps
+  # instance names to a hash of instance configuration values as each hash value
+  def self.instance_info(node_list, current_node, key_name)
+    discovered_nodes = {}
+    return discovered_nodes unless node_list
+
+    node_list.each do |n|
       # n may not be a Chef::Node so we can't use node#deep_fetch from chef/sugar
-      if n['magentostack'] && n['magentostack']['redis'] && n['magentostack']['redis']['servers']
-        n['magentostack']['redis']['servers'].each do |redis_name, redis_instance|
+      if n['magentostack'] && n['magentostack']['redis'] && n['magentostack']['redis'][key_name]
+        n['magentostack']['redis'][key_name].each do |redis_name, redis_instance|
           discovered_nodes[redis_name] = redis_instance
-          Chef::Log.debug("Discovery found redis instance #{redis_name}:#{redis_instance}")
+          n.set['magentostack']['redis'][key_name][redis_name]['best_ip_for'] = get_ip_by_name(n.name, current_node)
+          Chef::Log.debug("Discovery found node instance #{redis_name}:#{redis_instance}")
         end
       else
-        Chef::Log.warn("Found node #{n.name} but didn't see any data under its ['magentostack']['redis']['servers'] attribute")
+        Chef::Log.warn("Found node #{n.name} but didn't see any data under its ['magentostack']['redis']['#{key_name}'] attribute")
       end
     end
 
     return discovered_nodes
+  end
+
+  def self.servers_info(redis_nodes, current_node)
+    instance_info(redis_nodes, current_node, 'servers')
+  end
+
+  def self.sentinels_info(redis_nodes, current_node)
+    instance_info(redis_nodes, current_node, 'sentinels')
   end
 
   # Recompute node['redisio']['servers'] based on our node['magentostack']['redis']['servers']
