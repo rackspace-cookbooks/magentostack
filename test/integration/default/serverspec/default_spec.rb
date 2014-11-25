@@ -92,20 +92,6 @@ describe command('wget -qO- localhost/magento-check.php') do
   end
 end
 
-# redis
-# cannot name the service redis6379 because the check uses ps, not the actual service name
-describe service('redis') do
-  it { should be_running }
-end
-if os[:family] == 'redhat'
-  describe service('redis6379') do
-    it { should be_enabled }
-  end
-end
-describe port(6379) do
-  it { should be_listening }
-end
-
 # mysql base
 if os[:family] == 'redhat'
   describe service('mysqld') do
