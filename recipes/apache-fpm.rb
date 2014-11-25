@@ -18,24 +18,60 @@
 # limitations under the License.
 #
 
-# repo dependencies for php-fpm
-if platform_family?('rhel')
-  include_recipe 'yum'
-  include_recipe 'yum-epel'
-  include_recipe 'yum-ius'
-elsif platform_family?('debian')
-  include_recipe 'apt'
-end
+include_recipe 'chef-sugar'
 
-# Modules depedencies (Magento/Php-fpm)
-node.default['apache']['default_modules'] = %w(
+# Modules dependencies (Magento/Php-fpm)
+apache_modules = %w(
   status actions alias auth_basic
   authn_file authz_default
   authz_groupfile authz_host
   authz_user autoindex dir env mime
   negotiation setenvif ssl headers
-  expires log_config logio
+  expires
 )
+
+# repo dependencies for php-fpm
+if platform_family?('rhel')
+  include_recipe 'yum'
+  include_recipe 'yum-epel'
+  include_recipe 'yum-ius'
+  # manually installed modules for rhel only
+  apache_modules.concat %w( log_config logio)
+elsif platform_family?('debian')
+  include_recipe 'apt'
+  if ubuntu_precise?
+    # force php 5.5 on Ubuntu < 14.04
+    # using http://ppa rather than ppa: to be sure it passes firewall
+    apt_repository 'php5-5' do
+      uri          'http://ppa.launchpad.net/ondrej/php5/ubuntu'
+      keyserver    'hkp://keyserver.ubuntu.com:80'
+      key          '14AA40EC0831756756D7F66C4F4EA0AAE5267A6C'
+      components   ['main']
+      distribution node['lsb']['codename']
+    end
+    # however we don't want apache from ondrej/php5
+    apt_preference 'apache' do
+      glob         '*apache*'
+      pin          'release o=Ubuntu'
+      pin_priority '600'
+    end
+  end
+end
+
+node.default['apache']['default_modules'] = apache_modules
+
+# install php libraries requirements
+node['magentostack']['php']['packages'].each do |phplib|
+  package phplib
+end
+# enable mcrypt module on Ubuntu 14
+# https://bugs.launchpad.net/ubuntu/+source/php-mcrypt/+bug/1243568
+execute 'enable mcrypt module' do
+  command 'php5enmod mcrypt'
+  creates '/etc/php5/cli/conf.d/20-mcrypt.ini'
+  action :run
+  only_if { ubuntu_trusty? }
+end
 
 %w(
   apache2
