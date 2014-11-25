@@ -75,7 +75,35 @@ describe command('wget -qO- localhost') do
     File.open("#{docroot}/index.php", 'w') { |file| file.write('<?php phpinfo(); ?>') }
   end
   its(:stdout) { should match(/FPM\/FastCGI/) }
+  its(:stdout) { should match(/PHP Version 5.5/) }
   after do
     File.delete("#{docroot}/index.php")
   end
+end
+
+## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
+describe command('wget -qO- localhost/magento-check.php') do
+  before do
+    File.open("#{docroot}/magento-check.php", 'w') { |file| file.write(File.read("#{ENV['BUSSER_ROOT']}/suites/serverspec/fixtures/magento-check.php")) }
+  end
+  its(:stdout) { should match(/Congratulations/) }
+  after do
+    File.delete("#{docroot}/magento-check.php")
+  end
+end
+
+# mysql base
+if os[:family] == 'redhat'
+  describe service('mysqld') do
+    it { should be_enabled }
+    it { should be_running }
+  end
+else
+  describe service('mysql') do
+    it { should be_enabled }
+    it { should be_running }
+  end
+end
+describe port(3306) do
+  it { should be_listening }
 end
