@@ -3,8 +3,12 @@
 ## Supported Platforms
 
 - CentOS 6.5
-- Ubuntu 12.04
-- Ubuntu 14.04
+- Ubuntu 12.04 (partially, not for Mysql)
+- Ubuntu 14.04 (partially, not for Mysql)
+
+## Supported Magento version
+Community Edition >= 1.9
+Enterprise Edition >= 1.14.1
 
 ## Requirements
 
@@ -34,14 +38,19 @@
 This recipe sets Apache2 configuration so you can deploy your Magento code.
 - what it does
   - configures Apache with PHP FPM
-  - enables magento required modules
+  - enables magento required php modules
   - create a self-signed certificate if node['magentostack']['web']['ssl_autosigned'] (default to true)
   - create a Vhost for Magento (non-SSL)
   - create a Vhost for Magento (SSL)
 - toggles
   - certificate generation node['magentostack']['web']['ssl_autosigned']
 
-> apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore it will not use the mod_fastcgi patched version. It means Ubuntu with Magento CE <1.9 or EE < 1.14 might have some bugs. [References](http://www.magentocommerce.com/boards/m/viewthread/229253/)
+> Only Community Edition >= 1.9 and Enterprise Edition >= 1.14.1 are supported by Magentostack, therefore it's PHP 5.5 only
+
+<!---
+# Only for Magento CE <1.9 or EE < 1.14 (not supported yet)
+apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore it will not use the mod_fastcgi patched version. It means Ubuntu with Magento CE <1.9 or EE < 1.14 might have some bugs. [References](http://www.magentocommerce.com/boards/m/viewthread/229253/)
+--->
 
 ### gluster
 - what it does
