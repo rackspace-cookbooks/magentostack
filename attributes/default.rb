@@ -45,3 +45,6 @@ default['magentostack']['web']['dir'] = "#{node['apache']['docroot_dir']}/magent
 site_name = node['magentostack']['web']['domain']
 default['magentostack']['web']['ssl_key'] = "#{node['apache']['dir']}/ssl/#{site_name}.key"
 default['magentostack']['web']['ssl_cert'] = "#{node['apache']['dir']}/ssl/#{site_name}.pem"
+
+# MySQL
+default['mysql']['version'] = '5.6'
