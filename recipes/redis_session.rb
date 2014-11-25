@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: redis_master
+# Recipe:: redis_session
 #
 # Copyright 2014, Rackspace US, Inc.
 #
@@ -18,4 +18,12 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::redis_master' # ~RACK002
+# required by libraries/util.rb
+include_recipe 'chef-sugar'
+
+bind_port = node['magentostack']['redis']['bind_port_session']
+server_name = "#{bind_port}-session-master"
+node.set['magentostack']['redis']['servers'][server_name] = { 'name' => server_name, 'port' => bind_port }
+tag('magentostack_redis')
+tag('magentostack_redis_session')
+MagentostackUtil.recompute_redis(node)

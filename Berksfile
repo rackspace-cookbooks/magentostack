@@ -10,3 +10,7 @@ group :integration do
   cookbook 'apt'
   cookbook 'yum'
 end
+
+# Fixes in master@HEAD, but not latest release 2.2.4
+# This line may be removed once a newer version has been released
+cookbook 'redisio', git:'git@github.com:brianbianco/redisio.git'
