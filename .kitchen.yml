@@ -1,6 +1,9 @@
 ---
 driver:
   name: vagrant
+  network:
+  - ["forwarded_port", {guest: 80,   host: 8080, auto_correct: true}]
+  - ["forwarded_port", {guest: 443,   host: 8443, auto_correct: true}]
 driver_config:
   require_chef_omnibus: true
 
@@ -17,6 +20,14 @@ provisioner:
       server_debian_password: "randompass"
     holland:
       password: "randompass"
+    mysql-multi:
+      master: '127.0.0.1'
+    magentostack:
+      web:
+        domain: 'localhost'
+      config:
+        secure_base_url: 'https://localhost:8443/'
+        url: 'http://localhost:8080/'
 
 platforms:
   - name: ubuntu-12.04
