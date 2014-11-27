@@ -31,12 +31,13 @@ provisioner:
         url: 'http://localhost:8080/'
 
 platforms:
-  - name: ubuntu-12.04
-    run_list:
-    - recipe[apt]
-  - name: ubuntu-14.04
-    run_list:
-    - recipe[apt]
+  # Leaving Ubuntu out until Phase 2
+  # - name: ubuntu-12.04
+  #   run_list:
+  #   - recipe[apt]
+  # - name: ubuntu-14.04
+  #   run_list:
+  #   - recipe[apt]
   - name: centos-6.5
     run_list:
     - recipe[yum]
