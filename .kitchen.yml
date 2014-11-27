@@ -22,6 +22,7 @@ provisioner:
       password: "randompass"
     mysql-multi:
       master: '127.0.0.1'
+      bind_ip: '0.0.0.0'
     magentostack:
       web:
         domain: 'localhost'
