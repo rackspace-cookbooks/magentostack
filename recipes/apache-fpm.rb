@@ -118,6 +118,9 @@ end
   end
 end
 
+# required by stack_commons::mysql_base to find the app nodes (mysql user permission)
+tag('magento_app_node')
+
 # to add to include_recipe  platformstack::monitors
 # template "http-monitor-#{site_opts['server_name']}-#{port}" do
 #  cookbook stackname
