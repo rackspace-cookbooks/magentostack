@@ -111,3 +111,7 @@ end
 describe port(3306) do
   it { should be_listening }
 end
+describe command('mysqld -V') do
+  its(:exit_status) { should eq 0 }
+  its(:stdout) { should match(/5.6/) }
+end
