@@ -54,13 +54,13 @@ end
 ## apachectl -S on Apache 2.4(default on Ubuntu 14) has a different output
 if os[:release] == '14.04'
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/\*:443                  mymagento.com/) }
-    its(:stdout) { should match(/\*:80                   mymagento.com/) }
+    its(:stdout) { should match(/\*:443                  localhost/) }
+    its(:stdout) { should match(/\*:80                   localhost/) }
   end
 else
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/port 443 namevhost mymagento.com/) }
-    its(:stdout) { should match(/port 80 namevhost mymagento.com/) }
+    its(:stdout) { should match(/port 443 namevhost localhost/) }
+    its(:stdout) { should match(/port 80 namevhost localhost/) }
   end
 end
 
@@ -71,13 +71,17 @@ end
 ## Create an index.php for testing purpose
 ## using wget because curl is nto there by default on ubuntu
 describe command('wget -qO- localhost') do
+  index_php_path = "#{docroot}/index.php"
   before do
-    File.open("#{docroot}/index.php", 'w') { |file| file.write('<?php phpinfo(); ?>') }
+    # save Magento index.php
+    FileUtils.copy(index_php_path, index_php_path + '-before-kitchen') if File.exist?(index_php_path)
+    File.open(index_php_path, 'w') { |file| file.write('<?php phpinfo(); ?>') }
   end
   its(:stdout) { should match(/FPM\/FastCGI/) }
   its(:stdout) { should match(/PHP Version 5.5/) }
   after do
-    File.delete("#{docroot}/index.php")
+    # restore Magento index.php
+    FileUtils.mv(index_php_path + '-before-kitchen', index_php_path) if File.exist?(index_php_path + '-before-kitchen')
   end
 end
 
