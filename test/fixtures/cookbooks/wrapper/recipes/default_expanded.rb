@@ -20,6 +20,7 @@
   magentostack::redis_sentinel
   magentostack::redis_configure
   magentostack::mysql_base
+  magentostack::mysql_holland
   magentostack::apache-fpm
   magentostack::magento
 ).each do |recipe|
