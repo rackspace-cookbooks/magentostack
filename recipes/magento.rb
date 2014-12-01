@@ -18,6 +18,26 @@
 # limitations under the License.
 #
 
-directory '/var/www/current' do
-  recursive true
+# search for Mysql node
+include_recipe 'mysql-multi::_find_master'
+node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
+
+# define computed attributes in the recipe
+node.default['magentostack']['config']['db']['port'] = node['mysql']['port']
+node.default['magentostack']['config']['url'] = "http://#{node['magentostack']['web']['domain']}/"
+node.default['magentostack']['config']['secure_base_url'] = "https://#{node['magentostack']['web']['domain']}/"
+
+ark 'magento' do
+  url node['magentostack']['download_url']
+  path node['apache']['docroot_dir']
+  owner node['apache']['user']
+  group node['apache']['group']
+  checksum node['magentostack']['checksum']
+  action :put
 end
+
+# Run install.php script for initial magento setup
+magento_initial_configuration
+
+# required for stack_commons::mysql_base to find the app nodes
+tag('magento_app_node')
