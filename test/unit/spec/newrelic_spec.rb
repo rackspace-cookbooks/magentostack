@@ -14,8 +14,13 @@ describe 'magentostack::newrelic' do
           end.converge(described_recipe)
         end
 
-        it 'includes stack_commons recipe' do
+        it 'includes recipes' do
+          expect(chef_run).to include_recipe('python::pip')
           expect(chef_run).to include_recipe('stack_commons::newrelic')
+        end
+
+        it 'upgrades setuptools' do
+          expect(chef_run).to upgrade_python_pip('setuptools')
         end
 
       end
