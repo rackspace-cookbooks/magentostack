@@ -7,7 +7,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 description 'Provides a full Magento stack'
 version '0.0.1'
 
-depends 'apache2'
+depends 'apache2', '= 2.0.0'
 depends 'apt'
 depends 'ark'
 depends 'build-essential'

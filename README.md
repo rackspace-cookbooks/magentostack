@@ -57,6 +57,11 @@ apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore
   - sets up glusterfs based on the `node['rackspace_gluster']['config']['server']['glusters']` attribute
     - this may involve some manual setup, it is glusterfs afterall
 
+### magento
+- what it does
+  - download and extract Magento from `default['magentostack']['download_url']` to `node['apache']['docroot_dir']`
+  - install Magento with install.php (basic configuration, DB bootstrap, SSL url etc...)
+
 ### mysql_add_drive
 - what it does
   - formats /dev/xvde1 and will prepare it for the mysql datadir.
@@ -181,8 +186,6 @@ No Data_Bag configured for this cookbook
 - `default['magentostack']['newrelic']['application_monitoring'] = ''`
   - controls if we allow newrelic to to do application monitoring
     - is set to `'true'` in the newrelic recipe
-- `default['magentostack']['ini']['cookbook'] = 'magentostack'`
-  - sets where the `/etc/magentostack.ini` template is sourced from
 - `default['magentostack']['mysql']['databases'] = {}`
   - contains a list of databases to set up (along with users / passwords)
 - `default['magentostack']['apache']['sites'] = {}`
@@ -204,6 +207,14 @@ default['magentostack']['web']['server_aliases'] = node['fqdn']
   - Documenent root (where to put Magento code)
 - `default['magentostack']['web']['ssl_key']` and `default['magentostack']['web']['ssl_cert']`
   - where are the certificates and keys (might be useful when disabling self-signed)
+
+### Magento
+- `default['magentostack']['config'][*]`
+  - install.php related options, see https://github.com/AutomationSupport/magentostack/blob/master/definitions/magento_initial_configuration.rb
+- `normal['magentostack']['mysql']['databases']['magento_database']`
+  - create Magento DB and Magento DB users
+  `default['magentostack']['download_url']` and `default['magentostack']['checksum']`
+  - where to get Magento and the file checksum (faster re-converge)
 
 ### gluster
 

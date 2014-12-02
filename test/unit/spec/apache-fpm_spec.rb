@@ -97,7 +97,8 @@ describe 'magentostack::apache-fpm' do
           end
           it_should_behave_like 'apache modules'
           it_should_behave_like 'magento vhosts', '/etc/httpd/sites-available', property[:platform_family]
-          it_should_behave_like 'fastcgi patched version'
+          # we don't use patched version for now
+          # it_should_behave_like 'fastcgi patched version'
           it_should_behave_like 'fastcgi configuration', '/etc/httpd'
         # UBUNTU
         when 'debian'
