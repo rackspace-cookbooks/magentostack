@@ -19,7 +19,7 @@
   magentostack::redis_session_slave
   magentostack::redis_sentinel
   magentostack::redis_configure
-  magentostack::mysql_base
+  magentostack::mysql_master
   magentostack::mysql_holland
   magentostack::apache-fpm
   magentostack::magento
