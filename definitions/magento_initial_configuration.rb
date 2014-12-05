@@ -2,7 +2,6 @@ define :magento_initial_configuration do
   # Configure all the things
   database_name = node['magentostack']['mysql']['databases'].keys[0]
 
-
   pp node['magentostack']['web']['dir']
 
   # docroot_dir should be one closer to root from magento/ vhost dir
@@ -11,7 +10,7 @@ define :magento_initial_configuration do
     user node['apache']['user']
     group node['apache']['group']
     mode '0700'
-    variables({database_name: database_name})
+    variables(database_name: database_name)
   end
 
   bash 'Configure Magento' do
