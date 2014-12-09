@@ -28,8 +28,8 @@ describe 'magentostack::magento' do
         it 'gets magento and extract it' do
           expect(chef_run).to put_ark('magento').with(action: [:put], url: 'http://www.magentocommerce.com/downloads/assets/1.9.0.1/magento-1.9.0.1.tar.gz')
         end
-        it 'installs magento' do
-          expect(chef_run).to run_bash('Configure Magento')
+        it 'runs Magento installer' do
+          expect(chef_run).to run_execute("#{Chef::Config[:file_cache_path]}/magentostack.sh")
         end
       end
     end
