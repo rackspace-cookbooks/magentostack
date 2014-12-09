@@ -5,7 +5,7 @@ driver:
   - ["forwarded_port", {guest: 80,   host: 8080, auto_correct: true}]
   - ["forwarded_port", {guest: 443,   host: 8443, auto_correct: true}]
 driver_config:
-  require_chef_omnibus: true
+  require_chef_omnibus: 11.16.4
 
 provisioner:
   name: chef_zero
@@ -27,8 +27,8 @@ provisioner:
       web:
         domain: 'localhost'
       config:
-        secure_base_url: 'https://localhost:8443/'
-        url: 'http://localhost:8080/'
+        secure_base_url: 'https://localhost:443/'
+        url: 'http://localhost:80/'
 
 platforms:
   # Leaving Ubuntu out until Phase 2
