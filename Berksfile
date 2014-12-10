@@ -13,9 +13,12 @@ end
 # This line may be removed once a newer version has been released
 cookbook 'redisio', git:'git@github.com:brianbianco/redisio.git'
 
-# 0.9.1 is not available in the market, but wee need it for chefspec and lib/matchers
+# 0.9.1 is not available in the market, but we need it for chefspec and lib/matchers
 # it's not a major problem if the wrapper cookbook has 0.9.0 as 0.9.1 is only required for tests
 cookbook 'ark', git:'git@github.com:burtlo/ark.git', ref: '1f7c092ffe80073409bce7fa851346fb076a259f'
 
 # until https://github.com/opscode-cookbooks/openssl/pull/11
 cookbook 'openssl', git: 'git@github.com:racker/openssl.git'
+
+# 0.3.1 is not released in Supermarket yet
+cookbook 'user', git: 'git@github.com:fnichol/chef-user.git'
