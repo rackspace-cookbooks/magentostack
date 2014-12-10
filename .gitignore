@@ -21,3 +21,7 @@ bin/*
 
 # chefspec
 .coverage/
+
+# misc
+.DS_Store
+.berkshelf

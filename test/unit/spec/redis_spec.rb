@@ -24,7 +24,6 @@ describe 'magentostack all in one demo' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-
           end.converge(*recipes_for_demo) # *splat operator for array to vararg
         end
 
@@ -49,7 +48,6 @@ describe 'magentostack all in one demo' do
 
           expect(ipt['-m tcp -p tcp -s 10.0.0.2 --dport 6379 -j ACCEPT']).to be_truthy
         end
-
       end
     end
   end
@@ -81,7 +79,6 @@ describe 'magentostack expanded all-in-one' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-
           end.converge(*recipes_for_demo) # *splat operator for array to vararg
         end
 
@@ -108,7 +105,6 @@ describe 'magentostack expanded all-in-one' do
           expect(ipt['-m tcp -p tcp -s 10.0.0.2 --dport 6383 -j ACCEPT']).to be_truthy
           expect(ipt['-m tcp -p tcp -s 10.0.0.2 --dport 6385 -j ACCEPT']).to be_truthy
         end
-
       end
     end
   end

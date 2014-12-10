@@ -19,3 +19,4 @@
 #
 
 include_recipe 'stack_commons::mysql_master' # ~RACK002
+node.save unless Chef::Config[:solo] # make me searchable right away!

@@ -20,13 +20,11 @@ describe 'magentostack all in one demo' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-
           end.converge(*recipes_for_demo) # *splat operator for array to vararg
         end
 
         property = load_platform_properties(platform: platform, platform_version: version)
         property.to_s # pacify rubocop
-
       end
     end
   end

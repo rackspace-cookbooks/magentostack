@@ -19,25 +19,55 @@
 #
 
 # search for Mysql node
-include_recipe 'mysql-multi::_find_master'
-node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
+begin
+  include_recipe 'mysql-multi::_find_master'
+  node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
+rescue
+  Chef::Log.warn('Did not find a mysql master to use for magento. You may need to reconverge.')
+end
 
 # define computed attributes in the recipe
 node.default['magentostack']['config']['db']['port'] = node['mysql']['port']
 node.default['magentostack']['config']['url'] = "http://#{node['magentostack']['web']['domain']}/"
 node.default['magentostack']['config']['secure_base_url'] = "https://#{node['magentostack']['web']['domain']}/"
 
-ark 'magento' do
-  url node['magentostack']['download_url']
-  path node['apache']['docroot_dir']
-  owner node['apache']['user']
-  group node['apache']['group']
-  checksum node['magentostack']['checksum']
-  action :put
+# ensure they asked for a valid install method
+install_method = node['magentostack']['install_method']
+unless %w(ark http none).include? install_method
+  fail "You have specified to install magento with method #{install_method}, which is not valid."
 end
 
+include_recipe 'magentostack::_magento_ark' if node['magentostack']['install_method'] == 'ark'
+include_recipe 'magentostack::_magento_cloudfiles' if node['magentostack']['install_method'] == 'cloudfiles'
+
 # Run install.php script for initial magento setup
-magento_initial_configuration
+# Configure all the things
+database_name = node['magentostack']['mysql']['databases'].keys[0]
+
+# temporary location for script that runs install.php
+setup_script = "#{Chef::Config[:file_cache_path]}/magentostack.sh"
+
+# output of install.php goes into this file, needs to be writeable by apache
+# but ensure it stays outside of the actual web-accessible dir ('docroot/magento')
+magento_configured_file = "#{node['magentostack']['web']['dir']}/.magento_configured"
+
+template setup_script do
+  source 'magentostack.sh.erb'
+  user node['apache']['user']
+  group node['apache']['group']
+  mode '0700'
+  variables(
+    database_name: database_name,
+    magento_configured_file: magento_configured_file
+    )
+end
+
+execute setup_script do
+  cwd node['magentostack']['web']['dir']
+  user node['apache']['user']
+  group node['apache']['group']
+  not_if { File.exist?(magento_configured_file) }
+end
 
 # required for stack_commons::mysql_base to find the app nodes
 tag('magento_app_node')
