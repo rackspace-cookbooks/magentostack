@@ -18,7 +18,6 @@ describe 'magentostack::magento' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-
           end.converge(described_recipe)
         end
 
