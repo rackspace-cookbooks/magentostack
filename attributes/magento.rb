@@ -14,6 +14,7 @@ default['magentostack']['download_file'] = 'magento.tar.gz'
 normal['magentostack']['mysql']['databases']['magento_database']['mysql_user'] = 'magento_user'
 normal['magentostack']['mysql']['databases']['magento_database']['mysql_password'] = 'magento_password'
 normal['magentostack']['mysql']['databases']['magento_database']['privileges'] = ['all']
+normal['magentostack']['mysql']['databases']['magento_database']['global_privileges'] = [:usage, :select, :'lock tables', :'show view', :reload, :super]
 
 # Magento configuration
 ## localisation

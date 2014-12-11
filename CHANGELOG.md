@@ -5,6 +5,7 @@ magentostack CHANGELOG
 0.0.1
 -----
 
+- @martinb3 - Test cloud files install method, works flawlessly
 - @martinb3 - Split install methods into ark, cloudfiles, or none
 - @martinb3 - Add 'cloudfiles' install method, used rackspacecloud LWRPs
 - @martinb3 - Adjust configuration of magento to write out shell script with configuration options instead of calling it inline.
