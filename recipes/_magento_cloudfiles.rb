@@ -6,7 +6,8 @@
 # Copyright 2014, Rackspace Hosting
 #
 
-# install the fog gems
+# install these for nokogiri for xml for fog gem for rackspacecloud
+include_recipe 'build-essential'
 include_recipe 'rackspacecloud'
 
 # these can be populated in a wrapper using a data bag and then placed in node.run_state
