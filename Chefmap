@@ -1,0 +1,111 @@
+---
+id: magentostack
+is: application
+provides:
+- application: magento
+requires:
+- host: linux
+options:
+  "admin_frontname":
+    type: string
+    default: admin
+  "firstname":
+    type: string
+    default: Admin
+  "lastname":
+    type: string
+    default: User
+  "email":
+    type: string
+    required: true
+  "username":
+    type: string
+    default: MagentoAdmin
+    required: true
+  "password":
+    type: string
+    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    required: true
+  "demo":
+    type: boolean
+    default: true
+    required: true
+  "newrelic":
+    type: boolean
+    default: false
+    required: true
+  "database_username":
+    type: string
+    default: magento_user
+    required: true
+  "database_password":
+    type: string
+    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    required: true
+#  "database_privileges":
+#    type: string
+#    default: all
+#    required: true
+  "database_prefix":
+    type: string
+    default: magento_
+run-list:
+  recipes:
+  - magentostack::redis_single
+  - magentostack::redis_single_slave
+  - magentostack::redis_sentinel
+  - magentostack::redis_configure
+  - magentostack::mysql_master
+  - magentostack::mysql_holland
+  - magentostack::apache-fpm
+  - magentostack::magento
+maps:
+- value: {{ setting('demo') }}
+  targets:
+  - attributes://magentostack/demo/enabled
+- value: {{ setting('newrelic') }}
+  targets:
+  - attributes://magentostack/newrelic/application_monitoring/php/enabled
+- value: {{ setting('admin_frontname') }}
+  targets:
+  - attributes://magentostack/config/admin_frontname
+- value: {{ setting('firstname') }}
+  targets:
+  - attributes://magentostack/config/admin_user/firstname
+- value: {{ setting('lastname') }}
+  targets:
+  - attributes://magentostack/config/admin_user/lastname
+- value: {{ setting('email') }}
+  targets:
+  - attributes://magentostack/config/admin_user/email
+- value: {{ setting('username') }}
+  targets:
+  - attributes://magentostack/config/admin_user/username
+  - outputs://instance:{{resource.index}}/instance/interfaces/magento/username
+- value: {{ setting('password') }}
+  targets:
+  - attributes://magentostack/config/admin_user/password/
+  - outputs://instance:{{resource.index}}/instance/interfaces/magento/password
+- value: {{ setting('database_username') }}
+  targets:
+  - attributes://magentostack/mysql/databases/magento_database/mysql_user
+  - outputs://instance:{{resource.index}}/instance/interfaces/mysql/magento/username
+- value: {{ setting('database_password') }}
+  targets:
+  - attributes://magentostack/mysql/databases/magento_database/mysql_password
+  - outputs://instance:{{resource.index}}/instance/interfaces/mysql/magento/password
+- value: "all"
+  targets:
+  - attributes://magentostack/mysql/databases/magento_database/privileges
+output:
+  'instance:{{resource.index}}':
+    instance:
+      interfaces:
+        magento:
+          username: {{setting('username')}}
+          password: {{setting('password')}}
+        mysql:
+          magento:
+            password: {{setting('database_password')}}
+            username: {{setting('database_username')}}
+            # note host is written as output of a map
