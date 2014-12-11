@@ -18,4 +18,10 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::newrelic' # ~RACK002
+# Need to update setuptools for the newrelic plugin to install
+include_recipe 'python::pip'
+python_pip 'setuptools' do
+  action :upgrade
+end
+
+include_recipe 'stack_commons::newrelic'

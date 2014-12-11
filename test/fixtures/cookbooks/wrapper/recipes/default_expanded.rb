@@ -23,6 +23,7 @@
   magentostack::mysql_holland
   magentostack::apache-fpm
   magentostack::magento
+  magentostack::newrelic
 ).each do |recipe|
   include_recipe recipe
 end
