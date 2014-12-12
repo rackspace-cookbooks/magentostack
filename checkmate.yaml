@@ -1,0 +1,481 @@
+blueprint:
+  id: 8363F2D2284D4871BC618E92D152994F
+  name: "magentostack-single"
+  description: "Magento Community Edition installed on a single Cloud Server"
+  version: 1.0.0
+  services:
+    magento:
+      component:
+        name: magentostack
+        type: application
+        role: master
+      constraints:
+      - count: 1
+  options:
+    # Deployment Options
+    region:
+      label: Region
+      type: string
+      required: true
+      default: ORD
+      display-hints:
+        group: deployment
+        list-type: region
+        choice:
+        - DFW
+        - ORD
+        - LON
+        - SYD
+        - IAD
+        - HKG
+      constrains:
+      - setting: region
+        provider: load-balancer
+    # Application Options
+    url:
+      label: Site Address
+      description: 'The address you wish to host your site on.'
+      help: |
+        Required: The domain used is required for site configuration. You may
+        need to set modify your hosts file if you intend on pointing DNS over
+        at a later date.
+      type: url
+      required: true
+      default: http://magento.example.com/
+      display-hints:
+        group: application
+        order: 1
+        default-protocol: http
+        sample: http://magento.example.com/
+      constraints:
+      - protocols: [http]
+        message: protocols are limited to http or https
+      - regex: '^([a-zA-Z]{2,}?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$'
+        message: must be a valid web address
+      constrains:
+      - setting: domain
+        service: magento
+        attribute: hostname
+      - resource_type: application
+        service: magento
+        setting: ssl_intermediate_key
+        attribute: intermediate_key
+      - setting: ssl_private_key
+        service: magento
+        resource_type: application
+        attribute: private_key
+      - setting: ssl_certificate
+        service: magento
+        resource_type: application
+        attribute: certificate
+#    version:
+#      label: Magento Version
+#      help: |
+#        Required: Version of Magento Community Edition to install. If this
+#        deployment is part of a migration, select the version you are currently
+#        using.
+#      required: true
+#      type: string
+#      default: 1.7.0.2
+#      display-hints:
+#        group: application
+#        order: 2
+#        choice:
+#        - name: 1.7.0.2
+#          value: 1.7.0.2
+#        - name: 1.8.1.0
+#          value: 1.8.1.0
+#      constrains:
+#      - setting: version
+#        service: magento
+#      constraints:
+#      - in: ["1.7.0.2", "1.8.1.0"]
+#        message: unsupported version
+    terms:
+      label: Agree to Terms
+      description: You must agree to the Magento Community Edition License.
+      type: boolean
+      help: |
+        Required: You must agree to the Magento Community Edition License which
+        can be found here: http://opensource.org/licenses/osl-3.0.php
+      required: true
+      display-hints:
+        group: application
+        order: 3
+      constrains:
+      - setting: terms
+        service: magento
+#    sampledata:
+#      label: Install Sample Data
+#      description: Determine whether or not to provide sample data
+#      type: boolean
+#      help: |
+#        Optional: If selected, this will install sample data into your Magento
+#        deployment.
+#      display-hints:
+#        group: application
+#        order: 9
+#      constrains:
+#      - setting: sampledata
+#        service: magento
+    username:
+      label: Admin Username
+      type: string
+      description: |
+        The user name to use for Magento and the deployment servers and
+        database.
+      help: |
+        Required: This will be the administrative user for your Magento
+        deployment.
+      required: true
+      default: MagentoAdmin
+      display-hints:
+        group: application
+        order: 4
+      constrains:
+      - setting: resources/magento user/name
+      constraints:
+      - regex: '^([a-zA-Z0-9]{1,16})$'
+        message: must be an alpha numeric string with fewer than 16 characters
+    password:
+      label: Admin Password
+      type: password
+      description: Password to use to administer your Magento site.
+      default: '=generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])'
+      help: |
+        Optional: Password provided must be between 8 and 255 characters in
+        length.  If no password is provided, one will be generated for you.
+      display-hints:
+        group: application
+        order: 5
+      constraints:
+      - regex: '^((.){8,255})?$'
+        message: must be between 8 and 255 characters long if provided
+      constrains:
+      - setting: resources/magento user/password
+    email:
+      label: Admin Email
+      type: string
+      description: The email address for the Magento admin user.
+      help: |
+        Required: This is the email address for the admin user for the Magento
+        site.  This value is required for configuring Magento.
+      required: true
+      display-hints:
+        group: application
+        order: 6
+      constraints:
+      - regex: "^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:[.][A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?[.])+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$"
+        message: must be a valid email address
+      constrains:
+      - setting: email
+        service: magento
+        resource_type: application
+    firstname:
+      label: First Name
+      type: string
+      description: First name for Magento admin user.
+      help: |
+        Required: This is the first name of the Magento admin user.  This value
+        is required for configuring Magento.
+      required: true
+      display-hints:
+        group: application
+        order: 7
+      constrains:
+      - setting: firstname
+        service: magento
+        resource_type: application
+      constraints:
+      - regex: '^([a-z0-9A-Z._-]{1,32})$'
+        message: must be alpha numeric string with fewer than 32 characters
+    lastname:
+      label: Last Name
+      type: string
+      description: Last name for Magento admin user.
+      help: |
+        Required: This is the last name for the Magento admin user.  This value
+        is required for configuring Magento.
+      required: true
+      display-hints:
+        group: application
+        order: 8
+      constrains:
+      - setting: lastname
+        service: magento
+        resource_type: application
+      constraints:
+      - regex: '^([a-z0-9A-Z._-]{1,32})$'
+        message: must be alpha numeric string with fewer than 32 characters
+    os:
+      label: Operating System
+      type: string
+      description: The operating system for all the servers.
+      default: Ubuntu 12.04
+      display-hints:
+        group: server
+        order: 1
+        list-type: compute.os
+        choice:
+        - name: "Ubuntu 12.04 LTS (Precise Pangolin)"
+          value: Ubuntu 12.04
+      constraints:
+      - in: ["Ubuntu 12.04"]
+        message: unsupported operating system
+      constrains:
+      - setting: os
+        resource_type: compute
+        service: magento
+    server_size:
+      label: Server Size
+      type: integer
+      default: 4096
+      description: The size of the Magento server instances in MB of RAM.
+      help: |
+        Server sizes are based on amount of RAM allocated to the system. Disk
+        space will be dependent on server flavors available in the region
+        selected. By default, we will build the best performing server
+        available.
+      display-hints:
+        group: server
+        order: 2
+        list-type: compute.memory
+        choice:
+        - name: 4 GB
+          value: 4096
+        - name: 8 GB
+          value: 8192
+        - name: 15 GB
+          value: 15360
+        - name: 30 GB
+          value: 30720
+        - name: 60 GB
+          value: 61440
+      constrains:
+      - setting: memory
+        service: magento
+        resource_type: compute
+      constraints:
+      - greater-than-or-equal-to: 4096
+        message: must be 4096 or larger
+      - less-than-or-equal-to: 61440
+        message: must be 61440 or smaller
+  resources:
+    "magento user":
+      type: user
+      constrains:
+      - setting: username
+        service: magento
+        resource_type: application
+        attribute: name
+      - setting: password
+        service: magento
+        resource_type: application
+        attribute: password
+    "db user":
+      type: user
+      name: magentouser
+      constrains:
+      - setting: database_username
+        service: magento
+        resource_type: application
+        attribute: name
+      - setting: database_password
+        service: magento
+        resource_type: application
+        attribute: password
+#    "encryption key":
+#      type: user
+#      constrains:
+#      - setting: magento_encryption_key
+#        service: magento
+#        attribute: password
+#        resource_type: application
+    "root":
+      type: user
+      constrains:
+      - setting: database_root_password
+        service: magento
+        attribute: password
+        resource_type: application
+  meta-data:
+    schema-version: v0.7
+    blueprint-type: Application
+    application-name: Magento
+    flavor: |
+      Single Linux server with Magento Community Edition and MySQL 5.5
+    flavor-weight: 1
+    heat-info:
+      porting: true
+      template-url: https://github.com/rackspace-orchestration-templates/magento-single
+    reach-info:
+      option-groups:
+      - application: Magento Options
+      - server: Server Options
+      - database: Database Options
+      tattoo: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-tattoo.png
+      icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
+  documentation:
+    abstract: |
+      Single Linux server with [Magento Community
+      Edition](http://www.magentocommerce.com/product/community-edition/)
+      installed with [nginx](http://nginx.org/en/), [PHP
+      FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
+
+      This deployment is intended for simple test cases and low traffic
+      scenarios.  It is not for high traffic events and is not easily scalable.
+    instructions: |
+      #### Getting Started
+      If you're new to Magento Community Edition, the [Magento User
+      Guide](http://www.magentocommerce.com/resources/user-guide-download)
+      will step you through the process of configuring and managing your store.
+      This guide is free, but does require you to provide a valid email address
+      to receive it.
+
+      The [Magento Forum](http://www.magentocommerce.com/boards/) provides a
+      place to get answers to both simple and advanced questions regarding
+      configuration and management of Magento Community Edition.
+
+      #### Logging into Magento
+      To login, go to the URL listed above in a browser. If your DNS is not
+      pointing to this installation, you can add a line in your [hosts
+      file](http://www.rackspace.com/knowledge_center/article/how-do-i-modify-my-hosts-file)
+      to point your domain to the IP of this Cloud Server. Once you've done
+      this, restart your browser and navigate to the site. The backend can be
+      accessed by adding '/admin' to the end of the URL, and you can login with
+      the credentials provided above.
+
+      #### Logging in via SSH
+      The private key provided in the passwords section can be used to login as
+      root via SSH.  We have an article on how to use these keys with [Mac OS X
+      and Linux](http://www.rackspace.com/knowledge_center/article/logging-in-with-a-ssh-private-key-on-linuxmac)
+      as well as [Windows using
+      PuTTY](http://www.rackspace.com/knowledge_center/article/logging-in-with-a-ssh-private-key-on-windows).
+
+      #### Details of Your Setup
+      This deployment was stood up using
+      [chef-solo](http://docs.opscode.com/chef_solo.html).  Once the deployment
+      is up, chef will not run again, so it is safe to modify configurations.
+
+      A system user named 'magento' has been created.  This user does not have
+      a password set, so if you wish to use the account, a password will need to
+      be set.  This account is the system user for PHP-FPM, so deletion of this
+      user will take eCommerce site down.
+
+      [Nginx](http://nginx.org/en/) is used as the web server and listens on
+      port 8080 and 443 to handle web traffic. The configuration for your site
+      can be found in /etc/nginx/sites-enabled. There will be a default site
+      configuration, and a seperate one for SSL traffic. Magento itself is
+      installed in /var/www/vhosts. You will find a directory with the name of
+      website you entered as a part of this deployment. The SSL certificates
+      used are self signed and were generated when this deployment was created.
+      You can replace the private key and certificate by overwriting the ones in
+      /etc/nginx/ssl.
+
+      [PHP-FPM](http://php.net/manual/en/install.fpm.php) is used to handle
+      evaluation of all PHP-based pages. The configuration for this
+      installation is in /etc/php5/fpm/pools/magento.conf. By default, PHP-FPM
+      is running as the 'magento' user, listens on 127.0.0.1:9001.
+
+      [Varnish](https://www.varnish-cache.org/) is listening on port 80, and
+      will handle all HTTP traffic. Varnish provides a caching layer to serve
+      static content directly from memory. Anything that is not in cache will
+      be passed onto Nginx. Varnish will greatly improve your site's
+      performance, especially as traffic grows.  We leverage the VCL provided by
+      the Magento PageCache module.  The configuration file is
+      /etc/varnish/default.vcl.
+
+      Object and session caching are handled by
+      [Memcached](http://www.memcached.org/).  Memcache helps performance by
+      storing data in memory for faster responses to clients. These caches help
+      lessen the number of queries required to the database.  There are two
+      seperate instances of Memcached running to ensure session and object
+      caching are handled seperately.  The session cache is listening on
+      127.0.0.1:11211, and is set as a 512MB cache.  The object cache is
+      listening on 127.0.0.1:11212, and it is set as a 1.5GB cache.  The
+      configuration files are memcached_sessions.conf and memcached_backend.conf
+      in /etc.
+
+      [MySQL 5.5](http://www.mysql.com/) is installed as the database backend.
+      All configuration with Magento has been handled as a part of the setup.
+      The MySQL root password is provided as a part of this deployment.  If you
+      lose or forget the password, it can also be found in /root/.my.cnf.
+
+      MySQL backups are performed nightly by
+      [Holland](https://github.com/holland-backup/holland).  Backups can be
+      found in /var/lib/mysqlbackup.
+
+      #### Magento Plugins
+      There are thousands of plugins that have been developed for Magento by the
+      developer community. [Magento
+      Connect](http://www.magentocommerce.com/magento-connect/) provides an easy
+      way to discover popular plugins that other users have found to be helpful.
+      Not all plugins are free, and we recommend only installing the plugins
+      that you need.
+
+      #### Additional Notes
+      There is not an automatic way to add additional nodes to this deployment.
+      This deployment is meant for lower traffic or testing scenarios.
+  display-outputs:
+    "Site Address":
+      type: url
+      source: options://url
+      extra-sources:
+        ipv4: "services://lb/interfaces/vip/ip_address"
+      order: 1
+      group: application
+    "Admin Username":
+      type: string
+      source: resources://magento user/instance/name
+      order: 2
+      group: application
+    "Admin Password":
+      type: password
+      source: resources://magento user/instance/password
+      order: 3
+      group: application
+      is-secret: true
+#    "Magento Encryption Key":
+#      type: password
+#      order: 4
+#      group: application
+#      is-secret: true
+#      source: resources://encryption key/instance/password
+    "MySQL Root Password":
+      type: password
+      order: 5
+      group: application
+      is-secret: true
+      source: resources://root/instance/password
+    "Private Key":
+      type: private-key
+      source: "resources://deployment-keys/instance/private_key"
+      order: 6
+      group: application
+      is-secret: true
+environment:
+  description: This environment uses next-gen cloud servers.
+  name: Next-Gen Open Cloud
+  providers:
+    chef-server:
+      vendor: opscode # This should be chef now since the company is "Chef Software, Inc.
+      constraints:
+      - source: %repo_url%
+      - bootstrap-version: "11.16.4-1"
+    load-balancer: {}
+    nova: {}
+    common:
+      vendor: rackspace
+inputs:
+  blueprint:
+    url: http://magento.cldsrvr.com/
+    version: 1.7.0.2
+    region: IAD
+    terms: true
+    sampledata: false
+    server_size: 4096
+    username: "MagentoAdmin"
+    password: "Mag!345678"
+    email: "chkmate@example.com"
+    firstname: "Test"
+    lastname: "Deployment"
