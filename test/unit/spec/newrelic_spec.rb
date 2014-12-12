@@ -7,7 +7,6 @@ describe 'magentostack::newrelic' do
   supported_platforms.each do |platform, versions|
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
-
         let(:chef_run) do
           ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
             node_resources(node)
@@ -17,7 +16,6 @@ describe 'magentostack::newrelic' do
         it 'includes recipes' do
           expect(chef_run).to include_recipe('stack_commons::newrelic')
         end
-
       end
     end
   end
