@@ -16,6 +16,7 @@
   magentostack::mysql_master
   magentostack::mysql_holland
   magentostack::apache-fpm
+  magentostack::newrelic
   magentostack::magento
 ).each do |recipe|
   include_recipe recipe
