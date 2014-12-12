@@ -1,11 +1,14 @@
 ---
 id: magentostack
+roles: [master]
 is: application
 provides:
 - application: magento
 requires:
 - host: linux
 options:
+  "url":
+    type: url
   "admin_frontname":
     type: string
     default: admin
@@ -60,6 +63,9 @@ run-list:
   - magentostack::apache-fpm
   - magentostack::magento
 maps:
+- value: {{ parse_url(setting('url')).hostname }}
+  targets:
+  - attributes://magentostack/web/domain
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
@@ -81,31 +87,37 @@ maps:
 - value: {{ setting('username') }}
   targets:
   - attributes://magentostack/config/admin_user/username
-  - outputs://instance:{{resource.index}}/instance/interfaces/magento/username
+  - outputs://resources/{{resource.index}}/instance/interfaces/magento/username
 - value: {{ setting('password') }}
   targets:
   - attributes://magentostack/config/admin_user/password/
-  - outputs://instance:{{resource.index}}/instance/interfaces/magento/password
+  - outputs://resources/{{resource.index}}/instance/interfaces/magento/password
+# Database Setup (Values required by MySQL cookbook)
 - value: {{ setting('database_username') }}
   targets:
   - attributes://magentostack/mysql/databases/magento_database/mysql_user
-  - outputs://instance:{{resource.index}}/instance/interfaces/mysql/magento/username
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/username
 - value: {{ setting('database_password') }}
   targets:
   - attributes://magentostack/mysql/databases/magento_database/mysql_password
-  - outputs://instance:{{resource.index}}/instance/interfaces/mysql/magento/password
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
+- value: {{ setting('database_root_password') }}
+  targets:
+  - attributes://mysql/server_root_password
 - value: "all"
   targets:
   - attributes://magentostack/mysql/databases/magento_database/privileges
 output:
-  'instance:{{resource.index}}':
-    instance:
-      interfaces:
-        magento:
-          username: {{setting('username')}}
-          password: {{setting('password')}}
-        mysql:
+  resources:
+    {{resource.index}}:
+      instance:
+        interfaces:
           magento:
-            password: {{setting('database_password')}}
-            username: {{setting('database_username')}}
-            # note host is written as output of a map
+            username: {{setting('username')}}
+            password: {{setting('password')}}
+          mysql:
+            server_root_password: {{ setting('database_root_password') }}
+            magento:
+              password: {{setting('database_password')}}
+              username: {{setting('database_username')}}
+              # note host is written as output of a map
