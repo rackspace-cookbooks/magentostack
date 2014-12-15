@@ -56,7 +56,7 @@ def stub_environments(server)
 end
 
 def fixture_files(file_path)
-  File.read(File.join('test', 'unit', 'spec', 'fixtures', 'files', file_path))
+  File.read(File.join('test', 'fixtures', 'files', file_path))
 end
 
 at_exit { ChefSpec::Coverage.report! }
