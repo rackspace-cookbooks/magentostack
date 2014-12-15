@@ -22,12 +22,6 @@ provisioner:
     mysql-multi:
       master: '127.0.0.1'
       bind_ip: '0.0.0.0'
-    magentostack:
-      web:
-        domain: 'localhost'
-      config:
-        secure_base_url: 'https://localhost:443/'
-        url: 'http://localhost:80/'
 
 platforms:
   # Leaving Ubuntu out until Phase 2

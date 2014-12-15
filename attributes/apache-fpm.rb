@@ -3,7 +3,7 @@
 # default['apache']['mod_fastcgi']['download_url'] = 'http://www.fastcgi.com/dist/mod_fastcgi-SNAP-0910052141.tar.gz'
 
 # Configure default Magento Vhosts
-default['magentostack']['web']['domain'] = 'mymagento.com'
+default['magentostack']['web']['domain'] = 'localhost'
 default['magentostack']['web']['http_port'] = '80'
 default['magentostack']['web']['https_port'] = '443'
 default['magentostack']['web']['server_aliases'] = node['fqdn']

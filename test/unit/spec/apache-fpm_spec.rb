@@ -42,8 +42,24 @@ describe 'magentostack::apache-fpm' do
         shared_examples_for 'magento vhosts' do |vhost_path, platform_family|
           it 'configures a vhost for magento' do
             platform_family = 'ubuntu_14' if platform_family == 'debian' && property[:platform_version] == '14.04'
-            expect(chef_run).to render_file("#{vhost_path}/default.conf").with_content(fixture_files("magento_vhost_#{platform_family}"))
-            expect(chef_run).to render_file("#{vhost_path}/ssl.conf").with_content(fixture_files("magento_vhost_ssl_#{platform_family}"))
+
+            defaultconf = [
+              'VirtualHost *:80',
+              'ServerName localhost',
+              'DocumentRoot /var/www/html/magento'
+            ]
+            defaultconf.each do |line|
+              expect(chef_run).to render_file("#{vhost_path}/default.conf").with_content(line)
+            end
+
+            sslconf = [
+              'SSLEngine on',
+              'SSLCertificateFile /etc/httpd/ssl/localhost.pem',
+              'SSLCertificateKeyFile /etc/httpd/ssl/localhost.key'
+            ]
+            sslconf.each do |line|
+              expect(chef_run).to render_file("#{vhost_path}/ssl.conf").with_content(line)
+            end
           end
         end
 

@@ -33,7 +33,7 @@ node.default['magentostack']['config']['secure_base_url'] = "https://#{node['mag
 
 # ensure they asked for a valid install method
 install_method = node['magentostack']['install_method']
-unless %w(ark http none).include? install_method
+unless %w(ark cloudfiles none).include? install_method
   fail "You have specified to install magento with method #{install_method}, which is not valid."
 end
 

@@ -18,6 +18,10 @@
 # limitations under the License.
 #
 
+# ensure these run at compile
+default['build-essential']['compile_time'] = true
+default['xml']['compiletime'] = true
+
 # Stack_commons configuration attributes
 # should not be changed
 default['stack_commons']['stackname'] = 'magentostack'
