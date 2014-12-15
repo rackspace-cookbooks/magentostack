@@ -6,7 +6,7 @@ blueprint:
   services:
     magento:
       component:
-        name: magentostack
+        name: magento
         type: application
         role: master
       constraints:
