@@ -40,6 +40,8 @@ end
 include_recipe 'magentostack::_magento_ark' if node['magentostack']['install_method'] == 'ark'
 include_recipe 'magentostack::_magento_cloudfiles' if node['magentostack']['install_method'] == 'cloudfiles'
 
+include_recipe 'magentostack::_magento_redis'
+
 # Run install.php script for initial magento setup
 # Configure all the things
 database_name = node['magentostack']['mysql']['databases'].keys[0]
