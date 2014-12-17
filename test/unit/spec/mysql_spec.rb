@@ -5,18 +5,6 @@ describe 'magentostack::mysql' do
   supported_platforms.each do |platform, versions|
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
-        context 'for mysql_base' do
-          let(:chef_run) do
-            ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
-              node_resources(node)
-            end.converge('magentostack::mysql_base')
-          end
-
-          it 'includes stack_commons recipe' do
-            expect(chef_run).to include_recipe('stack_commons::mysql_base')
-          end
-        end
-
         context 'for mysql_master' do
           let(:chef_run) do
             ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
