@@ -27,3 +27,4 @@ node.set['magentostack']['redis']['servers'][server_name] = { 'name' => server_n
 tag('magentostack_redis')
 tag('magentostack_redis_session')
 MagentostackUtil.recompute_redis(node)
+node.save unless Chef::Config[:solo] # make me searchable right away!

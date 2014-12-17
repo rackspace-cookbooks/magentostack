@@ -38,9 +38,26 @@ xml_edit 'set session_store to db in ./app/etc/local.xml' do
   action :append_if_missing # because the whole section doesn't exist by default
 end
 
-master_name, master_ip, master_port = MagentostackUtil.redis_find_masters(node) do |name, data|
+# find a master to watch
+master_name, master_ip, master_port = nil, nil, nil
+
+session_master_name, session_master_ip, session_master_port = MagentostackUtil.redis_find_masters(node) do |name, data|
   name.include?('-session-master') && !name.include?('slave')
 end
+single_master_name, single_master_ip, single_master_port = MagentostackUtil.redis_find_masters(node) do |name, data|
+  name.include?('-single-master') && !name.include?('slave')
+end
+
+# prefer session master over single master, for sentinel monitoring
+if session_master_name && session_master_ip && session_master_port
+  master_name, master_ip, master_port = session_master_name, session_master_ip, session_master_port
+elsif single_master_name && single_master_ip && single_master_port
+  master_name, master_ip, master_port = single_master_name, single_master_ip, single_master_port
+else
+  Chef::Log.warn('Did not find any single master or session master redis instances to monitor with sentinel, not proceeding')
+  return
+end
+
 
 fail 'Could not locate a master redis node' unless master_name && master_ip && master_port
 
