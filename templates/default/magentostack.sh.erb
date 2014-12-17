@@ -23,7 +23,7 @@ php -f install.php -- \
 --admin_username "<%= node['magentostack']['config']['admin_user']['username'] %>" \
 --admin_password "<%= node['magentostack']['config']['admin_user']['password'] %>" \
 --encryption_key "<%= node['magentostack']['config']['encryption_key'] %>" \
---skip_url_validation && touch <%= @magento_configured_file %>
+--skip_url_validation && touch <%= @magento_configured_file %> || /bin/true
 exit $?
 
 # don't add commands here, we want to exit with the same status of install.php's run

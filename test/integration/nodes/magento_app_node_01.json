@@ -5,11 +5,11 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
-      "magentostack::magento"
+      "magentostack::magento_configure"
     ],
     "roles": [
     ],
-    "ipaddress": "127.0.0.1"
+    "ipaddress": "127.1.2.3"
   },
   "tags": [
     "magento_app_node"

@@ -67,21 +67,6 @@ apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore
   - formats /dev/xvde1 and will prepare it for the mysql datadir.
   - creates the mysql user and manages the /var/lib/mysql mountpoint
 
-### mysql_base
-- what it does
-  - sets a random root mysql password if the default password would normally be set
-  - sets up mysql
-  - sets up a holland user if `node['holland']['enabled']`
-  - sets up a monitoring mysql user and monitor if `node['platformstack']['cloud_monitoring']['enabled']`
-  - allow app nodes in the environment to attempt to connect
-  - auto-generates mysql databases and assiciated users/passwords for sites installed (can be disabled)
-  - installs magentostack specific databases (will autogenerate the user and password if needed still)
-- toggles
-  -  `node['magentostack']['db-autocreate']['enabled']` controls database autocreation at a global level
-  -  if the site has the `db_autocreate` attribute, it will control database autocreation for that site
-- info
-  - auto-generated databases are based on site name and port number the site is on, same for username
-
 ### mysql_holland
 -  what it does
   -  installs holland
@@ -247,7 +232,7 @@ shouldn't really be messed with
     "run_list": [
       "recipe[platformstack::default]",
       "recipe[rackops_rolebook::default]",
-      "recipe[magentostack::mysql_base]"
+      "recipe[magentostack::mysql_master]"
     ]
 }
 ```

@@ -4,6 +4,29 @@
 #  within this library.
 # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
 module MagentostackUtil
+  def self.best_redis_session_master(current_node)
+    # find a master to watch
+    master_name, master_ip, master_port = nil, nil, nil
+
+    session_master_name, session_master_ip, session_master_port = MagentostackUtil.redis_find_masters(current_node) do |name, data|
+      name.include?('-session-master') && !name.include?('slave')
+    end
+    single_master_name, single_master_ip, single_master_port = MagentostackUtil.redis_find_masters(current_node) do |name, data|
+      name.include?('-single-master') && !name.include?('slave')
+    end
+
+    # prefer session master over single master, for sentinel monitoring
+    if session_master_name && session_master_ip && session_master_port
+      master_name, master_ip, master_port = session_master_name, session_master_ip, session_master_port
+    elsif single_master_name && single_master_ip && single_master_port
+      master_name, master_ip, master_port = single_master_name, single_master_ip, single_master_port
+    else
+      Chef::Log.warn('Did not find any single master or session master redis instances to monitor with sentinel, not proceeding')
+    end
+
+    return master_name, master_ip, master_port
+  end
+
   # Determine each required iptables rule and call my_proc on it, considering
   # any slaves or sentinels that must connect inbound to this node
   def self.build_iptables(current_node, &my_proc)

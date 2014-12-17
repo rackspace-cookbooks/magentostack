@@ -2,7 +2,7 @@
 
 require_relative 'spec_helper'
 
-describe 'magentostack::magento' do
+describe 'magentostack::magento recipes' do
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|
@@ -18,7 +18,7 @@ describe 'magentostack::magento' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-          end.converge(described_recipe)
+          end.converge('magentostack::magento_install', 'magentostack::magento_configure')
         end
 
         it 'includes mysql-multi::_find_master' do

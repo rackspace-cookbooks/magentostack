@@ -19,11 +19,12 @@
   magentostack::redis_session_slave
   magentostack::redis_sentinel
   magentostack::redis_configure
+  magentostack::apache-fpm
+  magentostack::magento_install
   magentostack::mysql_master
   magentostack::mysql_holland
-  magentostack::apache-fpm
   magentostack::newrelic
-  magentostack::magento
+  magentostack::magento_configure
 ).each do |recipe|
   include_recipe recipe
 end
