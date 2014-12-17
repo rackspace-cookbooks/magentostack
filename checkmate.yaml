@@ -12,6 +12,51 @@ blueprint:
       constraints:
       - count: 1
   options:
+
+
+    chef-server-username:
+      constrains:
+        - setting: server-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 2
+      type: string
+    validator-username:
+      constrains:
+        - setting: validator-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 5
+      type: string
+    chef-server-url:
+      constrains:
+        - setting: server-url
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 1
+      type: url
+      label: Chef Server Org URL
+    chef-server-user-key:
+      constrains:
+        - setting: server-user-key
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 3
+      type: text
+    validator-pem:
+      constrains:
+        - setting: validator-pem
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 4
+      type: text
+
+
     # Deployment Options
     region:
       label: Region
@@ -211,16 +256,20 @@ blueprint:
       label: Operating System
       type: string
       description: The operating system for all the servers.
-      default: Ubuntu 12.04
+      default: CentOS 6.5
       display-hints:
         group: server
         order: 1
         list-type: compute.os
         choice:
+        - name: "CentOS 6.5"
+          value: CentOS 6.5
         - name: "Ubuntu 12.04 LTS (Precise Pangolin)"
           value: Ubuntu 12.04
+        - name: "Ubuntu 14.04 LTS (Trusty Tahr)"
+          value: Ubuntu 14.04
       constraints:
-      - in: ["Ubuntu 12.04"]
+      - in: ["Ubuntu 12.04", "CentOS 6.5", "Ubuntu 14.04"]
         message: unsupported operating system
       constrains:
       - setting: os
