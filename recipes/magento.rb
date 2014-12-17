@@ -68,3 +68,6 @@ execute setup_script do
   group node['apache']['group']
   not_if { File.exist?(magento_configured_file) }
 end
+
+# required for stack_commons::mysql_base to find the app nodes
+tag('magento_app_node')
