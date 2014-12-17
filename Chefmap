@@ -4,7 +4,7 @@ name: magento
 roles: [master]
 is: application
 provides:
-- application: magento
+- application: http
 requires:
 - host: linux
 options:
@@ -59,10 +59,12 @@ run-list:
   - magentostack::redis_single_slave
   - magentostack::redis_sentinel
   - magentostack::redis_configure
+  - magentostack::apache-fpm
+  - magentostack::magento_install
   - magentostack::mysql_master
   - magentostack::mysql_holland
-  - magentostack::apache-fpm
-  - magentostack::magento
+  - magentostack::newrelic
+  - magentostack::magento_configure
 maps:
 - value: {{ parse_url(setting('url')).hostname }}
   targets:
@@ -110,7 +112,7 @@ maps:
   - attributes://magentostack/mysql/databases/magento_database/privileges
 output:
   resources:
-    {{resource.index}}:
+    '{{resource.index}}':
       instance:
         interfaces:
           magento:
