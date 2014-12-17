@@ -5,7 +5,7 @@
   "automatic": {
     "hostname": "vagrant.vm",
     "recipes": [
-      "magentostack::magento"
+      "magentostack::magento_configure"
     ],
     "roles": [
     ],

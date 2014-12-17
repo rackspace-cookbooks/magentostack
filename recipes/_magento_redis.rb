@@ -18,6 +18,12 @@
 # limitations under the License.
 #
 
+master_name, master_ip, master_port = MagentostackUtil.best_redis_session_master(node)
+unless master_name && master_ip && master_port
+  Chef::Log.warn('Could not locate a master redis session node')
+  return
+end
+
 # we're going to do some dirty work here with XML files to configure redis
 include_recipe 'xmledit'
 
@@ -37,9 +43,6 @@ xml_edit 'set session_store to db in ./app/etc/local.xml' do
   fragment '<session_save><![CDATA[db]]></session_save>'
   action :append_if_missing # because the whole section doesn't exist by default
 end
-
-master_name, master_ip, master_port = MagentostackUtil.best_redis_session_master(node)
-fail 'Could not locate a master redis session node' unless master_name && master_ip && master_port
 
 redis_session_fragment = "<redis_session>
       <host>#{master_ip}</host>
