@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: magento
+# Recipe:: magento_configure
 #
 # Copyright 2014, Rackspace Hosting
 #
