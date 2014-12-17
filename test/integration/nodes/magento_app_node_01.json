@@ -9,7 +9,7 @@
     ],
     "roles": [
     ],
-    "ipaddress": "127.0.0.1"
+    "ipaddress": "127.1.2.3"
   },
   "tags": [
     "magento_app_node"

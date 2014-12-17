@@ -19,9 +19,6 @@ provisioner:
       server_debian_password: "randompass"
     holland:
       password: "randompass"
-    mysql-multi:
-      master: '127.0.0.1'
-      bind_ip: '0.0.0.0'
 
 platforms:
   # Leaving Ubuntu out until Phase 2

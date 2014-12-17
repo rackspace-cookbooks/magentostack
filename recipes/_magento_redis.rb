@@ -42,6 +42,8 @@ master_name, master_ip, master_port = MagentostackUtil.redis_find_masters(node) 
   name.include?('-session-master') && !name.include?('slave')
 end
 
+fail 'Could not locate a master redis node' unless master_name && master_ip && master_port
+
 redis_session_fragment = "<redis_session>
       <host>#{master_ip}</host>
       <port>#{master_port}</port>

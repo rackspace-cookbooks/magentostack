@@ -22,6 +22,7 @@
 begin
   include_recipe 'mysql-multi::_find_master'
   node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
+  Chef::Log.warn("Selected #{node['mysql-multi']['master']} as the mysql master IP to connect to")
 rescue
   Chef::Log.warn('Did not find a mysql master to use for magento. You may need to reconverge.')
 end
@@ -30,15 +31,6 @@ end
 node.default['magentostack']['config']['db']['port'] = node['mysql']['port']
 node.default['magentostack']['config']['url'] = "http://#{node['magentostack']['web']['domain']}/"
 node.default['magentostack']['config']['secure_base_url'] = "https://#{node['magentostack']['web']['domain']}/"
-
-# ensure they asked for a valid install method
-install_method = node['magentostack']['install_method']
-unless %w(ark cloudfiles none).include? install_method
-  fail "You have specified to install magento with method #{install_method}, which is not valid."
-end
-
-include_recipe 'magentostack::_magento_ark' if node['magentostack']['install_method'] == 'ark'
-include_recipe 'magentostack::_magento_cloudfiles' if node['magentostack']['install_method'] == 'cloudfiles'
 
 # Run install.php script for initial magento setup
 # Configure all the things
@@ -57,9 +49,9 @@ template setup_script do
   group node['apache']['group']
   mode '0700'
   variables(
-    database_name: database_name,
-    magento_configured_file: magento_configured_file
-    )
+  database_name: database_name,
+  magento_configured_file: magento_configured_file
+  )
 end
 
 execute setup_script do
@@ -70,6 +62,3 @@ execute setup_script do
 end
 
 include_recipe 'magentostack::_magento_redis'
-
-# required for stack_commons::mysql_base to find the app nodes
-tag('magento_app_node')
