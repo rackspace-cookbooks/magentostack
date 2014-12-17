@@ -58,7 +58,6 @@ else
   return
 end
 
-
 fail 'Could not locate a master redis node' unless master_name && master_ip && master_port
 
 redis_session_fragment = "<redis_session>
