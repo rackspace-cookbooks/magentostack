@@ -21,9 +21,10 @@ module MagentostackUtil
     elsif single_master_name && single_master_ip && single_master_port
       master_name, master_ip, master_port = single_master_name, single_master_ip, single_master_port
     else
-      Chef::Log.warn('Did not find any single master or session master redis instances to monitor with sentinel, not proceeding')
+      Chef::Log.warn('best_redis_session_master did not find any single master or session master redis instances to monitor with sentinel, not proceeding')
     end
 
+    Chef::Log.info("best_redis_session_master found best session master to be #{master_name}, #{master_ip}:#{master_port}")
     return master_name, master_ip, master_port
   end
 
@@ -61,14 +62,15 @@ module MagentostackUtil
   def self.redis_find_masters(current_node, &filter_proc)
     # find redis instances in the same chef environment
     redis_instances = MagentostackUtil.redis_discovery(current_node)
+    Chef::Log.debug("redis_find_masters found the following redis instances: #{redis_instances.join(',')}")
 
     # lookup their redis data structure
     found_instances = MagentostackUtil.servers_info(redis_instances, current_node)
 
     if found_instances && !found_instances.empty?
-      Chef::Log.debug("Master disco found the following instances: #{found_instances.keys.join(',')}")
+      Chef::Log.debug("redis_find_masters found the following redis data on those instances: #{found_instances.keys.join(',')}")
     else
-      Chef::Log.warn('Master disco not find any redis instances')
+      Chef::Log.info('redis_find_masters not find any redis instances')
       return
     end
 
@@ -78,9 +80,9 @@ module MagentostackUtil
     masters = found_instances.select(&filter_proc)
     if masters && !masters.empty?
       if masters.count > 1
-        Chef::Log.warn("Master disco found more than one redis instance: #{masters.keys.join(',')}")
+        Chef::Log.warn("redis_find_masters, after filtering, found more than one redis instance: #{masters.keys.join(',')}")
       else
-        Chef::Log.debug("Master disco found #{masters.count} masters: #{masters.keys.join(',')}")
+        Chef::Log.debug("redis_find_masters, after filtering, found #{masters.count} masters: #{masters.keys.join(',')}")
       end
       master_name, master_data = masters.first
       master_ip = MagentostackUtil.get_ip_by_name(master_name, current_node)
@@ -88,9 +90,9 @@ module MagentostackUtil
     end
 
     if master_name && master_ip && master_port
-      Chef::Log.info("Master disco chose #{master_name} (#{master_ip}:#{master_port}) ")
+      Chef::Log.debug("redis_find_masters, after filtering, chose #{master_name} (#{master_ip}:#{master_port}) ")
     else
-      Chef::Log.warn('Master disco did not find any instances, not proceeding')
+      Chef::Log.info('redis_find_masters, after filtering, did not find any instances, not proceeding')
     end
 
     return master_name, master_ip, master_port
@@ -109,14 +111,14 @@ module MagentostackUtil
 
     # use preset if it exists
     if preset_nodes
-      Chef::Log.info("Redis server discovery was already set to #{preset_nodes}")
+      Chef::Log.info("redis_discovery was already set to #{preset_nodes}")
       return preset_nodes
     end
 
     # if solo, just warn
     if Chef::Config[:solo]
       Chef::Log.warn('redis_cache_find recipe uses search if node[\'magentostack\'][\'redis\'][\'discovery\']  attribute is not set.')
-      Chef::Log.warn('Chef Solo does not support search.')
+      Chef::Log.warn('Chef Solo does not support search in redis_discovery.')
       return {}
     end
 
@@ -126,8 +128,7 @@ module MagentostackUtil
     Chef::Search::Query.new.search('node', query) { |o| redis_nodes << o }
 
     if redis_nodes.nil? || redis_nodes.count < 1
-      errmsg = 'Did not find any redis nodes in discovery, but none were set'
-      Chef::Log.warn(errmsg)
+      Chef::Log.warn('redis_discovery did not find any redis nodes in discovery, but none were set')
       redis_nodes = [] # so loop below exits
     end
 
@@ -146,10 +147,10 @@ module MagentostackUtil
         n['magentostack']['redis'][key_name].each do |redis_name, redis_instance|
           discovered_nodes[redis_name] = redis_instance
           n.set['magentostack']['redis'][key_name][redis_name]['best_ip_for'] = get_ip_by_name(n.name, current_node)
-          Chef::Log.debug("Discovery found node instance #{redis_name}:#{redis_instance}")
+          Chef::Log.debug("instance_info found node instance #{redis_name}:#{redis_instance}")
         end
       else
-        Chef::Log.warn("Found node #{n.name} but didn't see any data under its ['magentostack']['redis']['#{key_name}'] attribute")
+        Chef::Log.warn("instance_info found node #{n.name} but didn't see any data under its ['magentostack']['redis']['#{key_name}'] attribute")
       end
     end
 
@@ -188,13 +189,15 @@ module MagentostackUtil
   #  wanted something that accepted a string for the redis discovery.
   def self.get_ip_by_name(node_name, current_node)
     results = []
-    Chef::Search::Query.new.search(:node, "name:#{node_name}") { |o| results << o }
+    # the extra condition in the block below covers chef finding nodes with nested name keys that match
+    Chef::Search::Query.new.search(:node, "name:#{node_name}") { |o| results << o if node_name == o.name }
 
     if results.count < 1
       found = nil
     else
       found = Chef::Sugar::IP.best_ip_for(current_node, results.first)
     end
+    Chef::Log.debug("Found best ip for #{node_name} to be #{found}")
 
     found
   end
