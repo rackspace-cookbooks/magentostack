@@ -18,17 +18,6 @@
 # limitations under the License.
 #
 
-# search for Mysql node
-begin
-  include_recipe 'mysql-multi::_find_master'
-  node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
-  Chef::Log.warn("Selected #{node['mysql-multi']['master']} as the mysql master IP to connect to")
-rescue
-  Chef::Log.warn('Did not find a mysql master to use for magento. You may need to reconverge.')
-end
-
-# define computed attributes in the recipe
-node.default['magentostack']['config']['db']['port'] = node['mysql']['port']
 node.default['magentostack']['config']['url'] = "http://#{node['magentostack']['web']['domain']}/"
 node.default['magentostack']['config']['secure_base_url'] = "https://#{node['magentostack']['web']['domain']}/"
 

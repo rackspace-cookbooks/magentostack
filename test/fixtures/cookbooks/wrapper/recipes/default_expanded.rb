@@ -24,6 +24,7 @@
   magentostack::mysql_master
   magentostack::mysql_holland
   magentostack::newrelic
+  magentostack::_find_mysql
   magentostack::magento_configure
 ).each do |recipe|
   include_recipe recipe

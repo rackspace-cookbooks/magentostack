@@ -8,8 +8,8 @@ provides:
 requires:
 - host: linux
 options:
-  "url":
-    type: url
+  "domain":
+    type: string
   "admin_frontname":
     type: string
     default: admin
@@ -64,9 +64,10 @@ run-list:
   - magentostack::mysql_master
   - magentostack::mysql_holland
   - magentostack::newrelic
+  - magentostack::_find_mysql
   - magentostack::magento_configure
 maps:
-- value: {{ parse_url(setting('url')).hostname }}
+- value: {{ setting('domain') }}
   targets:
   - attributes://magentostack/web/domain
 - value: {{ setting('demo') }}
