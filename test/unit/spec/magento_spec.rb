@@ -18,7 +18,9 @@ describe 'magentostack::magento recipes' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-          end.converge('magentostack::magento_install', 'magentostack::magento_configure')
+          end.converge('magentostack::magento_install',
+                       'magentostack::_find_mysql',
+                       'magentostack::magento_configure')
         end
 
         it 'includes mysql-multi::_find_master' do
