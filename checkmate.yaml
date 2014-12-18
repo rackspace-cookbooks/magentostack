@@ -252,6 +252,19 @@ blueprint:
       constraints:
       - regex: '^([a-z0-9A-Z._-]{1,32})$'
         message: must be alpha numeric string with fewer than 32 characters
+    newrelic:
+      label: New Relic License
+      type: string
+      description: License key to enable New Relic
+      help: |
+        This is the license key from New Relic for your application.
+      display-hints:
+        group: application
+        order: 8
+      constrains:
+      - setting: newrelic
+        service: magento
+        resource_type: application
     os:
       label: Operating System
       type: string
