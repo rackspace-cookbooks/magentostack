@@ -22,6 +22,8 @@ options:
   "email":
     type: string
     required: true
+  "newrelic":
+    type: string
   "username":
     type: string
     default: MagentoAdmin
@@ -88,6 +90,9 @@ maps:
 - value: {{ setting('email') }}
   targets:
   - attributes://magentostack/config/admin_user/email
+- value: {{ setting('newrelic') }}
+  targets:
+  - attributes://newrelic/license
 - value: {{ setting('username') }}
   targets:
   - attributes://magentostack/config/admin_user/username
