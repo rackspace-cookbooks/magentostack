@@ -32,7 +32,9 @@ default['magentostack']['varnish']['backend_nodes'] = {}
 default['magentostack']['varnish']['multi'] = true
 
 # Toggle newrelic application monitoring
-default['magentostack']['newrelic']['application_monitoring']['php']['enabled'] = 'false'
+default['stack_commons']['application_monitoring']['php']['enabled'] = true
+# dirty hack to prevent stack_commons::newrelic to install php5.3 packages
+default['php']['packages'] = []
 
 # Apache-fpm
 ## there is a bug in mod_fastcgi, Magento <1.9 or EE <1.14 need this mod_fastcgi

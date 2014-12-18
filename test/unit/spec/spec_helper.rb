@@ -15,6 +15,9 @@ Dir['./test/unit/spec/support/**/*.rb'].sort.each { |f| require f }
 def node_resources(node)
   # for chefspec, so we don't have to converge elkstack
   node.default['elkstack']['config']['additional_logstash_templates'] = []
+  # newrelic
+  node.set['newrelic']['php_agent']['web_server']['service_name'] = 'stub_service'
+  node.set['newrelic']['license'] = 'aaaaaaaaaaaaaaaafffaaaaaaaaaaaaaaaaaaaaa'
 end
 
 # rubocop:disable Metrics/AbcSize

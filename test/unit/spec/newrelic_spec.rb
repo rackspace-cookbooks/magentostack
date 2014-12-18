@@ -15,6 +15,7 @@ describe 'magentostack::newrelic' do
 
         it 'includes recipes' do
           expect(chef_run).to include_recipe('stack_commons::newrelic')
+          expect(chef_run).to include_recipe('newrelic::php_agent')
         end
       end
     end
