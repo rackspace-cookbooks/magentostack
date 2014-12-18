@@ -64,6 +64,7 @@ run-list:
   - magentostack::mysql_master
   - magentostack::mysql_holland
   - magentostack::newrelic
+  - magentostack::_find_mysql
   - magentostack::magento_configure
 maps:
 - value: {{ setting('domain') }}
