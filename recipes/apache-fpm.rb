@@ -118,8 +118,8 @@ end
   end
 end
 
-# TODO: Clean this up to allow for dynamic port
-include_recipe "platformstack::iptables"
+# Open ports for Apache
+include_recipe 'platformstack::iptables'
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['http_port']} -j ACCEPT", 100, 'Allow access to apache')
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['https_port']} -j ACCEPT", 100, 'Allow access to apache')
 
