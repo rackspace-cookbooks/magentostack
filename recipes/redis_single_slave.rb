@@ -26,7 +26,7 @@ master_name, master_ip, master_port = MagentostackUtil.redis_find_masters(node) 
 end
 
 unless master_name && master_ip && master_port
-  Chef::Log.warn('Did not find a redis single master to configure a redis slave, not proceeding')
+  Chef::Log.warn('magentostack::redis_single_slave did not find a redis single master to configure a redis slave, not proceeding')
   return
 end
 

@@ -1,5 +1,5 @@
 {
-  "name": "magento_app_node_01",
+  "name": "magento_single_01",
   "chef_environment": "_default",
   "json_class": "Chef::Node",
   "automatic": {
@@ -9,10 +9,11 @@
     ],
     "roles": [
     ],
-    "ipaddress": "127.1.2.3"
+    "ipaddress": "127.0.0.1"
   },
   "tags": [
-    "magento_app_node"
+    "magento_app_node",
+    "magentostack_redis"
   ],
   "normal": {
   },
@@ -20,6 +21,16 @@
   "default": {
   },
   "override": {
+    "magentostack": {
+      "redis": {
+        "servers": {
+          "6379-single-master": {
+            "name": "6379-single-master",
+            "port": 6379
+          }
+        }
+      }
+    }
   },
   "run_list": [
     "recipe[magentostack::magento]"

@@ -20,11 +20,14 @@ module MagentostackUtil
       master_name, master_ip, master_port = session_master_name, session_master_ip, session_master_port
     elsif single_master_name && single_master_ip && single_master_port
       master_name, master_ip, master_port = single_master_name, single_master_ip, single_master_port
+    end
+
+    if master_name && master_ip && master_port
+      Chef::Log.info("best_redis_session_master found best session master to be #{master_name}, #{master_ip}:#{master_port}")
     else
       Chef::Log.warn('best_redis_session_master did not find any single master or session master redis instances to monitor with sentinel, not proceeding')
     end
 
-    Chef::Log.info("best_redis_session_master found best session master to be #{master_name}, #{master_ip}:#{master_port}")
     return master_name, master_ip, master_port
   end
 
@@ -41,7 +44,7 @@ module MagentostackUtil
     redis_nodes = redis_discovery(current_node)
 
     # get all my redis instances (sentinels don't receive connections, so ignore them)
-    local_redis_instances = servers_info([current_node], current_node)
+    local_redis_instances = redis_instance_info([current_node], current_node)
     local_redis_instances.each do |instance_name, instance_config|
       next unless instance_config['port']
       dest_port = instance_config['port']
@@ -62,13 +65,13 @@ module MagentostackUtil
   def self.redis_find_masters(current_node, &filter_proc)
     # find redis instances in the same chef environment
     redis_instances = MagentostackUtil.redis_discovery(current_node)
-    Chef::Log.debug("redis_find_masters found the following redis instances: #{redis_instances.join(',')}")
+    Chef::Log.debug("redis_find_masters found the following redis instances: #{redis_instances.join(', ')}")
 
     # lookup their redis data structure
-    found_instances = MagentostackUtil.servers_info(redis_instances, current_node)
+    found_instances = MagentostackUtil.redis_instance_info(redis_instances, current_node)
 
     if found_instances && !found_instances.empty?
-      Chef::Log.debug("redis_find_masters found the following redis data on those instances: #{found_instances.keys.join(',')}")
+      Chef::Log.debug("redis_find_masters found the following redis data on those instances: #{found_instances.keys.join(', ')}")
     else
       Chef::Log.info('redis_find_masters not find any redis instances')
       return
@@ -80,17 +83,19 @@ module MagentostackUtil
     masters = found_instances.select(&filter_proc)
     if masters && !masters.empty?
       if masters.count > 1
-        Chef::Log.warn("redis_find_masters, after filtering, found more than one redis instance: #{masters.keys.join(',')}")
+        Chef::Log.warn("redis_find_masters, after filtering, found more than one redis instance: #{masters.keys.join(', ')}")
       else
-        Chef::Log.debug("redis_find_masters, after filtering, found #{masters.count} masters: #{masters.keys.join(',')}")
+        Chef::Log.info("redis_find_masters, after filtering, found #{masters.count} masters: #{masters.keys.join(', ')}")
       end
       master_name, master_data = masters.first
-      master_ip = MagentostackUtil.get_ip_by_name(master_name, current_node)
+      master_ip = master_data['best_ip_for']
       master_port = master_data['port']
     end
 
     if master_name && master_ip && master_port
       Chef::Log.debug("redis_find_masters, after filtering, chose #{master_name} (#{master_ip}:#{master_port}) ")
+    elsif master_name || master_ip || master_port
+      Chef::Log.warn("redis_find_masters, after filtering, chose #{master_name} (#{master_ip}:#{master_port}) - but was missing name, ip or port. Please file a bug.")
     else
       Chef::Log.info('redis_find_masters, after filtering, did not find any instances, not proceeding')
     end
@@ -130,6 +135,8 @@ module MagentostackUtil
     if redis_nodes.nil? || redis_nodes.count < 1
       Chef::Log.warn('redis_discovery did not find any redis nodes in discovery, but none were set')
       redis_nodes = [] # so loop below exits
+    else
+      Chef::Log.debug("redis_discovery found nodes #{redis_nodes.join(', ')}")
     end
 
     return redis_nodes
@@ -145,9 +152,10 @@ module MagentostackUtil
       # n may not be a Chef::Node so we can't use node#deep_fetch from chef/sugar
       if n['magentostack'] && n['magentostack']['redis'] && n['magentostack']['redis'][key_name]
         n['magentostack']['redis'][key_name].each do |redis_name, redis_instance|
-          discovered_nodes[redis_name] = redis_instance
-          n.set['magentostack']['redis'][key_name][redis_name]['best_ip_for'] = get_ip_by_name(n.name, current_node)
-          Chef::Log.debug("instance_info found node instance #{redis_name}:#{redis_instance}")
+          found_data = redis_instance.to_hash
+          found_data['best_ip_for'] = get_ip_by_name(n.name, current_node)
+          discovered_nodes[redis_name] = found_data
+          Chef::Log.debug("instance_info found node instance #{redis_name} (#{redis_instance})")
         end
       else
         Chef::Log.warn("instance_info found node #{n.name} but didn't see any data under its ['magentostack']['redis']['#{key_name}'] attribute")
@@ -157,11 +165,11 @@ module MagentostackUtil
     return discovered_nodes
   end
 
-  def self.servers_info(redis_nodes, current_node)
+  def self.redis_instance_info(redis_nodes, current_node)
     instance_info(redis_nodes, current_node, 'servers')
   end
 
-  def self.sentinels_info(redis_nodes, current_node)
+  def self.sentinel_instance_info(redis_nodes, current_node)
     instance_info(redis_nodes, current_node, 'sentinels')
   end
 
@@ -180,6 +188,7 @@ module MagentostackUtil
     # we must save so that search works during the same chef run
     # or a sentinel will require 2 runs to converge
     current_node.save unless Chef::Config[:solo]
+    Chef::Log.info("recompute_redis computed #{current_node.keys.join(', ')} instances")
     redis_instances
   end
 
@@ -197,7 +206,7 @@ module MagentostackUtil
     else
       found = Chef::Sugar::IP.best_ip_for(current_node, results.first)
     end
-    Chef::Log.debug("Found best ip for #{node_name} to be #{found}")
+    Chef::Log.debug("best_ip_for #{node_name} to be #{found}")
 
     found
   end

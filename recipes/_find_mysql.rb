@@ -22,9 +22,9 @@
 begin
   include_recipe 'mysql-multi::_find_master'
   node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
-  Chef::Log.warn("Selected #{node['mysql-multi']['master']} as the mysql master IP to connect to")
+  Chef::Log.info("magentostack::_find_mysql selected #{node['mysql-multi']['master']} as the mysql master IP to connect to")
 rescue
-  Chef::Log.warn('Did not find a mysql master to use for magento. You may need to reconverge.')
+  Chef::Log.warn('magentostack::_find_mysql did not find a mysql master to use for magento. You may need to reconverge.')
 end
 
 # define computed attributes in the recipe

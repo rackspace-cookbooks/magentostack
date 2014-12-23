@@ -9,6 +9,7 @@ driver:
 
 provisioner:
   name: chef_zero
+  environments_path: test/integration/environments
   require_chef_omnibus: 11.16.4
   attributes:
     authorization:
@@ -36,9 +37,15 @@ platforms:
 
 suites:
   - name: default
+    provisioner:
+        client_rb:
+          environment: default_single
     run_list:
       - recipe[wrapper::default]
 
   - name: default-expanded
+    provisioner:
+        client_rb:
+          environment: default_expanded
     run_list:
       - recipe[wrapper::default_expanded]
