@@ -18,9 +18,13 @@
 # limitations under the License.
 #
 
-stackname = 'magentostack'
-
-default[stackname]['cloud_monitoring']['remote_http']['disabled'] = false
-default[stackname]['cloud_monitoring']['remote_http']['alarm'] = false
-default[stackname]['cloud_monitoring']['remote_http']['period'] = 60
-default[stackname]['cloud_monitoring']['remote_http']['timeout'] = 15
+# push to be sure we don't reset custom_monitors
+default['platformstack']['cloud_monitoring']['custom_monitors']['name'].push('custom_http')
+default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['source'] = 'cloud-monitoring/monitoring-remote-http.yaml.erb'
+default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['cookbook'] = 'magentostack'
+default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables'] = {
+  disabled: false,
+  alarm: false,
+  period: 60,
+  timeout: 15
+}
