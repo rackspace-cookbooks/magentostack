@@ -38,6 +38,9 @@ WordArray:
 UnusedBlockArgument:
   Enabled: false
 
+CyclomaticComplexity:
+  Max: 20
+
 AllCops:
   Include:
     - '**/metadata.rb'
