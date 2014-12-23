@@ -20,7 +20,7 @@
 
 master_name, master_ip, master_port = MagentostackUtil.best_redis_session_master(node)
 unless master_name && master_ip && master_port
-  Chef::Log.warn('Could not locate a master redis session node')
+  Chef::Log.warn('magentostack::_magento_redis could not locate a master redis session node')
   return
 end
 

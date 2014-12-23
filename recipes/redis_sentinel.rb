@@ -23,7 +23,10 @@ include_recipe 'chef-sugar'
 
 # find a master to watch
 master_name, master_ip, master_port = MagentostackUtil.best_redis_session_master(node)
-return unless master_name && master_ip && master_port
+unless master_name && master_ip && master_port
+  Chef::Log.warn('magentostack::redis_sentinel did not find a redis single master to configure a redis slave, not proceeding')
+  return
+end
 
 Chef::Log.info("Choosing this sentinel's master to be #{master_name} (#{master_ip}:#{master_port}) ")
 bind_port = node['magentostack']['redis']['bind_port_sentinel']
