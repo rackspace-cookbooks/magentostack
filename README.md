@@ -198,8 +198,10 @@ default['magentostack']['web']['server_aliases'] = node['fqdn']
   - install.php related options, see https://github.com/AutomationSupport/magentostack/blob/master/definitions/magento_initial_configuration.rb
 - `normal['magentostack']['mysql']['databases']['magento_database']`
   - create Magento DB and Magento DB users
-  `default['magentostack']['download_url']` and `default['magentostack']['checksum']`
+- `default['magentostack']['download_url']` and `default['magentostack']['checksum']`
   - where to get Magento and the file checksum (faster re-converge)
+- default['magentostack']['flavor'] = 'community' # could also be enterprise
+  - controls if the stack should try to configure a full page cache or not
 
 ### gluster
 

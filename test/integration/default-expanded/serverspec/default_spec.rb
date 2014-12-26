@@ -70,7 +70,7 @@ end
 
 ## Create an index.php for testing purpose
 ## using wget because curl is nto there by default on ubuntu
-describe command('wget -qO- localhost') do
+describe command('wget -qO- localhost:8080') do
   index_php_path = "#{docroot}/index.php"
   before do
     # save Magento index.php
@@ -86,7 +86,7 @@ describe command('wget -qO- localhost') do
 end
 
 ## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
-describe command('wget -qO- localhost/magento-check.php') do
+describe command('wget -qO- localhost:8080/magento-check.php') do
   before do
     File.open("#{docroot}/magento-check.php", 'w') { |file| file.write(File.read("#{ENV['BUSSER_ROOT']}/suites/serverspec/fixtures/magento-check.php")) }
   end

@@ -70,23 +70,21 @@ end
 
 ## Create an index.php for testing purpose
 ## using wget because curl is nto there by default on ubuntu
-describe command('wget -qO- localhost') do
-  index_php_path = "#{docroot}/index.php"
+describe command('wget -qO- localhost:8080/phpinfo.php') do
+  phpinfo_path = "#{docroot}/phpinfo.php"
   before do
-    # save Magento index.php
-    FileUtils.copy(index_php_path, index_php_path + '-before-kitchen') if File.exist?(index_php_path)
-    File.open(index_php_path, 'w') { |file| file.write('<?php phpinfo(); ?>') }
+    File.open(phpinfo_path, 'w') { |file| file.write('<?php phpinfo(); ?>') }
   end
   its(:stdout) { should match(/FPM\/FastCGI/) }
   its(:stdout) { should match(/PHP Version 5.5/) }
   after do
-    # restore Magento index.php
-    FileUtils.mv(index_php_path + '-before-kitchen', index_php_path) if File.exist?(index_php_path + '-before-kitchen')
+    # remove phpinfo file
+    #FileUtils.rm(phpinfo_path) if File.exist?(phpinfo_path)
   end
 end
 
 ## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
-describe command('wget -qO- localhost/magento-check.php') do
+describe command('wget -qO- localhost:8080/magento-check.php') do
   before do
     File.open("#{docroot}/magento-check.php", 'w') { |file| file.write(File.read("#{ENV['BUSSER_ROOT']}/suites/serverspec/fixtures/magento-check.php")) }
   end
