@@ -3,11 +3,11 @@ php -f install.php -- \
 --locale "<%= node['magentostack']['config']['locale'] %>" \
 --timezone "<%= node['magentostack']['config']['tz'] %>" \
 --default_currency "<%= node['magentostack']['config']['default_currency'] %>" \
---db_host "<%= node['magentostack']['config']['db']['host'] %>:<%= node['magentostack']['config']['db']['port'] %>" \
+--db_host "<%= @db_host %>" \
 --db_model "<%= node['magentostack']['config']['db']['model'] %>" \
---db_name "<%= @database_name %>" \
---db_user "<%= node['magentostack']['mysql']['databases'][@database_name]['mysql_user'] %>" \
---db_pass "<%= node['magentostack']['mysql']['databases'][@database_name]['mysql_password'] %>" \
+--db_name "<%= @db_name %>" \
+--db_user "<%= @db_user %>" \
+--db_pass "<%= @db_pass %>" \
 --db_prefix "<%= node['magentostack']['config']['db']['prefix'] %>" \
 --session_save "<%= node['magentostack']['config']['session']['save'] %>" \
 --url "<%= node['magentostack']['config']['url'] %>" \
@@ -25,7 +25,3 @@ php -f install.php -- \
 --encryption_key "<%= node['magentostack']['config']['encryption_key'] %>" \
 --skip_url_validation && touch <%= @magento_configured_file %> || /bin/true
 exit $?
-
-# don't add commands here, we want to exit with the same status of install.php's run
-# wish we could append to a log file, but apache has no write permissions anywhere :(
-# >> <%= node['apache']['log_dir'] %>/magento_install.log

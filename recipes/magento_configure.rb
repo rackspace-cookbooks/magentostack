@@ -18,12 +18,39 @@
 # limitations under the License.
 #
 
-node.default['magentostack']['config']['url'] = "http://#{node['magentostack']['web']['domain']}/"
-node.default['magentostack']['config']['secure_base_url'] = "https://#{node['magentostack']['web']['domain']}/"
+http_port = node['magentostack']['web']['http_port']
+url = if http_port == 80
+        "http://#{node['magentostack']['web']['domain']}/"
+      else
+        "http://#{node['magentostack']['web']['domain']}:#{http_port}/"
+      end
+node.default['magentostack']['config']['url'] = url
+
+https_port = node['magentostack']['web']['https_port']
+secure_base_url = if https_port == 443
+                    "https://#{node['magentostack']['web']['domain']}/"
+                  else
+                    "https://#{node['magentostack']['web']['domain']}:#{https_port}/"
+                  end
+node.default['magentostack']['config']['secure_base_url'] = secure_base_url
 
 # Run install.php script for initial magento setup
-# Configure all the things
+# We must be sure we know all important configuration to pass to magento at this point
+
+# Configure all the database things
+include_recipe 'magentostack::_find_mysql'
 database_name = node['magentostack']['mysql']['databases'].keys[0]
+dbh = node['magentostack']['config']['db']['host']
+dbp = node['magentostack']['config']['db']['port']
+database_host = if dbh && dbp
+                  "#{dbh}:#{dbp}"
+                elsif dbh
+                  dbh
+                else
+                  false
+                end
+database_user = node['magentostack']['mysql']['databases'][database_name]['mysql_user']
+database_pass = node['magentostack']['mysql']['databases'][database_name]['mysql_password']
 
 # temporary location for script that runs install.php
 setup_script = "#{Chef::Config[:file_cache_path]}/magentostack.sh"
@@ -38,7 +65,10 @@ template setup_script do
   group node['apache']['group']
   mode '0700'
   variables(
-  database_name: database_name,
+  db_name: database_name,
+  db_host: database_host,
+  db_user: database_user,
+  db_pass: database_pass,
   magento_configured_file: magento_configured_file
   )
 end
