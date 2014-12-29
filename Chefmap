@@ -9,14 +9,14 @@ requires:
 - host: linux
 uses:
 - session-cache:
-  interface: {from: [redis]}
-  type: cache
+    interface: {from: [redis]}
+    type: cache
 - object-cache:
-  interface: {from: [redis]}
-  type: cache
+    interface: {from: [redis]}
+    type: cache
 - page-cache:
-  interface: {from: [redis]}
-  type: cache
+    interface: {from: [redis]}
+    type: cache
 options:
   "domain":
     type: string
