@@ -7,6 +7,16 @@ provides:
 - application: http
 requires:
 - host: linux
+uses:
+- session-cache:
+  interface: {from: [redis]}
+  type: cache
+- object-cache:
+  interface: {from: [redis]}
+  type: cache
+- page-cache:
+  interface: {from: [redis]}
+  type: cache
 options:
   "domain":
     type: string
@@ -55,6 +65,18 @@ options:
   "database_prefix":
     type: string
     default: magento_
+  "session_cache_host":
+    type: string
+  "session_cache_port":
+    type: string
+  "object_cache_host":
+    type: string
+  "object_cache_port":
+    type: string
+  "page_cache_host":
+    type: string
+  "page_cache_port":
+    type: string
 run-list:
   recipes:
   - magentostack::redis_single
@@ -116,6 +138,25 @@ maps:
 - value: "all"
   targets:
   - attributes://magentostack/mysql/databases/magento_database/privileges
+- value: {{ setting('session_cache_host') }}
+  targets:
+  - attributes://magentostack/redis/override_session_host
+- value: {{ setting('session_cache_port') }}
+  targets:
+  - attributes://magentostack/redis/override_session_port
+- value: {{ setting('object_cache_host') }}
+  targets:
+  - attributes://magentostack/redis/override_object_host
+- value: {{ setting('object_cache_port') }}
+  targets:
+  - attributes://magentostack/redis/override_object_port
+- value: {{ setting('page_cache_host') }}
+  targets:
+  - attributes://magentostack/redis/override_page_host
+- value: {{ setting('page_cache_port') }}
+  targets:
+  - attributes://magentostack/redis/override_page_port
+
 output:
   resources:
     '{{resource.index}}':
