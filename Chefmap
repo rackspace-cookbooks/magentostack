@@ -10,13 +10,13 @@ requires:
 uses:
 - session-cache:
     interface: {from: [redis]}
-    type: cache
+    resource_type: cache
 - object-cache:
     interface: {from: [redis]}
-    type: cache
+    resource_type: cache
 - page-cache:
     interface: {from: [redis]}
-    type: cache
+    resource_type: cache
 options:
   "domain":
     type: string
