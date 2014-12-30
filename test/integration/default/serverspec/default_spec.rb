@@ -54,13 +54,13 @@ end
 ## apachectl -S on Apache 2.4(default on Ubuntu 14) has a different output
 if os[:release] == '14.04'
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/\*:443                  localhost/) }
-    its(:stdout) { should match(/\*:80                   localhost/) }
+    its(:stdout) { should match(/\*:8443 .\*localhost/) }
+    its(:stdout) { should match(/\*:8080 .\*localhost/) }
   end
 else
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/port 443 namevhost localhost/) }
-    its(:stdout) { should match(/port 80 namevhost localhost/) }
+    its(:stdout) { should match(/port 8443 namevhost localhost/) }
+    its(:stdout) { should match(/port 8080 namevhost localhost/) }
   end
 end
 
