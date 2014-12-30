@@ -79,7 +79,7 @@ describe command('wget -qO- localhost:8080/phpinfo.php') do
   its(:stdout) { should match(/PHP Version 5.5/) }
   after do
     # remove phpinfo file
-    #FileUtils.rm(phpinfo_path) if File.exist?(phpinfo_path)
+    # FileUtils.rm(phpinfo_path) if File.exist?(phpinfo_path)
   end
 end
 
