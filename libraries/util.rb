@@ -27,11 +27,11 @@ module MagentostackUtil
     port = current_node['magentostack']['redis']["override_#{type}_port"]
     return name, host, port if name && host && port
 
-    session_master_name, session_master_ip, session_master_port = MagentostackUtil.redis_find_masters(current_node) do |name, data|
-      name.include?("-#{type}-master") && !name.include?('slave')
+    session_master_name, session_master_ip, session_master_port = MagentostackUtil.redis_find_masters(current_node) do |n, data|
+      n.include?("-#{type}-master") && !n.include?('slave')
     end
-    single_master_name, single_master_ip, single_master_port = MagentostackUtil.redis_find_masters(current_node) do |name, data|
-      name.include?('-single-master') && !name.include?('slave')
+    single_master_name, single_master_ip, single_master_port = MagentostackUtil.redis_find_masters(current_node) do |n, data|
+      n.include?('-single-master') && !n.include?('slave')
     end
 
     # prefer session master over single master, for sentinel monitoring
