@@ -10,7 +10,7 @@ describe 'redis instance for object cache' do
   end
 
   # ensure there are no keys
-  describe command("#{redis_path}/redis-cli --no-raw -n 0 keys *") do
+  describe command("#{redis_path}/redis-cli --no-raw -n 0 keys '*'") do
     its(:stdout) { should match(/empty list or set/) }
   end
 
@@ -20,7 +20,7 @@ describe 'redis instance for object cache' do
   end
 
   # ensure the cache is non-empty now
-  describe command("#{redis_path}/redis-cli --no-raw -n 0 keys *") do
+  describe command("#{redis_path}/redis-cli --no-raw -n 0 keys '*'") do
     its(:stdout) { should_not match(/empty list or set/) }
   end
 end
@@ -33,7 +33,7 @@ describe 'redis instance for session cache' do
   end
 
   # ensure there are no keys
-  describe command("#{redis_path}/redis-cli --no-raw -n 2 keys *") do
+  describe command("#{redis_path}/redis-cli --no-raw -n 2 keys '*'") do
     its(:stdout) { should match(/empty list or set/) }
   end
 
@@ -43,7 +43,7 @@ describe 'redis instance for session cache' do
   end
 
   # ensure the cache is non-empty now
-  describe command("#{redis_path}/redis-cli --no-raw -n 2 keys *") do
+  describe command("#{redis_path}/redis-cli --no-raw -n 2 keys '*'") do
     its(:stdout) { should_not match(/empty list or set/) }
   end
 end
