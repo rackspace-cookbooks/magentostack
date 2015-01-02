@@ -4,8 +4,8 @@
 
 # Configure default Magento Vhosts
 default['magentostack']['web']['domain'] = 'localhost'
-default['magentostack']['web']['http_port'] = '80'
-default['magentostack']['web']['https_port'] = '443'
+default['magentostack']['web']['http_port'] = '8080'
+default['magentostack']['web']['https_port'] = '8443'
 default['magentostack']['web']['server_aliases'] = node['fqdn']
 default['magentostack']['web']['ssl_autosigned'] = true
 default['magentostack']['web']['cookbook'] = 'magentostack'

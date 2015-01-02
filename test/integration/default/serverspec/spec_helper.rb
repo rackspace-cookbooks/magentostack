@@ -6,7 +6,7 @@ require 'openssl'
 set :backend, :exec
 set :path, '/sbin:/usr/local/sbin:/bin:/usr/bin:$PATH'
 
-def page_returns(url = 'http://localhost/', host = 'example.com', ssl = false)
+def page_returns(url = 'http://localhost:8080/', host = 'localhost', ssl = false)
   uri = URI.parse(url)
   http = Net::HTTP.new(uri.host, uri.port)
   http.read_timeout = 70

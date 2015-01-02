@@ -25,3 +25,14 @@ default['magentostack']['redis']['bind_port_sentinel'] = '46379'
 
 # search query for discovery
 default['magentostack']['redis']['discovery_query'] = "tags:magentostack_redis AND chef_environment:#{node.chef_environment}"
+
+# overrides for chef-solo, other dependency injection
+# default['magentostack']['redis']['override_page_name'] = 'example01'
+# default['magentostack']['redis']['override_page_host'] = 'localhost'
+# default['magentostack']['redis']['override_page_port'] = '123'
+# default['magentostack']['redis']['override_session_name'] = 'example01'
+# default['magentostack']['redis']['override_session_host'] = 'localhost'
+# default['magentostack']['redis']['override_session_port'] = '123'
+# default['magentostack']['redis']['override_object_name'] = 'example01'
+# default['magentostack']['redis']['override_object_host'] = 'localhost'
+# default['magentostack']['redis']['override_object_port'] = '123'
