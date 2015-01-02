@@ -7,6 +7,7 @@ provides:
 - application: http
 requires:
 - host: linux
+- database: mysql
 uses:
 - session-cache:
     interface: {from: [redis]}
@@ -50,14 +51,6 @@ options:
     type: boolean
     default: false
     required: true
-  "database_username":
-    type: string
-    default: magento_user
-    required: true
-  "database_password":
-    type: string
-    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
-    required: true
 #  "database_privileges":
 #    type: string
 #    default: all
@@ -65,34 +58,10 @@ options:
   "database_prefix":
     type: string
     default: magento_
-  "session_cache_name":
-    type: string
-  "session_cache_host":
-    type: string
-  "session_cache_port":
-    type: string
-  "object_cache_name":
-    type: string
-  "object_cache_host":
-    type: string
-  "object_cache_port":
-    type: string
-  "page_cache_name":
-    type: string
-  "page_cache_host":
-    type: string
-  "page_cache_port":
-    type: string
 run-list:
   recipes:
-  - magentostack::redis_single
-  - magentostack::redis_single_slave
-  - magentostack::redis_sentinel
-  - magentostack::redis_configure
   - magentostack::apache-fpm
   - magentostack::magento_install
-  - magentostack::mysql_master
-  - magentostack::mysql_holland
   - magentostack::newrelic
   - magentostack::_find_mysql
   - magentostack::magento_configure
@@ -130,45 +99,45 @@ maps:
   - attributes://magentostack/config/admin_user/password/
   - outputs://resources/{{resource.index}}/instance/interfaces/magento/password
 # Database Setup (Values required by MySQL cookbook)
-- value: {{ setting('database_username') }}
+- source: requirements://database:mysql/host
+  targets:
+  - attributes://mysql-multi/master
+- source: requirements://database:mysql/database_username
   targets:
   - attributes://magentostack/mysql/databases/magento_database/mysql_user
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/username
-- value: {{ setting('database_password') }}
+- source: requirements://database:mysql/database_root_password
   targets:
   - attributes://magentostack/mysql/databases/magento_database/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
-- value: {{ setting('database_root_password') }}
-  targets:
-  - attributes://mysql/server_root_password
 - value: "all"
   targets:
   - attributes://magentostack/mysql/databases/magento_database/privileges
-- value: {{ setting('session_cache_name') }}
+- source: supported://cache:redis/session-cache/name
   targets:
   - attributes://magentostack/redis/override_session_name
-- value: {{ setting('session_cache_host') }}
+- source: supported://cache:redis/session-cache/host
   targets:
   - attributes://magentostack/redis/override_session_host
-- value: {{ setting('session_cache_port') }}
+- source: supported://cache:redis/session-cache/port
   targets:
   - attributes://magentostack/redis/override_session_port
-- value: {{ setting('object_cache_name') }}
+- source: supported://cache:redis/object-cache/name
   targets:
   - attributes://magentostack/redis/override_object_name
-- value: {{ setting('object_cache_host') }}
+- source: supported://cache:redis/object-cache/host
   targets:
   - attributes://magentostack/redis/override_object_host
-- value: {{ setting('object_cache_port') }}
+- source: supported://cache:redis/object-cache/port
   targets:
   - attributes://magentostack/redis/override_object_port
-- value: {{ setting('page_cache_name') }}
+- source: supported://cache:redis/page-cache/name
   targets:
   - attributes://magentostack/redis/override_page_name
-- value: {{ setting('page_cache_host') }}
+- source: supported://cache:redis/page-cache/host
   targets:
   - attributes://magentostack/redis/override_page_host
-- value: {{ setting('page_cache_port') }}
+- source: supported://cache:redis/page-cache/port
   targets:
   - attributes://magentostack/redis/override_page_port
 
@@ -186,3 +155,70 @@ output:
               password: {{setting('database_password')}}
               username: {{setting('database_username')}}
               # note host is written as output of a map
+
+---
+id: mysqlmaster
+name: mysql
+roles: [master]
+is: database
+provides:
+- database: mysql
+requires:
+- host: linux
+options:
+  "database_root_password":
+    type: string
+    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    required: true
+run_list:
+  - magentostack::mysql_master
+  - magentostack::mysql_holland
+maps:
+- value: {{ setting('database_root_password') }}
+  targets:
+  - attributes://mysql/server_root_password
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/server_root_password
+output:
+  resources:
+    '{{resource.index}}'
+      instance:
+        interfaces:
+          mysql:
+            host: requirements://host:linux/private_ip
+            server_root_password: {{ setting('database_root_password') }}
+
+---
+id: magentoredis
+name: redis
+is: cache
+provides:
+- cache: redis
+requires:
+- host: linux
+options:
+  "name":
+    type: string
+    default: cache_type
+    required: true
+    constraints:
+    - in: ["sessions", "objects", "FPC"]
+  "port":
+    type: string
+    default: 27017
+    required: true
+run_list:
+- magentostack::redis_single
+- magentostack::redis_configure
+maps:
+- value: {{ setting('name') }}
+  targets:
+  attributes://magentostack/redis/bind_port_single
+output:
+  resources:
+    '{{resource.index}}'
+      instance:
+        interfaces:
+          redis:
+            host: requirements://host:linux/private_ip
+            port: {{ settings('port') }}
+            name: {{ settings('name') }}
