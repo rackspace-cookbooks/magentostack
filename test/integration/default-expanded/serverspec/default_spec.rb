@@ -24,10 +24,10 @@ describe service(fpm_service_name) do
   it { should be_enabled }
   it { should be_running }
 end
-describe port(80) do
+describe port(8080) do
   it { should be_listening }
 end
-describe port(443) do
+describe port(8443) do
   it { should be_listening }
 end
 
@@ -54,13 +54,13 @@ end
 ## apachectl -S on Apache 2.4(default on Ubuntu 14) has a different output
 if os[:release] == '14.04'
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/\*:443                  localhost/) }
-    its(:stdout) { should match(/\*:80                   localhost/) }
+    its(:stdout) { should match(/\*:8443                  localhost/) }
+    its(:stdout) { should match(/\*:8080                   localhost/) }
   end
 else
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/port 443 namevhost localhost/) }
-    its(:stdout) { should match(/port 80 namevhost localhost/) }
+    its(:stdout) { should match(/port 8443 namevhost localhost/) }
+    its(:stdout) { should match(/port 8080 namevhost localhost/) }
   end
 end
 
@@ -70,7 +70,7 @@ end
 
 ## Create an index.php for testing purpose
 ## using wget because curl is nto there by default on ubuntu
-describe command('wget -qO- localhost') do
+describe command('wget -qO- localhost:8080') do
   index_php_path = "#{docroot}/index.php"
   before do
     # save Magento index.php
@@ -86,7 +86,7 @@ describe command('wget -qO- localhost') do
 end
 
 ## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
-describe command('wget -qO- localhost/magento-check.php') do
+describe command('wget -qO- localhost:8080/magento-check.php') do
   before do
     File.open("#{docroot}/magento-check.php", 'w') { |file| file.write(File.read("#{ENV['BUSSER_ROOT']}/suites/serverspec/fixtures/magento-check.php")) }
   end

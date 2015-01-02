@@ -5,14 +5,33 @@
 # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
 module MagentostackUtil
   def self.best_redis_session_master(current_node)
+    return best_redis_master(current_node, 'session')
+  end
+
+  def self.best_redis_object_master(current_node)
+    return best_redis_master(current_node, 'object')
+  end
+
+  def self.best_redis_page_master(current_node)
+    return nil, nil, nil unless current_node['magentostack']['flavor'] == 'enterprise'
+    return best_redis_master(current_node, 'page')
+  end
+
+  def self.best_redis_master(current_node, type)
     # find a master to watch
     master_name, master_ip, master_port = nil, nil, nil
 
-    session_master_name, session_master_ip, session_master_port = MagentostackUtil.redis_find_masters(current_node) do |name, data|
-      name.include?('-session-master') && !name.include?('slave')
+    # overrides for service discovery override, etc.
+    name = current_node['magentostack']['redis']["override_#{type}_name"]
+    host = current_node['magentostack']['redis']["override_#{type}_host"]
+    port = current_node['magentostack']['redis']["override_#{type}_port"]
+    return name, host, port if name && host && port
+
+    session_master_name, session_master_ip, session_master_port = MagentostackUtil.redis_find_masters(current_node) do |n, data|
+      n.include?("-#{type}-master") && !n.include?('slave')
     end
-    single_master_name, single_master_ip, single_master_port = MagentostackUtil.redis_find_masters(current_node) do |name, data|
-      name.include?('-single-master') && !name.include?('slave')
+    single_master_name, single_master_ip, single_master_port = MagentostackUtil.redis_find_masters(current_node) do |n, data|
+      n.include?('-single-master') && !n.include?('slave')
     end
 
     # prefer session master over single master, for sentinel monitoring
@@ -23,9 +42,9 @@ module MagentostackUtil
     end
 
     if master_name && master_ip && master_port
-      Chef::Log.info("best_redis_session_master found best session master to be #{master_name}, #{master_ip}:#{master_port}")
+      Chef::Log.info("best_redis_#{type}_master found best session master to be #{master_name}, #{master_ip}:#{master_port}")
     else
-      Chef::Log.warn('best_redis_session_master did not find any single master or session master redis instances to monitor with sentinel, not proceeding')
+      Chef::Log.warn("best_redis_#{type}_master did not find any single master or #{type} master redis instances to monitor with sentinel, not proceeding")
     end
 
     return master_name, master_ip, master_port

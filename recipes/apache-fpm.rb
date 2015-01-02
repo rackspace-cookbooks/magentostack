@@ -20,6 +20,14 @@
 
 include_recipe 'chef-sugar'
 
+# see recipes/mod_ssl.rb in apache2 for why this is coded this way
+ports = [node['magentostack']['web']['http_port'], node['magentostack']['web']['https_port']]
+ports.each do |p|
+  unless node['apache']['listen_ports'].include?(p)
+    node.set['apache']['listen_ports'] =  node['apache']['listen_ports'] + [p]
+  end
+end
+
 # Modules dependencies (Magento/Php-fpm)
 apache_modules = %w(
   status actions alias auth_basic
