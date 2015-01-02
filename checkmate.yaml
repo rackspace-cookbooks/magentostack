@@ -4,13 +4,23 @@ blueprint:
   description: "Magento Community Edition installed on a single Cloud Server"
   version: 1.0.0
   services:
-    magento:
+    'magento':
       component:
         name: magento
-        type: application
+        resource-type: application
         role: master
       constraints:
       - count: 1
+      relations:
+        clouddb: mysql
+    'clouddb':
+      component:
+        resource-type: database
+        interface: mysql
+    'cloud-redis':
+      component:
+        resource-type: cache
+        interface: redis
   options:
 
 
@@ -526,6 +536,7 @@ environment:
       - bootstrap-version: "11.16.4-1"
     load-balancer: {}
     nova: {}
+    database: {}
     common:
       vendor: rackspace
 inputs:
