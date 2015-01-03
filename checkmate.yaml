@@ -12,7 +12,7 @@ blueprint:
       constraints:
       - count: 1
       relations:
-        clouddb: mysql
+      - clouddb: mysql
     'clouddb':
       component:
         resource-type: database
