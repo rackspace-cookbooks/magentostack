@@ -220,5 +220,5 @@ output:
         interfaces:
           redis:
             host: requirements://host:linux/private_ip
-            port: {{ settings('port') }}
-            name: {{ settings('name') }}
+            port: {{ setting('port') }}
+            name: {{ setting('name') }}
