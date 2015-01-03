@@ -217,7 +217,7 @@ output:
   resources:
     '{{resource.index}}':
       instance:
-        name: {{ settings('name') }}
+        name: {{ setting('name') }}
         interfaces:
           redis:
             host: requirements://host:linux/private_ip
