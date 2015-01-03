@@ -8,7 +8,7 @@ provides:
 requires:
 - host: linux
 - database: mysql
-uses:
+supports:
 - session-cache:
     interface: {from: [redis]}
     resource_type: cache
