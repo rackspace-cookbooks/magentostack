@@ -21,8 +21,8 @@ blueprint:
       component:
         resource-type: cache
         interface: redis
-  options:
 
+  options:
 
     # Chef Server Options
     chef-server-url:
@@ -72,8 +72,7 @@ blueprint:
       type: string
       required: true
 
-
-    # Deployment Options
+    # Cloud Deployment Options
     region:
       label: Region
       type: string
@@ -92,6 +91,7 @@ blueprint:
         # - LON does not yet support Cloud DBs
       - setting: region
         provider: load-balancer
+
     # Application Options
     url:
       label: Site Address
@@ -109,8 +109,8 @@ blueprint:
         default-protocol: http
         sample: http://magento.example.com/
       constraints:
-      - protocols: [http]
-        message: protocols are limited to http or https
+      - protocols: [http]  # update message when adding https
+        message: protocols are limited to http right now
       - regex: '^([a-zA-Z]{2,}?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$'
         message: must be a valid web address
       constrains:
@@ -378,9 +378,6 @@ blueprint:
     flavor: |
       Single Linux server with Magento Community Edition and MySQL 5.5
     flavor-weight: 1
-    heat-info:
-      porting: true
-      template-url: https://github.com/rackspace-orchestration-templates/magento-single
     reach-info:
       option-groups:
       - application: Magento Options
