@@ -32,7 +32,7 @@ blueprint:
       display-hints:
         group: chef
         order: 1
-      type: url
+      type: string
       required: true
       label: Chef Server Org URL
     chef-server-username:
