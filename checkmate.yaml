@@ -33,6 +33,7 @@ blueprint:
         group: chef
         order: 1
       type: url
+      required: true
       label: Chef Server Org URL
     chef-server-username:
       constrains:
@@ -42,6 +43,7 @@ blueprint:
         group: chef
         order: 2
       type: string
+      required: true
     chef-server-user-key:
       constrains:
         - setting: server-user-key
@@ -50,6 +52,7 @@ blueprint:
         group: chef
         order: 3
       type: text
+      required: true
     validator-pem:
       constrains:
         - setting: validator-pem
@@ -58,6 +61,7 @@ blueprint:
         group: chef
         order: 4
       type: text
+      required: true
     validator-username:
       constrains:
         - setting: validator-username
@@ -66,6 +70,7 @@ blueprint:
         group: chef
         order: 5
       type: string
+      required: true
 
 
     # Deployment Options
