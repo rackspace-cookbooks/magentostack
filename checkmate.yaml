@@ -82,14 +82,14 @@ blueprint:
       display-hints:
         group: deployment
         list-type: region
-        choice:
-        - DFW
-        - ORD
-        - LON
-        - SYD
-        - IAD
-        - HKG
       constrains:
+      - in:
+        #- DFW does not yet support Cloud Redis
+        #- ORD does not yet support Cloud Redis
+        - IAD
+        # - SYD does not yet support Cloud DBs
+        # - HKG does not yet support Cloud DBs
+        # - LON does not yet support Cloud DBs
       - setting: region
         provider: load-balancer
     # Application Options
@@ -141,11 +141,6 @@ blueprint:
 #      display-hints:
 #        group: application
 #        order: 2
-#        choice:
-#        - name: 1.7.0.2
-#          value: 1.7.0.2
-#        - name: 1.8.1.0
-#          value: 1.8.1.0
 #      constrains:
 #      - setting: version
 #        service: magento
