@@ -24,22 +24,7 @@ blueprint:
   options:
 
 
-    chef-server-username:
-      constrains:
-        - setting: server-username
-          provider: chef-server
-      display-hints:
-        group: chef
-        order: 2
-      type: string
-    validator-username:
-      constrains:
-        - setting: validator-username
-          provider: chef-server
-      display-hints:
-        group: chef
-        order: 5
-      type: string
+    # Chef Server Options
     chef-server-url:
       constrains:
         - setting: server-url
@@ -49,6 +34,14 @@ blueprint:
         order: 1
       type: url
       label: Chef Server Org URL
+    chef-server-username:
+      constrains:
+        - setting: server-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 2
+      type: string
     chef-server-user-key:
       constrains:
         - setting: server-user-key
@@ -65,6 +58,14 @@ blueprint:
         group: chef
         order: 4
       type: text
+    validator-username:
+      constrains:
+        - setting: validator-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 5
+      type: string
 
 
     # Deployment Options
