@@ -8,7 +8,7 @@ provides:
 requires:
 - host: linux
 - database: mysql
-uses:
+supports:
 - session-cache:
     interface: {from: [redis]}
     resource_type: cache
@@ -113,31 +113,31 @@ maps:
 - value: "all"
   targets:
   - attributes://magentostack/mysql/databases/magento_database/privileges
-- source: supported://cache:redis/session-cache/name
+- source: supported://session-cache/instance/name
   targets:
   - attributes://magentostack/redis/override_session_name
-- source: supported://cache:redis/session-cache/host
+- source: supported://session-cache/host
   targets:
   - attributes://magentostack/redis/override_session_host
-- source: supported://cache:redis/session-cache/port
+- source: supported://session-cache/port
   targets:
   - attributes://magentostack/redis/override_session_port
-- source: supported://cache:redis/object-cache/name
+- source: supported://object-cache/instance/name
   targets:
   - attributes://magentostack/redis/override_object_name
-- source: supported://cache:redis/object-cache/host
+- source: supported://object-cache/host
   targets:
   - attributes://magentostack/redis/override_object_host
-- source: supported://cache:redis/object-cache/port
+- source: supported://object-cache/port
   targets:
   - attributes://magentostack/redis/override_object_port
-- source: supported://cache:redis/page-cache/name
+- source: supported://page-cache/instance/name
   targets:
   - attributes://magentostack/redis/override_page_name
-- source: supported://cache:redis/page-cache/host
+- source: supported://page-cache/host
   targets:
   - attributes://magentostack/redis/override_page_host
-- source: supported://cache:redis/page-cache/port
+- source: supported://page-cache/port
   targets:
   - attributes://magentostack/redis/override_page_port
 
@@ -217,8 +217,8 @@ output:
   resources:
     '{{resource.index}}'
       instance:
+        name: {{ settings('name') }}
         interfaces:
           redis:
             host: requirements://host:linux/private_ip
             port: {{ settings('port') }}
-            name: {{ settings('name') }}
