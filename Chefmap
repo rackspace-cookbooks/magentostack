@@ -180,7 +180,7 @@ maps:
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/server_root_password
 output:
   resources:
-    '{{resource.index}}'
+    '{{resource.index}}':
       instance:
         interfaces:
           mysql:
@@ -212,13 +212,13 @@ run_list:
 maps:
 - value: {{ setting('name') }}
   targets:
-  attributes://magentostack/redis/bind_port_single
+  - attributes://magentostack/redis/bind_port_single
 output:
   resources:
-    '{{resource.index}}'
+    '{{resource.index}}':
       instance:
         name: {{ settings('name') }}
         interfaces:
           redis:
             host: requirements://host:linux/private_ip
-            port: {{ settings('port') }}
+            port: {{ setting('port') }}
