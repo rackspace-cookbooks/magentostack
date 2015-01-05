@@ -1,26 +1,35 @@
 blueprint:
   id: 8363F2D2284D4871BC618E92D152994F
-  name: "magentostack-single"
-  description: "Magento Community Edition installed on a single Cloud Server"
+  name: "magentostack-cloud"
+  description: "Magento Community Edition installed using Cloud Datastores"
   version: 1.0.0
   services:
     'magento':
       component:
         name: magento
-        resource-type: application
+        resource_type: application
         role: master
       constraints:
       - count: 1
       relations:
-      - clouddb: mysql
-    'clouddb':
+      - data: mysql
+      - session-cache: redis#sessions
+      - object-cache: redis#objects
+    'data':
       component:
-        resource-type: database
+        resource_type: database
         interface: mysql
-    'cloud-redis':
+        id: mysql_database
+    'session-cache':
       component:
-        resource-type: cache
+        resource_type: cache
         interface: redis
+        id: redis_cache
+    'object-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        id: redis_cache
 
   options:
 
