@@ -13,14 +13,23 @@ blueprint:
       - count: 1
       relations:
       - data: mysql
+      - session-cache: redis#sessions
+      - object-cache: redis#objects
     'data':
       component:
         resource_type: database
         interface: mysql
-    'cloud-redis':
+        id: mysql_database
+    'session-cache':
       component:
-        resource-type: cache
+        resource_type: cache
         interface: redis
+        id: redis_cache
+    'object-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        id: redis_cache
 
   options:
 
