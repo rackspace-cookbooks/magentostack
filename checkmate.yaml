@@ -7,7 +7,7 @@ blueprint:
     'magento':
       component:
         name: magento
-        resource-type: application
+        resource_type: application
         role: master
       constraints:
       - count: 1
