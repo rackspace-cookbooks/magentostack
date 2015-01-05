@@ -21,6 +21,12 @@ supports:
 options:
   "domain":
     type: string
+  "http_port":
+    type: integer
+    default: 80
+  "https_port":
+    type: integer
+    default: 443
   "admin_frontname":
     type: string
     default: admin
@@ -66,6 +72,12 @@ run-list:
   - magentostack::_find_mysql
   - magentostack::magento_configure
 maps:
+- value: {{ setting('http_port') }}
+  targets:
+  - attributes://magentostack/web/http_port
+- value: {{ setting('https_port') }}
+  targets:
+  - attributes://magentostack/web/https_port
 - value: {{ setting('domain') }}
   targets:
   - attributes://magentostack/web/domain
@@ -102,17 +114,21 @@ maps:
 - source: requirements://database:mysql/host
   targets:
   - attributes://mysql-multi/master
-- source: requirements://database:mysql/database_username
+  - attributes://magentostack/config/db/host
+- source: requirements://database:mysql/port
   targets:
-  - attributes://magentostack/mysql/databases/magento_database/mysql_user
+  - attributes://magentostack/config/db/port
+- source: requirements://database:mysql/username
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_user
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/username
-- source: requirements://database:mysql/database_root_password
+- source: requirements://database:mysql/password
   targets:
-  - attributes://magentostack/mysql/databases/magento_database/mysql_password
+  - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
 - value: "all"
   targets:
-  - attributes://magentostack/mysql/databases/magento_database/privileges
+  - attributes://magentostack/mysql/databases/db1/privileges
 - source: supported://session-cache/instance/name
   targets:
   - attributes://magentostack/redis/override_session_name
