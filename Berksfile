@@ -13,7 +13,7 @@ end
 # This line may be removed once a newer version has been released
 cookbook 'redisio', git:'https://github.com/brianbianco/redisio.git'
 
-# 0.9.1 is not available in the market, but wee need it for chefspec and lib/matchers
+# 0.9.1 is not available in the market, but we need it for chefspec and lib/matchers
 # it's not a major problem if the wrapper cookbook has 0.9.0 as 0.9.1 is only required for tests
 cookbook 'ark', git:'https://github.com/burtlo/ark.git', ref: '1f7c092ffe80073409bce7fa851346fb076a259f'
 
