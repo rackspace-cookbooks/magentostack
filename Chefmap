@@ -10,13 +10,13 @@ requires:
 - database: mysql
 supports:
 - session-cache:
-    interface: {from: [redis]}
+    interface: redis
     resource_type: cache
 - object-cache:
-    interface: {from: [redis]}
+    interface: redis
     resource_type: cache
 - page-cache:
-    interface: {from: [redis]}
+    interface: redis
     resource_type: cache
 options:
   "domain":
