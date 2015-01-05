@@ -19,3 +19,6 @@ cookbook 'ark', git:'https://github.com/burtlo/ark.git', ref: '1f7c092ffe8007340
 
 # until https://github.com/opscode-cookbooks/openssl/pull/11
 cookbook 'openssl', git: 'https://github.com/racker/openssl.git'
+
+# newrelic cookbook bug. They have curl as a `recommend`, but it's actually a  dependency
+cookbook 'curl'
