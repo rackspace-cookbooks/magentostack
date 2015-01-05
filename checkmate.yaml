@@ -1,7 +1,7 @@
 blueprint:
   id: 8363F2D2284D4871BC618E92D152994F
-  name: "magentostack-single"
-  description: "Magento Community Edition installed on a single Cloud Server"
+  name: "magentostack-cloud"
+  description: "Magento Community Edition installed using Cloud Datastores"
   version: 1.0.0
   services:
     'magento':
@@ -12,10 +12,10 @@ blueprint:
       constraints:
       - count: 1
       relations:
-      - clouddb: mysql
-    'clouddb':
+      - data: mysql
+    'data':
       component:
-        resource-type: database
+        resource_type: database
         interface: mysql
     'cloud-redis':
       component:
