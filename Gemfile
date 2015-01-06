@@ -8,7 +8,7 @@ end
 
 group :unit do
   gem 'berkshelf', '~> 3'
-  gem 'chefspec'
+  gem 'chefspec', '>= 4'
   gem 'chef-sugar'
 end
 
@@ -23,10 +23,6 @@ end
 
 group :kitchen_rackspace do
   gem 'kitchen-rackspace'
-end
-
-group :kitchen_openstack do
-  gem 'kitchen-openstack'
 end
 
 group :development do
