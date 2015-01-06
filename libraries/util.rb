@@ -84,7 +84,7 @@ module MagentostackUtil
   def self.redis_find_masters(current_node, &filter_proc)
     # find redis instances in the same chef environment
     redis_instances = MagentostackUtil.redis_discovery(current_node)
-    Chef::Log.debug("redis_find_masters found the following redis instances: #{redis_instances.join(', ')}")
+    Chef::Log.debug("redis_find_masters found the following redis instances: #{redis_instances.map(&:name).join(', ')}")
 
     # lookup their redis data structure
     found_instances = MagentostackUtil.redis_instance_info(redis_instances, current_node)
@@ -155,7 +155,7 @@ module MagentostackUtil
       Chef::Log.warn('redis_discovery did not find any redis nodes in discovery, but none were set')
       redis_nodes = [] # so loop below exits
     else
-      Chef::Log.debug("redis_discovery found nodes #{redis_nodes.join(', ')}")
+      Chef::Log.debug("redis_discovery found nodes #{redis_nodes.map(&:name).join(', ')}")
     end
 
     return redis_nodes
