@@ -19,7 +19,6 @@ blueprint:
         resource_type: application
         role: master
       constraints:
-      - count: 1
       relations:
       - data: mysql
       - session-cache: redis#sessions
@@ -359,6 +358,24 @@ blueprint:
         message: must be 4096 or larger
       - less-than-or-equal-to: 61440
         message: must be 61440 or smaller
+    magento_server_count:
+      label: Magento Servers
+      type: integer
+      required: true
+      default: 1
+      description: The number of Magento servers to launch (up to 8)
+      display-hints:
+        group: server
+        order: 3
+      constraints:
+      - greater-than-or-equal-to: 1
+        message: must be 1 or greater
+      - less-than-or-equal-to: 8
+        message: must be 8 or fewer
+      constrains:
+      - setting: count
+        service: magento
+        resource_type: application
   resources:
     "magento user":
       type: user
@@ -413,7 +430,7 @@ blueprint:
       icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
   documentation:
     abstract: |
-      Single Linux server with [Magento Community
+      Linux with [Magento Community
       Edition](http://www.magentocommerce.com/product/community-edition/)
       installed with [nginx](http://nginx.org/en/), [PHP
       FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
@@ -574,5 +591,6 @@ inputs:
     username: "MagentoAdmin"
     password: "Mag!345678"
     email: "chkmate@example.com"
+    magento_server_count: 1
     firstname: "Test"
     lastname: "Deployment"
