@@ -134,19 +134,7 @@ add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web'][
 # required by stack_commons::mysql_base to find the app nodes (mysql user permission)
 tag('magento_app_node')
 
-# to add to include_recipe  platformstack::monitors
-# template "http-monitor-#{site_opts['server_name']}-#{port}" do
-#  cookbook stackname
-#  source 'monitoring-remote-http.yaml.erb'
-#  path "/etc/rackspace-monitoring-agent.conf.d/#{site_opts['server_name']}-#{port}-http-monitor.yaml"
-#  owner 'root'
-#  group 'root'
-#  mode '0644'
-#  variables(
-#    http_port: port,
-#    server_name: site_opts['server_name']
-#  )
-#  notifies 'restart', 'service[rackspace-monitoring-agent]', 'delayed'
-#  action 'create'
-#  only_if { node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled') }
-# end
+# set http_port and domain variables in in the recipe as they are built from attributes
+node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['http_port'] = node['magentostack']['web']['http_port']
+node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['domain'] = node['magentostack']['web']['domain']
+include_recipe 'platformstack::monitors' if node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled')

@@ -18,6 +18,12 @@ def node_resources(node)
   # newrelic
   node.set['newrelic']['php_agent']['web_server']['service_name'] = 'stub_service'
   node.set['newrelic']['license'] = 'aaaaaaaaaaaaaaaafffaaaaaaaaaaaaaaaaaaaaa'
+  # Cloud monitoring
+  node.set['platformstack']['cloud_monitoring']['enabled'] = true
+  # if we set node['cloud'] best_ip_for will use it, with local_ipv4
+  node.set['cloud']['local_ipv4'] = '10.0.0.2'
+  # monitoring-custom_http.yaml template relies on the public IP
+  node.set['cloud']['public_ipv4'] = '10.0.1.2'
 end
 
 # rubocop:disable Metrics/AbcSize
