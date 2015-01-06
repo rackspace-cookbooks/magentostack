@@ -4,13 +4,24 @@ blueprint:
   description: "Magento Community Edition installed using Cloud Datastores"
   version: 1.0.0
   services:
+    lb:
+      component:
+        interface: http
+        type: load-balancer
+        constraints:
+        - algorithm: ROUND_ROBIN
+      relations:
+      - magento: http
+      display-name: Load Balancer
     'magento':
       component:
         name: magento
         resource_type: application
         role: master
       constraints:
-      - count: 1
+      - setting: count  # used for manual scaling
+        greater-than-or-equal-to: 1
+        less-than: 9
       relations:
       - data: mysql
       - session-cache: redis#sessions
@@ -118,11 +129,19 @@ blueprint:
         default-protocol: http
         sample: http://magento.example.com/
       constraints:
-      - protocols: [http]  # update message when adding https
-        message: protocols are limited to http right now
+      - protocols: [http, https]
+        message: http and https are the only protocols supported
       - regex: '^([a-zA-Z]{2,}?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$'
         message: must be a valid web address
       constrains:
+      - setting: allow_insecure
+        service: lb
+        resource_type: load-balancer
+        value: true  # turn on HTTP if protocol is HTTPS (provider handles it)
+      - setting: protocol
+        attribute: protocol
+        service: lb
+        resource_type: load-balancer
       - setting: domain
         service: magento
         attribute: hostname
@@ -342,6 +361,24 @@ blueprint:
         message: must be 4096 or larger
       - less-than-or-equal-to: 61440
         message: must be 61440 or smaller
+    magento_server_count:
+      label: Magento Servers
+      type: integer
+      required: true
+      default: 1
+      description: The number of Magento servers to launch (up to 8)
+      display-hints:
+        group: server
+        order: 3
+      constraints:
+      - greater-than-or-equal-to: 1
+        message: must be 1 or greater
+      - less-than-or-equal-to: 8
+        message: must be 8 or fewer
+      constrains:
+      - setting: count
+        service: magento
+        resource_type: application
   resources:
     "magento user":
       type: user
@@ -396,7 +433,7 @@ blueprint:
       icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
   documentation:
     abstract: |
-      Single Linux server with [Magento Community
+      Linux with [Magento Community
       Edition](http://www.magentocommerce.com/product/community-edition/)
       installed with [nginx](http://nginx.org/en/), [PHP
       FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
@@ -433,8 +470,9 @@ blueprint:
 
       #### Details of Your Setup
       This deployment was stood up using
-      [chef-solo](http://docs.opscode.com/chef_solo.html).  Once the deployment
-      is up, chef will not run again, so it is safe to modify configurations.
+      [chef-server](http://docs.opscode.com/chef_server.html).  Chef will run
+      continuously and override any changes, so it is not safe to modify
+      configurations.
 
       A system user named 'magento' has been created.  This user does not have
       a password set, so if you wish to use the account, a password will need to
@@ -493,8 +531,7 @@ blueprint:
       that you need.
 
       #### Additional Notes
-      There is not an automatic way to add additional nodes to this deployment.
-      This deployment is meant for lower traffic or testing scenarios.
+      This blueprint supports adding additional nodes to the deployment.
   display-outputs:
     "Site Address":
       type: url
@@ -557,5 +594,6 @@ inputs:
     username: "MagentoAdmin"
     password: "Mag!345678"
     email: "chkmate@example.com"
+    magento_server_count: 1
     firstname: "Test"
     lastname: "Deployment"
