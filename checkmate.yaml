@@ -19,6 +19,9 @@ blueprint:
         resource_type: application
         role: master
       constraints:
+      - setting: count  # used for manual scaling
+        greater-than-or-equal-to: 1
+        less-than: 9
       relations:
       - data: mysql
       - session-cache: redis#sessions
@@ -527,8 +530,7 @@ blueprint:
       that you need.
 
       #### Additional Notes
-      There is not an automatic way to add additional nodes to this deployment.
-      This deployment is meant for lower traffic or testing scenarios.
+      This blueprint supports adding additional nodes to the deployment.
   display-outputs:
     "Site Address":
       type: url
