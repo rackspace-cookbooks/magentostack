@@ -470,8 +470,9 @@ blueprint:
 
       #### Details of Your Setup
       This deployment was stood up using
-      [chef-solo](http://docs.opscode.com/chef_solo.html).  Once the deployment
-      is up, chef will not run again, so it is safe to modify configurations.
+      [chef-server](http://docs.opscode.com/chef_server.html).  Chef will run
+      continuously and override any changes, so it is not safe to modify
+      configurations.
 
       A system user named 'magento' has been created.  This user does not have
       a password set, so if you wish to use the account, a password will need to
