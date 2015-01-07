@@ -16,7 +16,7 @@ provisioner:
       web:
         http_port: '8080'
         https_port: '8443'
-    
+
     authorization:
       sudo:
         users: ['vagrant']
@@ -54,3 +54,32 @@ suites:
           environment: default_expanded
     run_list:
       - recipe[wrapper::default_expanded]
+<% if ENV['RACKSPACE_API_KEY'] %>
+  - name: default-ee
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      rackspace:
+        cloud_credentials:
+          username: 'rackops'
+          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
+      magentostack:
+        flavor: 'enterprise'
+        install_method: 'cloudfiles'
+        download_file: 'magento-ee-1.14.0.1.tar.gz'
+        checksum: '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
+
+  - name: default-expanded-ee
+    run_list:
+      - recipe[wrapper::default_expanded]
+    attributes:
+      rackspace:
+        cloud_credentials:
+          username: 'rackops'
+          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
+      magentostack:
+        flavor: 'enterprise'
+        install_method: 'cloudfiles'
+        download_file: 'magento-ee-1.14.0.1.tar.gz'
+        checksum: '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
+<% end %>
