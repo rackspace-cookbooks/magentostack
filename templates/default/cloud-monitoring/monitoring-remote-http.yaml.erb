@@ -4,11 +4,11 @@
 # Controlling Cookbook: <%=  @cookbook_name %>
 #
 type: remote.http
-label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@http_port} for #{@server_name}" %>
+label: Remote HTTP check on <%= "#{@host} port #{@http_port} for #{@server_name}" %>
 disabled: <%= @disabled %>
 period: <%= @period %>
 timeout: <%= @timeout %>
-target_hostname: <%= node['cloud']['public_ipv4'] %>
+target_hostname: <%= @host %>
 monitoring_zones_poll:
   - mzdfw
   - mzord
@@ -17,11 +17,11 @@ details:
   hostname: <%= @server_name %>
   method: GET
   body: Orders and Returns
-  url: http://<%= "#{node['cloud']['public_ipv4']}:#{@http_port}" %>
+  url: http://<%= "#{@host}:#{@http_port}" %>
 <% if @alarm == true %>
 alarms:
   http-check:
-    label: Remote HTTP check on <%= "#{node['cloud']['public_ipv4']} port #{@http_port} for #{@server_name}" %>
+    label: Remote HTTP check on <%= "#{@host} port #{@http_port} for #{@server_name}" %>
     notification_plan_id: npTechnicalContactsEmail
     criteria: |
       if (metric['code'] regex '4[0-9][0-9]') {
