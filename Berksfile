@@ -23,3 +23,5 @@ cookbook 'openssl', git: 'https://github.com/racker/openssl.git'
 cookbook 'kibana', git: 'git@github.com:lusis/chef-kibana.git', branch: 'KIBANA3'
 # newrelic cookbook bug. They have curl as a `recommend`, but it's actually a  dependency
 cookbook 'curl'
+
+cookbook 'newrelic_plugins', git: 'git@github.com:rackspace-cookbooks/newrelic_plugins_chef.git'

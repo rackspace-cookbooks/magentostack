@@ -137,4 +137,5 @@ tag('magento_app_node')
 # set http_port and domain variables in in the recipe as they are built from attributes
 node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['http_port'] = node['magentostack']['web']['http_port']
 node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['domain'] = node['magentostack']['web']['domain']
+node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['host'] = node.deep_fetch('cloud', 'public_ipv4') || node['ipaddress']
 include_recipe 'platformstack::monitors' if node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled')
