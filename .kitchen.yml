@@ -2,8 +2,8 @@
 driver:
   name: vagrant
   network:
-  - ["forwarded_port", {guest: 8080,   host: 8080, auto_correct: true}]
-  - ["forwarded_port", {guest: 8443,   host: 8443, auto_correct: true}]
+  - ["forwarded_port", {guest: 80,   host: 8080, auto_correct: true}]
+  - ["forwarded_port", {guest: 443,   host: 8443, auto_correct: true}]
   customize:
     memory: 1024
 
@@ -12,6 +12,11 @@ provisioner:
   environments_path: test/integration/environments
   require_chef_omnibus: 11.16.4
   attributes:
+    magentostack:
+      web:
+        http_port: '8080'
+        https_port: '8443'
+    
     authorization:
       sudo:
         users: ['vagrant']
