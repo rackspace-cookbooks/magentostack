@@ -1,19 +1,60 @@
 blueprint:
   id: 8363F2D2284D4871BC618E92D152994F
-  name: "magentostack-single"
-  description: "Magento Community Edition installed on a single Cloud Server"
+  name: "magentostack-cloud"
+  description: "Magento Community Edition installed using Cloud Datastores"
   version: 1.0.0
   services:
-    magento:
+    lb:
+      component:
+        interface: http
+        type: load-balancer
+        constraints:
+        - algorithm: ROUND_ROBIN
+      relations:
+      - magento: http
+      display-name: Load Balancer
+    'magento':
       component:
         name: magento
-        type: application
+        resource_type: application
         role: master
       constraints:
-      - count: 1
+      - setting: count  # used for manual scaling
+        greater-than-or-equal-to: 1
+        less-than: 9
+      relations:
+      - data: mysql
+      - session-cache: redis#sessions
+      - object-cache: redis#objects
+    'data':
+      component:
+        resource_type: database
+        interface: mysql
+        id: mysql_database
+    'session-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        id: redis_cache
+    'object-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        id: redis_cache
+
   options:
 
-
+    # Chef Server Options
+    chef-server-url:
+      constrains:
+        - setting: server-url
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 1
+      type: string
+      required: true
+      label: Chef Server Org URL
     chef-server-username:
       constrains:
         - setting: server-username
@@ -22,23 +63,7 @@ blueprint:
         group: chef
         order: 2
       type: string
-    validator-username:
-      constrains:
-        - setting: validator-username
-          provider: chef-server
-      display-hints:
-        group: chef
-        order: 5
-      type: string
-    chef-server-url:
-      constrains:
-        - setting: server-url
-          provider: chef-server
-      display-hints:
-        group: chef
-        order: 1
-      type: url
-      label: Chef Server Org URL
+      required: true
     chef-server-user-key:
       constrains:
         - setting: server-user-key
@@ -47,6 +72,7 @@ blueprint:
         group: chef
         order: 3
       type: text
+      required: true
     validator-pem:
       constrains:
         - setting: validator-pem
@@ -55,9 +81,18 @@ blueprint:
         group: chef
         order: 4
       type: text
+      required: true
+    validator-username:
+      constrains:
+        - setting: validator-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 5
+      type: string
+      required: true
 
-
-    # Deployment Options
+    # Cloud Deployment Options
     region:
       label: Region
       type: string
@@ -66,16 +101,17 @@ blueprint:
       display-hints:
         group: deployment
         list-type: region
-        choice:
-        - DFW
-        - ORD
-        - LON
-        - SYD
-        - IAD
-        - HKG
       constrains:
+      - in:
+        #- DFW does not yet support Cloud Redis
+        #- ORD does not yet support Cloud Redis
+        - IAD
+        # - SYD does not yet support Cloud DBs
+        # - HKG does not yet support Cloud DBs
+        # - LON does not yet support Cloud DBs
       - setting: region
         provider: load-balancer
+
     # Application Options
     url:
       label: Site Address
@@ -93,11 +129,19 @@ blueprint:
         default-protocol: http
         sample: http://magento.example.com/
       constraints:
-      - protocols: [http]
-        message: protocols are limited to http or https
+      - protocols: [http, https]
+        message: http and https are the only protocols supported
       - regex: '^([a-zA-Z]{2,}?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$'
         message: must be a valid web address
       constrains:
+      - setting: allow_insecure
+        service: lb
+        resource_type: load-balancer
+        value: true  # turn on HTTP if protocol is HTTPS (provider handles it)
+      - setting: protocol
+        attribute: protocol
+        service: lb
+        resource_type: load-balancer
       - setting: domain
         service: magento
         attribute: hostname
@@ -125,11 +169,6 @@ blueprint:
 #      display-hints:
 #        group: application
 #        order: 2
-#        choice:
-#        - name: 1.7.0.2
-#          value: 1.7.0.2
-#        - name: 1.8.1.0
-#          value: 1.8.1.0
 #      constrains:
 #      - setting: version
 #        service: magento
@@ -322,6 +361,24 @@ blueprint:
         message: must be 4096 or larger
       - less-than-or-equal-to: 61440
         message: must be 61440 or smaller
+    magento_server_count:
+      label: Magento Servers
+      type: integer
+      required: true
+      default: 1
+      description: The number of Magento servers to launch (up to 8)
+      display-hints:
+        group: server
+        order: 3
+      constraints:
+      - greater-than-or-equal-to: 1
+        message: must be 1 or greater
+      - less-than-or-equal-to: 8
+        message: must be 8 or fewer
+      constrains:
+      - setting: count
+        service: magento
+        resource_type: application
   resources:
     "magento user":
       type: user
@@ -367,9 +424,6 @@ blueprint:
     flavor: |
       Single Linux server with Magento Community Edition and MySQL 5.5
     flavor-weight: 1
-    heat-info:
-      porting: true
-      template-url: https://github.com/rackspace-orchestration-templates/magento-single
     reach-info:
       option-groups:
       - application: Magento Options
@@ -379,7 +433,7 @@ blueprint:
       icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
   documentation:
     abstract: |
-      Single Linux server with [Magento Community
+      Linux with [Magento Community
       Edition](http://www.magentocommerce.com/product/community-edition/)
       installed with [nginx](http://nginx.org/en/), [PHP
       FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
@@ -416,8 +470,9 @@ blueprint:
 
       #### Details of Your Setup
       This deployment was stood up using
-      [chef-solo](http://docs.opscode.com/chef_solo.html).  Once the deployment
-      is up, chef will not run again, so it is safe to modify configurations.
+      [chef-server](http://docs.opscode.com/chef_server.html).  Chef will run
+      continuously and override any changes, so it is not safe to modify
+      configurations.
 
       A system user named 'magento' has been created.  This user does not have
       a password set, so if you wish to use the account, a password will need to
@@ -476,8 +531,7 @@ blueprint:
       that you need.
 
       #### Additional Notes
-      There is not an automatic way to add additional nodes to this deployment.
-      This deployment is meant for lower traffic or testing scenarios.
+      This blueprint supports adding additional nodes to the deployment.
   display-outputs:
     "Site Address":
       type: url
@@ -526,6 +580,7 @@ environment:
       - bootstrap-version: "11.16.4-1"
     load-balancer: {}
     nova: {}
+    database: {}
     common:
       vendor: rackspace
 inputs:
@@ -539,5 +594,6 @@ inputs:
     username: "MagentoAdmin"
     password: "Mag!345678"
     email: "chkmate@example.com"
+    magento_server_count: 1
     firstname: "Test"
     lastname: "Deployment"
