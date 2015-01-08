@@ -229,5 +229,21 @@ module MagentostackUtil
 
     found
   end
+  # If there is redis password for the session storage then return it
+  # rubocop:disable LineLength
+  def self.redis_session_password(run_state)
+    run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_session'] ? run_state['magentostack']['redis']['password_session'] : nil
+  end
+
+  # If there is redis password for the object storage then use it
+  def self.redis_object_password(run_state)
+    run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_object'] ? run_state['magentostack']['redis']['password_object'] : nil
+  end
+
+  # If there is redis password for the full page storage then use it
+  def self.redis_page_password(run_state)
+    run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_page'] ? run_state['magentostack']['redis']['password_page'] : nil
+  end
+  # rubocop:enable LineLength
 end
 # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
