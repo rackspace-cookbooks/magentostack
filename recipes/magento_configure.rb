@@ -84,7 +84,7 @@ execute setup_script do
   cwd node['magentostack']['web']['dir']
   user node['apache']['user']
   group node['apache']['group']
-  # not_if { File.exist?(magento_configured_file) }
+  not_if { File.exist?(magento_configured_file) }
 end
 
 include_recipe 'magentostack::_magento_redis'
