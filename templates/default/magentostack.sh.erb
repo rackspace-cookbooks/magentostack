@@ -1,3 +1,22 @@
+# run the checker
+CHECK_OUTPUT=$(php -f check-magento-installed.php)
+echo "$CHECK_OUTPUT"
+
+# if magento is already installed, we exit with a good status, chef run continues
+echo "$CHECK_OUTPUT" | grep "Magento is already installed"
+if [ $? -eq 0 ]; then
+  # magento was already installed, match
+  exit 0
+fi
+
+# if the error is NOT about the magento install, we exit with a bad status, chef run blows up
+echo "$CHECK_OUTPUT" | grep "Did not find any installation of Magento"
+if [ $? -ne 0 ]; then
+  # magento was not already installed, and error was *NOT* an expected one
+  exit 1 # short circuit, due an unexpected another error
+fi
+
+# run the installer
 php -f install.php -- \
 --license_agreement_accepted "yes" \
 --locale "<%= node['magentostack']['config']['locale'] %>" \
@@ -23,5 +42,13 @@ php -f install.php -- \
 --admin_username "<%= node['magentostack']['config']['admin_user']['username'] %>" \
 --admin_password "<%= node['magentostack']['config']['admin_user']['password'] %>" \
 --encryption_key "<%= node['magentostack']['config']['encryption_key'] %>" \
---skip_url_validation && touch <%= @magento_configured_file %> || /bin/true
-exit $?
+--skip_url_validation
+INSTALLER_RESULT=$?
+
+# touch the configured file, if installer went okay
+if [ $INSTALLER_RESULT -eq 0 ]; then
+  touch <%= @magento_configured_file %>
+fi
+
+# exit with installer's status
+exit $INSTALLER_RESULT
