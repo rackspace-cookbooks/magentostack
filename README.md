@@ -68,6 +68,10 @@ apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore
   - creates the mysql user and manages the /var/lib/mysql mountpoint
 
 ### mysql_holland
+---
+Warning
+mysql_holland package will install python-setup tools preventing to apply this fix https://github.com/rackspace-cookbooks/stack_commons/pull/86, so you must include magentostack::mysql_holland as late as possible in your run_list.
+---
 -  what it does
   -  installs holland
   -  will set up a backup job based on if you are running as a slave or not
