@@ -220,13 +220,21 @@ shouldn't really be messed with
 You can define a password for each redis instance(or for the single one) using the run_state attribute type.
 This type prevents to store passwords on the node. The passwords will be used to set up the Redis instances and configure Magento.
 
+Multiple redis instances
 ```
 node.run_state['magentostack'] = {
   'redis' => {
-    'password_session' => 'runstatepasswordsession',
-    'password_object' => 'runstatepasswordobject',
-    'password_page' => 'runstatepasswordpage',
-    'password_single' => 'runstatepasswordsingle'
+    'password_session' => 'redis_password_session_store',
+    'password_object' => 'redis_password_object_store',
+    'password_page' => 'redis_password_page_store'
+  }
+}
+```
+Single redis instance
+```
+node.run_state['magentostack'] = {
+  'redis' => {
+    'password_single' => 'redis_password_single_store'
   }
 }
 ```

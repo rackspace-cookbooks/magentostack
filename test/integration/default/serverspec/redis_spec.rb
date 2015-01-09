@@ -16,7 +16,7 @@ end
 describe file('/etc/redis/6379-single-master.conf') do
   it { should be_file }
 end
-describe command("#{redis_path}/redis-cli -p 6379 INFO") do
+describe command("#{redis_path}/redis-cli -a runstatepasswordsingle -p 6379 INFO") do
   its(:stdout) { should match(/role:master/) }
   its(:stdout) { should match(/connected_slaves:1/) }
 end
@@ -31,7 +31,7 @@ end
 describe file('/etc/redis/6380-single-slave.conf') do
   it { should be_file }
 end
-describe command("#{redis_path}/redis-cli -p 6380 INFO") do
+describe command("#{redis_path}/redis-cli -a runstatepasswordsingle -p 6380 INFO") do
   its(:stdout) { should match(/role:slave/) }
   its(:stdout) { should match(/master_host:.+/) }
   its(:stdout) { should match(/master_port:6379/) }
@@ -49,6 +49,6 @@ describe file('/etc/redis/sentinel_46379-sentinel.conf') do
   it { should be_file }
   its(:content) { should match(/sentinel monitor .+ 6379 2/) }
 end
-describe command("#{redis_path}/redis-cli -p 46379 SENTINEL masters") do
+describe command("#{redis_path}/redis-cli -a runstatepasswordsingle -p 46379 SENTINEL masters") do
   its(:stdout) { should match(/port\n6379/) }
 end
