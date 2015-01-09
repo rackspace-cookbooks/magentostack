@@ -215,6 +215,22 @@ controls how cloud_monitoring is used within magentostack
 
 shouldn't really be messed with
 
+### redis
+
+You can define a password for each redis instance(or for the single one) using the run_state attribute type.
+This type prevents to store passwords on the node. The passwords will be used to set up the Redis instances and configure Magento.
+
+```
+node.run_state['magentostack'] = {
+  'redis' => {
+    'password_session' => 'runstatepasswordsession',
+    'password_object' => 'runstatepasswordobject',
+    'password_page' => 'runstatepasswordpage',
+    'password_single' => 'runstatepasswordsingle'
+  }
+}
+```
+
 ### varnish
 - `default['magentostack']['varnish']['multi'] = true`
   - allows us to use more complex logic for the varnish configuration
