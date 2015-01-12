@@ -22,7 +22,11 @@ include_recipe 'chef-sugar'
 
 bind_port = node['magentostack']['redis']['bind_port_single']
 server_name = "#{bind_port}-single-master"
-node.set['magentostack']['redis']['servers'][server_name] = { 'name' => server_name, 'port' => bind_port }
+node.set['magentostack']['redis']['servers'][server_name] = {
+  'name' => server_name,
+  'port' => bind_port,
+  'requirepass' => MagentostackUtil.redis_single_password(node.run_state)
+}
 tag('magentostack_redis')
 tag('magentostack_redis_single')
 MagentostackUtil.recompute_redis(node)

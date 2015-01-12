@@ -68,6 +68,10 @@ apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore
   - creates the mysql user and manages the /var/lib/mysql mountpoint
 
 ### mysql_holland
+---
+Warning
+mysql_holland package will install python-setup tools preventing to apply this fix https://github.com/rackspace-cookbooks/stack_commons/pull/86, so you must include magentostack::mysql_holland as late as possible in your run_list.
+---
 -  what it does
   -  installs holland
   -  will set up a backup job based on if you are running as a slave or not
@@ -214,6 +218,30 @@ controls how cloud_monitoring is used within magentostack
 ### php_fpm
 
 shouldn't really be messed with
+
+### redis
+
+You can define a password for each redis instance(or for the single one) using the run_state attribute type.
+This type prevents to store passwords on the node. The passwords will be used to set up the Redis instances and configure Magento.
+
+Multiple redis instances
+```
+node.run_state['magentostack'] = {
+  'redis' => {
+    'password_session' => 'redis_password_session_store',
+    'password_object' => 'redis_password_object_store',
+    'password_page' => 'redis_password_page_store'
+  }
+}
+```
+Single redis instance
+```
+node.run_state['magentostack'] = {
+  'redis' => {
+    'password_single' => 'redis_password_single_store'
+  }
+}
+```
 
 ### varnish
 - `default['magentostack']['varnish']['multi'] = true`

@@ -22,4 +22,5 @@ cookbook 'openssl', git: 'https://github.com/racker/openssl.git'
 
 cookbook 'kibana', git: 'git@github.com:lusis/chef-kibana.git', branch: 'KIBANA3'
 
+# Until https://github.com/newrelic-platform/newrelic_plugins_chef/pull/29 is merged
 cookbook 'newrelic_plugins', git: 'git@github.com:rackspace-cookbooks/newrelic_plugins_chef.git'
