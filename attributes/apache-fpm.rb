@@ -44,6 +44,20 @@ when 'debian'
 end
 #    php5-soap
 
+# Php configuration
+default['php-fpm']['pools'] = {
+  'www' => {
+    enable: true,
+    php_options: {
+      'php_admin_flag[opcache.enable]' => '1',
+      'php_admin_value[opcache.memory_consumption]' => '256',
+      'php_admin_value[opcache.interned_strings_buffer]' => '8',
+      'php_admin_value[opcache.max_accelerated_files]' => '4000',
+      'php_admin_value[opcache.fast_shutdown]' => '1',
+      'php_admin_value[opcache.validate_timestamps]' => '0'
+    }
+  }
+}
 # cloud monitoring
 node.default['magentostack']['web']['monitor']['cookbook'] = 'magentostack'
 node.default['magentostack']['web']['monitor']['template'] = 'cloud-monitoring/monitoring-remote-http.yaml.erb'
