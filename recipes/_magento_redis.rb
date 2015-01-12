@@ -43,7 +43,7 @@ if session_master_name && session_master_ip && session_master_port
   redis_session_fragment = "<redis_session>
   <host>#{session_master_ip}</host>
   <port>#{session_master_port}</port>
-  <password></password>
+  <password>#{MagentostackUtil.redis_session_password(node.run_state)}</password>
   <timeout>2.5</timeout>
   <persistent></persistent>
   <db>2</db>
@@ -76,7 +76,7 @@ if object_master_name && object_master_ip && object_master_port
         <port>#{object_master_port}</port>
         <persistent></persistent>               <!-- Specify a unique string like \"cache-db0\" to enable persistent connections. -->
         <database>0</database>
-        <password></password>
+        <password>#{MagentostackUtil.redis_object_password(node.run_state)}</password>
         <force_standalone>0</force_standalone>  <!-- 0 for phpredis, 1 for standalone PHP -->
         <connect_retries>1</connect_retries>    <!-- Reduces errors due to random connection failures -->
         <read_timeout>10</read_timeout>         <!-- Set read timeout duration -->
@@ -108,7 +108,7 @@ if page_master_name && page_master_ip && page_master_port
     <server>#{page_master_ip}</server> <!-- or absolute path to unix socket for better performance -->
     <port>#{page_master_port}</port>
     <database>1</database>
-    <password></password>
+    <password>#{MagentostackUtil.redis_page_password(node.run_state)}</password>
     <force_standalone>0</force_standalone>  <!-- 0 for phpredis, 1 for standalone PHP -->
     <connect_retries>1</connect_retries>    <!-- Reduces errors due to random connection failures -->
     <automatic_cleaning_factor>0</automatic_cleaning_factor> <!-- Disabled by default -->
