@@ -30,3 +30,8 @@
 ).each do |recipe|
   include_recipe recipe
 end
+
+# if enterprise edition, also enable the FPC for testing
+if node['magentostack'] && node['magentostack']['flavor'] == 'enterprise'
+  include_recipe 'magentostack::_magento_fpc'
+end

@@ -66,8 +66,7 @@ describe 'redis instance for page cache' do
   end
 
   # ensure the cache is non-empty now
-  # TODO: Not working until we enable it somehow.
-  # describe command("#{redis_path}/redis-cli --no-raw -n 1 keys '*'") do
-  #  its(:stdout) { should_not match(/empty list or set/) }
-  # end
+  describe command("#{redis_path}/redis-cli -a runstatepasswordpage -p 6385 --no-raw -n 1 keys '*'") do
+    its(:stdout) { should_not match(/empty list or set/) }
+  end
 end
