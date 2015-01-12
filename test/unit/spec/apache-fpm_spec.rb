@@ -80,7 +80,8 @@ describe 'magentostack::apache-fpm' do
             expect(chef_run).to include_recipe('platformstack::monitors')
           end
           it 'configures rackspace monitoring agent' do
-            expect(chef_run).to render_file('/etc/rackspace-monitoring-agent.conf.d/monitoring-custom_http.yaml').with_content('hostname: 10.0.1.2')
+            expect(chef_run).to render_file('/etc/rackspace-monitoring-agent.conf.d/monitoring-custom_http.yaml').with_content('target_hostname: 10.0.1.2')
+            expect(chef_run).to render_file('/etc/rackspace-monitoring-agent.conf.d/monitoring-custom_http.yaml').with_content('  hostname: localhost')
           end
         end
 
