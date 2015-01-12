@@ -77,6 +77,13 @@ describe command('wget -qO- localhost:8080/phpinfo.php') do
   end
   its(:stdout) { should match(/FPM\/FastCGI/) }
   its(:stdout) { should match(/PHP Version 5.5/) }
+  # Opcache
+  its(:stdout) { should match(/opcache.enable<\/td><td class="v">On/) }
+  its(:stdout) { should match(/opcache.memory_consumption<\/td><td class="v">256/) }
+  its(:stdout) { should match(/opcache.interned_strings_buffer<\/td><td class="v">8/) }
+  its(:stdout) { should match(/opcache.max_accelerated_files<\/td><td class="v">4000/) }
+  its(:stdout) { should match(/opcache.fast_shutdown<\/td><td class="v">1/) }
+  its(:stdout) { should match(/opcache.validate_timestamps<\/td><td class="v">Off/) }
   after do
     # remove phpinfo file
     # FileUtils.rm(phpinfo_path) if File.exist?(phpinfo_path)

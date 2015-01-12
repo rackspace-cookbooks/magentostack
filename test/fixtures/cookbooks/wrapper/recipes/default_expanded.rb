@@ -9,7 +9,6 @@
 # installation with all components split apart (such as separate redis instances)
 #
 # Add more recipes in the wrapper for other topologies/configurations of magentostack.
-
 %w(
   wrapper::_redis_password
   magentostack::redis_object
