@@ -24,10 +24,10 @@ describe service(fpm_service_name) do
   it { should be_enabled }
   it { should be_running }
 end
-describe port(8080) do
+describe port(80) do
   it { should be_listening }
 end
-describe port(8443) do
+describe port(443) do
   it { should be_listening }
 end
 
@@ -54,8 +54,8 @@ end
 ## apachectl -S on Apache 2.4(default on Ubuntu 14) has a different output
 if os[:release] == '14.04'
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/\*:8443                  localhost/) }
-    its(:stdout) { should match(/\*:8080                   localhost/) }
+    its(:stdout) { should match(/\*:8443 .\*localhost/) }
+    its(:stdout) { should match(/\*:8080 .\*localhost/) }
   end
 else
   describe command("#{apache2ctl} -S") do
