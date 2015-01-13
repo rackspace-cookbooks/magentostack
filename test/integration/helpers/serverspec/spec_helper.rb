@@ -4,6 +4,8 @@ require 'net/http'
 require 'openssl'
 
 require_relative 'default_examples'
+require_relative 'apache_examples'
+require_relative 'mysql_examples'
 
 set :backend, :exec
 set :path, '/sbin:/usr/local/sbin:/bin:/usr/bin:$PATH'
