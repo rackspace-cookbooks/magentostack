@@ -61,7 +61,11 @@ describe 'magentostack::apache-fpm' do
             defaultconf = [
               'VirtualHost *:80',
               'ServerName localhost',
-              'DocumentRoot /var/www/html/magento'
+              'DocumentRoot /var/www/html/magento',
+              'SetEnvIf X-Forwarded-Proto https HTTPS=on',
+              'ExpiresActive On',
+              'ExpiresDefault "access plus 1 month"',
+              'Header set Access-Control-Allow-Origin "*"'
             ]
             defaultconf.each do |line|
               expect(chef_run).to render_file("#{vhost_path}/default.conf").with_content(line)

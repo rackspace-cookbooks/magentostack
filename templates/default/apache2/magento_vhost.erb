@@ -13,8 +13,8 @@
   DocumentRoot <%= @params[:docroot] %>
   DirectoryIndex index.php
 
-  # Enable this line if you are terminating your SSL on a load-balancer.
-  # SetEnvIf X-Forwarded-Proto https HTTPS=on
+  # We are enabling this even if we are not behind a load-balancer as it should not create any harm
+  SetEnvIf X-Forwarded-Proto https HTTPS=on
 
   <Directory <%= @params[:docroot] %>/>
     Options +FollowSymLinks
@@ -32,6 +32,13 @@
       ExpiresActive On
       ExpiresDefault "access plus 1 month"
     </IfModule>
+    # Allow web fonts across parallel hostnames
+    # (otherwise Firefox and IE won't load them from CSS)
+    <FilesMatch "\.(ttf|otf|eot|svg|woff)$">
+        <IfModule mod_headers.c>
+           Header set Access-Control-Allow-Origin "*"
+        </IfModule>
+    </FilesMatch>
   </Directory>
 
   #Log settings
