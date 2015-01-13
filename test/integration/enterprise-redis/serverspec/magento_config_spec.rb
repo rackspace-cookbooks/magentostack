@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
 describe 'Magentostack xml configuration' do
   describe 'Redis password for session' do
