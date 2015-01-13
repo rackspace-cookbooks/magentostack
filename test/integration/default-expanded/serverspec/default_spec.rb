@@ -24,10 +24,10 @@ describe service(fpm_service_name) do
   it { should be_enabled }
   it { should be_running }
 end
-describe port(8080) do
+describe port(80) do
   it { should be_listening }
 end
-describe port(8443) do
+describe port(443) do
   it { should be_listening }
 end
 
@@ -54,8 +54,8 @@ end
 ## apachectl -S on Apache 2.4(default on Ubuntu 14) has a different output
 if os[:release] == '14.04'
   describe command("#{apache2ctl} -S") do
-    its(:stdout) { should match(/\*:8443                  localhost/) }
-    its(:stdout) { should match(/\*:8080                   localhost/) }
+    its(:stdout) { should match(/\*:8443 .\*localhost/) }
+    its(:stdout) { should match(/\*:8080 .\*localhost/) }
   end
 else
   describe command("#{apache2ctl} -S") do
@@ -77,6 +77,13 @@ describe command('wget -qO- localhost:8080/phpinfo.php') do
   end
   its(:stdout) { should match(/FPM\/FastCGI/) }
   its(:stdout) { should match(/PHP Version 5.5/) }
+  # Opcache
+  its(:stdout) { should match(/opcache.enable<\/td><td class="v">On/) }
+  its(:stdout) { should match(/opcache.memory_consumption<\/td><td class="v">256/) }
+  its(:stdout) { should match(/opcache.interned_strings_buffer<\/td><td class="v">8/) }
+  its(:stdout) { should match(/opcache.max_accelerated_files<\/td><td class="v">4000/) }
+  its(:stdout) { should match(/opcache.fast_shutdown<\/td><td class="v">1/) }
+  its(:stdout) { should match(/opcache.validate_timestamps<\/td><td class="v">Off/) }
 end
 
 ## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
