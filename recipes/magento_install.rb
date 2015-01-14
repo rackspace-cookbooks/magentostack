@@ -63,6 +63,46 @@ when 'ark'
     checksum node['magentostack']['checksum']
     action :put
   end
+when 'git'
+  include_recipe 'git'
+  require 'base64'
+
+  # Store deploy key in the chef file cache path, so it is outside of docroot
+  id_deploy = "#{Chef::Config[:file_cache_path]}/id_deploy"
+  deploy_key = node['magentostack']['git_deploykey']
+  deploy_key = Base64.decode64(deploy_key) if deploy_key
+
+  # Write the actual keyfile
+  template id_deploy do
+    owner node['apache']['user']
+    group node['apache']['group']
+    mode '0600'
+    variables(id_deploy: deploy_key)
+  end
+
+  # Write an SSH wrapper for git checkouts
+  git_ssh_wrapper = "#{Chef::Config[:file_cache_path]}/git_ssh_wrapper.sh"
+  template git_ssh_wrapper do
+    user node['apache']['user']
+    group node['apache']['group']
+    mode '0700'
+    variables(keyfile: id_deploy)
+  end
+
+  # Run the checkout into /var/www/html/magento
+  magento_dir = "#{node['apache']['docroot_dir']}/magento"
+  directory magento_dir do
+    user node['apache']['user']
+    group node['apache']['group']
+  end
+  git magento_dir do
+    repository node['magentostack']['git_repository']
+    revision node['magentostack']['git_revision']
+    ssh_wrapper git_ssh_wrapper
+    action :sync
+    user node['apache']['user']
+    group node['apache']['group']
+  end
 when 'none'
   Chef::Log.info('Magento install method none was requested, not installing magento')
 else

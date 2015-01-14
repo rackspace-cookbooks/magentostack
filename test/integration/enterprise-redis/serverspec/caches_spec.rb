@@ -1,9 +1,9 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
 # object cache (magento calls this the 'cache', in redis db 0)
 # page cache (EE only, in redis db 1)
 # session cache (magento calls this the 'cache', in redis db 2)
-describe 'redis instances for object, page, and session cache' do
+describe 'enterprise with separate redis instances for object, page, and session cache' do
   before do
     clear_out_redis '-a runstatepasswordobject -p 6383 -n 0'
     clear_out_redis '-a runstatepasswordpage -p 6385 -n 1'

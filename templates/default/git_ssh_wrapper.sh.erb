@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+# SSH wrapper for deploying from private Github repository
+#
+# Rendered by Chef - local changes will be replaced
+
+/usr/bin/env ssh -o "StrictHostKeyChecking=no" -i "<%= @keyfile %>" $1 $2

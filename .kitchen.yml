@@ -41,21 +41,38 @@ platforms:
     - recipe[yum]
 
 suites:
-  - name: default
+  - name: community
     provisioner:
         client_rb:
           environment: default_single
     run_list:
       - recipe[wrapper::default]
 
-  - name: default-expanded
+  - name: community-redis
     provisioner:
         client_rb:
           environment: default_expanded
     run_list:
       - recipe[wrapper::default_expanded]
+<% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
+  - name: enterprise-git
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      rackspace:
+        cloud_credentials:
+          username: 'rackops'
+          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
+      magentostack:
+        flavor: 'enterprise'
+        install_method: 'git'
+        git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
+        git_revision: 'master'
+        # export RACKSPACE_MAGENTOSTACK_DEPLOYKEY=$(cat ~/.ssh/id_deploy | base64 -w 0 )
+        git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
+<% end %>
 <% if ENV['RACKSPACE_API_KEY'] %>
-  - name: default-ee
+  - name: enterprise-cloudfiles
     run_list:
       - recipe[wrapper::default]
     attributes:
@@ -69,7 +86,7 @@ suites:
         download_file: 'magento-ee-1.14.0.1.tar.gz'
         checksum: '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
 
-  - name: default-expanded-ee
+  - name: enterprise-redis
     run_list:
       - recipe[wrapper::default_expanded]
     attributes:
