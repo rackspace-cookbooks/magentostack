@@ -73,15 +73,26 @@ shared_examples_for 'magento under apache' do |args|
     before do
       File.open(index_php_path, 'w') { |file| file.write('<?php phpinfo(); ?>') }
     end
-    its(:stdout) { should match(/FPM\/FastCGI/) }
-    its(:stdout) { should match(/PHP Version 5.5/) }
-    # Opcache
-    its(:stdout) { should match(/opcache.enable<\/td><td class="v">On/) }
-    its(:stdout) { should match(/opcache.memory_consumption<\/td><td class="v">256/) }
-    its(:stdout) { should match(/opcache.interned_strings_buffer<\/td><td class="v">8/) }
-    its(:stdout) { should match(/opcache.max_accelerated_files<\/td><td class="v">4000/) }
-    its(:stdout) { should match(/opcache.fast_shutdown<\/td><td class="v">1/) }
-    its(:stdout) { should match(/opcache.validate_timestamps<\/td><td class="v">Off/) }
+    phpinfo = %w(
+      FPM\/FastCGI
+      PHP Version 5.5
+      opcache.enable<\/td><td class="v">On
+      opcache.memory_consumption<\/td><td class="v">256
+      opcache.interned_strings_buffer<\/td><td class="v">8
+      opcache.max_accelerated_files<\/td><td class="v">4000
+      opcache.fast_shutdown<\/td><td class="v">1
+      opcache.validate_timestamps<\/td><td class="v">Off
+      memory_limit<\/td><td class="v">512M
+      max_execution_time<\/td><td class="v">1800
+      realpath_cache_size<\/td><td class="v">256k
+      realpath_cache_ttl<\/td><td class="v">7200
+      open_basedir<\/td><td class="v">no value
+      session.entropy_length<\/td><td class="v">32
+      session.entropy_file<\/td><td class="v">/dev/urandom
+    )
+    phpinfo.each do |line|
+      its(:stdout) { should match(/#{line}/) }
+    end
   end
 
   ## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
@@ -90,8 +101,5 @@ shared_examples_for 'magento under apache' do |args|
       File.open("#{docroot}/magento-check.php", 'w') { |file| file.write(File.read("#{ENV['BUSSER_ROOT']}/suites/serverspec/fixtures/magento-check.php")) }
     end
     its(:stdout) { should match(/Congratulations/) }
-    after do
-      File.delete("#{docroot}/magento-check.php")
-    end
   end
 end
