@@ -53,8 +53,15 @@ default['php-fpm']['pools'] = {
       'php_admin_value[opcache.memory_consumption]' => '256',
       'php_admin_value[opcache.interned_strings_buffer]' => '8',
       'php_admin_value[opcache.max_accelerated_files]' => '4000',
-      'php_admin_value[opcache.fast_shutdown]' => '1',
-      'php_admin_value[opcache.validate_timestamps]' => '0'
+      'php_admin_flag[opcache.fast_shutdown]' => '1',
+      'php_admin_flag[opcache.validate_timestamps]' => '1',
+      'php_admin_value[memory_limit]' => '512M',
+      'php_admin_value[max_execution_time]' => '1800',
+      'php_admin_value[realpath_cache_size]' => '256k',
+      'php_admin_value[realpath_cache_ttl]' => '7200',
+      'php_admin_value[open_basedir]' => 'none',
+      'php_admin_value[session.entropy_length]' => '32',
+      'php_admin_value[session.entropy_file]' => '/dev/urandom'
     }
   }
 }
