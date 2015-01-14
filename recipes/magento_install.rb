@@ -69,15 +69,32 @@ when 'git'
 
   # Store deploy key in the chef file cache path, so it is outside of docroot
   id_deploy = "#{Chef::Config[:file_cache_path]}/id_deploy"
-  deploy_key = node['magentostack']['git_deploykey']
-  deploy_key = Base64.decode64(deploy_key) if deploy_key
+  deploy_key = MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'git_deploykey')
+  fail 'deploy key could not be found' unless deploy_key
+  deploy_key = Base64.decode64(deploy_key)
 
   # Write the actual keyfile
-  template id_deploy do
+  file id_deploy do
     owner node['apache']['user']
     group node['apache']['group']
     mode '0600'
-    variables(id_deploy: deploy_key)
+    content deploy_key
+  end
+
+  # need to determine apache's homedir, but we need to do it at convergence, not compile
+  # since the user may not exist yet when the chef run is in the compile phase
+  ruby_block 'evaluate apache homedir' do
+    block do
+      apache_ssh_dir = run_context.resource_collection.find(directory: 'apache .ssh')
+      apache_ssh_dir.path File.expand_path("~#{node['apache']['user']}")
+    end
+  end
+
+  # /var/www is owned by root, even though it's the home directory for the apache user
+  directory 'apache .ssh' do
+    owner node['apache']['user']
+    group node['apache']['group']
+    mode '0700'
   end
 
   # Write an SSH wrapper for git checkouts

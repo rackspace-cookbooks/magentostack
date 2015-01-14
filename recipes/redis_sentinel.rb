@@ -34,7 +34,7 @@ server_name = "#{bind_port}-sentinel"
 node.set['magentostack']['redis']['sentinels'][server_name] = {
   'name' => server_name,
   'sentinel_port' => bind_port,
-  'auth-pass' => MagentostackUtil.redis_session_password(node.run_state),
+  'auth-pass' => MagentostackUtil.redis_session_password(node),
   'master_ip' => master_ip,
   'master_port' => master_port
 }

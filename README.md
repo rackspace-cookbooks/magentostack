@@ -226,21 +226,13 @@ This type prevents to store passwords on the node. The passwords will be used to
 
 Multiple redis instances
 ```
-node.run_state['magentostack'] = {
-  'redis' => {
-    'password_session' => 'redis_password_session_store',
-    'password_object' => 'redis_password_object_store',
-    'password_page' => 'redis_password_page_store'
-  }
-}
+node.run_state['magentostack_redis_password_session'] = 'runstatepasswordsession'
+node.run_state['magentostack_redis_password_object'] = 'runstatepasswordobject'
+node.run_state['magentostack_redis_password_page'] = 'runstatepasswordpage'
 ```
 Single redis instance
 ```
-node.run_state['magentostack'] = {
-  'redis' => {
-    'password_single' => 'redis_password_single_store'
-  }
-}
+node.run_state['magentostack_redis_password_single'] = 'runstatepasswordsingle'
 ```
 
 ### varnish

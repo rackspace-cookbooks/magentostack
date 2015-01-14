@@ -35,8 +35,8 @@ server_name = "#{bind_port}-single-slave"
 node.set['magentostack']['redis']['servers'][server_name] = {
   'name' => server_name,
   'port' => bind_port,
-  'requirepass' => MagentostackUtil.redis_single_password(node.run_state),
-  'masterauth' => MagentostackUtil.redis_single_password(node.run_state),
+  'requirepass' => MagentostackUtil.redis_single_password(node),
+  'masterauth' => MagentostackUtil.redis_single_password(node),
   'slaveof' => { 'master_name' => master_name, 'address' => master_ip, 'port' => master_port }
 }
 tag('magentostack_redis')
