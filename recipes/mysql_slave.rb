@@ -18,4 +18,5 @@
 # limitations under the License.
 #
 
-include_recipe 'stack_commons::mysql_slave' # ~RACK002
+include_recipe 'magentostack::_mysql_logging'
+include_recipe 'stack_commons::mysql_slave'

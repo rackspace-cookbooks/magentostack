@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: mysql_master
+# Recipe:: mysql_logging
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -18,6 +18,22 @@
 # limitations under the License.
 #
 
-include_recipe 'magentostack::_mysql_logging'
-include_recipe 'stack_commons::mysql_master'
-node.save unless Chef::Config[:solo] # make me searchable right away!
+# required because we set the log in a mysql dir
+directory '/var/log/mysql' do
+  user 'mysql'
+  action :create
+end
+logrotate_app 'mysql_slow_log' do
+  path      '/var/log/mysql/slow.log'
+  create   '644 mysql mysql'
+  options   ['notifempty', 'missingok', 'compress']
+  frequency 'daily'
+  rotate    5
+  postrotate <<-EOF
+    # just if mysqld is really running
+    if test -x /usr/bin/mysqladmin && /usr/bin/mysqladmin ping &>/dev/null
+    then
+       /usr/bin/mysqladmin flush-logs
+    fi
+  EOF
+end
