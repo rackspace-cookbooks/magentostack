@@ -42,3 +42,5 @@ default['php']['packages'] = []
 
 # MySQL
 default['mysql']['version'] = '5.6'
+default['mysql-multi']['templates']['my.cnf']['cookbook'] = 'magentostack'
+default['mysql-multi']['templates']['my.cnf']['source'] = 'mysql/my.cnf.erb'
