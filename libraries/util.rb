@@ -229,39 +229,45 @@ module MagentostackUtil
 
     found
   end
+
   # If there is redis password for the session storage then return it
-  # rubocop:disable LineLength
-  def self.redis_session_password(run_state)
-    # return run_state['magentostack']['redis']['password_single'] if we defined it
-    if redis_single_password(run_state)
-      redis_single_password(run_state)
-    elsif run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_session']
-      run_state['magentostack']['redis']['password_session']
-    end
+  def self.redis_session_password(current_node)
+    redis_password_or_single(current_node, 'session')
   end
 
   # If there is redis password for the object storage then use it
-  def self.redis_object_password(run_state)
-    # return run_state['magentostack']['redis']['password_single'] if we defined it
-    if redis_single_password(run_state)
-      redis_single_password(run_state)
-    elsif run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_object']
-      run_state['magentostack']['redis']['password_object']
-    end
+  def self.redis_object_password(current_node)
+    redis_password_or_single(current_node, 'object')
   end
 
   # If there is redis password for the full page storage then use it
-  def self.redis_page_password(run_state)
-    # return run_state['magentostack']['redis']['password_single'] if we defined it
-    if redis_single_password(run_state)
-      redis_single_password(run_state)
-    elsif run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_page']
-      run_state['magentostack']['redis']['password_page']
+  def self.redis_page_password(current_node)
+    redis_password_or_single(current_node, 'page')
+  end
+
+  def self.redis_single_password(current_node)
+    get_runstate_or_attr(current_node, 'magentostack', 'redis', 'password_single')
+  end
+
+  def self.redis_password_or_single(current_node, password_type)
+    password_single = redis_single_password(current_node)
+    password_instance = get_runstate_or_attr(current_node, 'magentostack', 'redis', "password_#{password_type}")
+
+    if password_single
+      password_single
+    else
+      password_instance
     end
   end
-  def self.redis_single_password(run_state)
-    run_state['magentostack'] && run_state['magentostack']['redis'] && run_state['magentostack']['redis']['password_single'] ? run_state['magentostack']['redis']['password_single'] : nil
+
+  def self.get_runstate_or_attr(current_node, *attr)
+    require 'chef/sugar'
+    run_state_key = attr.join('_')
+    if current_node.run_state.key?(run_state_key)
+      current_node.run_state[run_state_key]
+    else
+      current_node.deep_fetch(*attr)
+    end
   end
-  # rubocop:enable LineLength
 end
 # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
