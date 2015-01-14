@@ -429,6 +429,7 @@ blueprint:
       - application: Magento Options
       - server: Server Options
       - database: Database Options
+      - chef: Chef Options
       tattoo: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-tattoo.png
       icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
   documentation:
