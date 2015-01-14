@@ -1,8 +1,4 @@
 # Set password for Redis instance
-node.run_state['magentostack'] = {
-  'redis' => {
-    'password_session' => 'runstatepasswordsession',
-    'password_object' => 'runstatepasswordobject',
-    'password_page' => 'runstatepasswordpage'
-  }
-}
+node.run_state['magentostack_redis_password_session'] = 'runstatepasswordsession'
+node.run_state['magentostack_redis_password_object'] = 'runstatepasswordobject'
+node.run_state['magentostack_redis_password_page'] = 'runstatepasswordpage'

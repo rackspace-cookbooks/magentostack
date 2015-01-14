@@ -26,7 +26,7 @@ server_name = "#{bind_port}-page-master"
 node.set['magentostack']['redis']['servers'][server_name] = {
   'name' => server_name,
   'port' => bind_port,
-  'requirepass' => MagentostackUtil.redis_page_password(node.run_state)
+  'requirepass' => MagentostackUtil.redis_page_password(node)
 }
 tag('magentostack_redis')
 tag('magentostack_redis_page')
