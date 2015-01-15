@@ -208,7 +208,7 @@ output:
             magento:
               password: {{setting('database_password')}}
               username: {{setting('database_username')}}
-              encrytion_key: {{setting('encryption_key')}}
+              encryption_key: {{setting('encryption_key')}}
               # note host is written as output of a map
 
 ---
