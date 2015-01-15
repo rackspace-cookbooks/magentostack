@@ -26,6 +26,7 @@ blueprint:
       - data: mysql
       - session-cache: redis#session-cache
       - object-cache: redis#object-cache
+      - page-cache: redis#page-cache
     'data':
       component:
         resource_type: database
@@ -37,6 +38,11 @@ blueprint:
         interface: redis
         id: redis_cache
     'object-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        id: redis_cache
+    'page-cache':
       component:
         resource_type: cache
         interface: redis
