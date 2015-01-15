@@ -379,6 +379,32 @@ blueprint:
       - setting: count
         service: magento
         resource_type: application
+    database_size:
+      label: Database Size
+      type: integer
+      default: 4096
+      description: The size of the MySQL instances in MB of RAM.
+      display-hints:
+        group: database
+        order: 1
+        list-type: compute.memory
+        choice:
+        - name: 1 GB
+          value: 1024
+        - name: 2 GB
+          value: 2048
+        - name: 4 GB
+          value: 4096
+        - name: 8 GB
+          value: 8192
+        - name: 15 GB
+          value: 15360
+        - name: 30 GB
+          value: 30720
+      constrains:
+      - setting: memory
+        service: data
+        resource_type: compute
   resources:
     "magento user":
       type: user
@@ -596,5 +622,6 @@ inputs:
     password: "Mag!345678"
     email: "chkmate@example.com"
     magento_server_count: 1
+    database_size: 8000
     firstname: "Test"
     lastname: "Deployment"
