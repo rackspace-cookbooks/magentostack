@@ -13,7 +13,7 @@ default['magentostack']['download_file'] = 'magento.tar.gz'
 
 # for git download method
 default['magentostack']['git_repository'] = 'git@github.com:example/deployment.git'
-default['magentostack']['git_branch'] = 'master' # e.g. staging, testing, dev
+default['magentostack']['git_revision'] = 'master' # e.g. staging, testing, dev
 default['magentostack']['git_deploykey'] = nil
 
 # Database creation
