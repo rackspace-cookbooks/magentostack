@@ -253,10 +253,10 @@ blueprint:
       - setting: git_deploykey
         service: magento
         resource_type: application
-      # TODO: fix the regex
-      # constraints:
-      #  - regex: '((^-----BEGIN [DR]SA PRIVATE KEY-----($\n^| )(([0-9A-Za-z+/]){64}($\n^| )){1,100}(([0-9A-Za-z+=/]){1,64}($\n^| ))-----END [DR]SA PRIVATE KEY----- ?$)|(^$))'
-      #  message: Must be a valid SSH private key
+      constraints:
+      - regex:
+          value: patterns.regex.private_key.required
+        message: Must be a valid SSH private key
 #    sampledata:
 #      label: Install Sample Data
 #      description: Determine whether or not to provide sample data
@@ -335,7 +335,8 @@ blueprint:
         group: application
         order: 12
       constraints:
-      - regex: "^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:[.][A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?[.])+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$"
+      - regex:
+          value: patterns.regex.email_address.required
         message: must be a valid email address
       constrains:
       - setting: email
