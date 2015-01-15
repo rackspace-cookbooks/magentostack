@@ -62,7 +62,6 @@ suites:
         flavor: 'enterprise'
         install_method: 'git'
         git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
-        git_revision: 'master'
         # export RACKSPACE_MAGENTOSTACK_DEPLOYKEY=$(cat ~/.ssh/id_deploy | base64 -w 0 )
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 <% end %>
