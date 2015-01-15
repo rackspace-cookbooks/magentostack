@@ -24,8 +24,8 @@ blueprint:
         less-than: 9
       relations:
       - data: mysql
-      - session-cache: redis#sessions
-      - object-cache: redis#objects
+      - session-cache: redis#session-cache
+      - object-cache: redis#object-cache
     'data':
       component:
         resource_type: database
