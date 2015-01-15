@@ -27,6 +27,9 @@ options:
   "https_port":
     type: integer
     default: 443
+  "install_flavor":
+    type: string
+    default: community
   "install_method":
     type: string
     default: ark
@@ -91,6 +94,9 @@ maps:
 - value: {{ setting('https_port') }}
   targets:
   - attributes://magentostack/web/https_port
+- value: {{ setting('install_flavor') }}
+  targets:
+  - attributes://magentostack/flavor
 - value: {{ setting('install_method') }}
   targets:
   - attributes://magentostack/install_method
@@ -167,7 +173,7 @@ maps:
 - source: supported://session-cache/port
   targets:
   - attributes://magentostack/redis/override_session_port
-- source: supported://session-cache/password
+- source: supported://session-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_session
 - source: supported://object-cache/instance/name
@@ -179,7 +185,7 @@ maps:
 - source: supported://object-cache/port
   targets:
   - attributes://magentostack/redis/override_object_port
-- source: supported://object-cache/password
+- source: supported://object-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_object
 - source: supported://page-cache/instance/name
@@ -191,7 +197,7 @@ maps:
 - source: supported://page-cache/port
   targets:
   - attributes://magentostack/redis/override_page_port
-- source: supported://page-cache/password
+- source: supported://page-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_page
 

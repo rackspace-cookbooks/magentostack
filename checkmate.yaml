@@ -193,6 +193,22 @@ blueprint:
       constrains:
       - setting: terms
         service: magento
+    install_flavor:
+      label: Community or Enterprise
+      description: Choose whether to install Community or Enterprise.
+      type: string
+      default: community
+      display-hints:
+        group: application
+        order: 3
+        choice:
+        - name: "Community"
+          value: community
+        - name: "Enterprise"
+          value: enterprise
+      constraints:
+      - in: ['community', 'enterprise']
+        message: unsupported install flavor
     install_method:
       label: Install Method
       description: Choose where the install is coming from.
