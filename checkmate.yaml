@@ -56,6 +56,7 @@ blueprint:
       required: true
       label: Chef Server Org URL
     chef-server-username:
+      label: Chef Server Username
       constrains:
         - setting: server-username
           provider: chef-server
@@ -65,6 +66,7 @@ blueprint:
       type: string
       required: true
     chef-server-user-key:
+      label: Chef User Key
       constrains:
         - setting: server-user-key
           provider: chef-server
@@ -73,23 +75,25 @@ blueprint:
         order: 3
       type: text
       required: true
-    validator-pem:
-      constrains:
-        - setting: validator-pem
-          provider: chef-server
-      display-hints:
-        group: chef
-        order: 4
-      type: text
-      required: true
     validator-username:
+      label: Validator Username
       constrains:
         - setting: validator-username
           provider: chef-server
       display-hints:
         group: chef
-        order: 5
+        order: 4
       type: string
+      required: true
+    validator-pem:
+      label: Chef Validator Key
+      constrains:
+        - setting: validator-pem
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 5
+      type: text
       required: true
 
     # Cloud Deployment Options
@@ -189,6 +193,70 @@ blueprint:
       constrains:
       - setting: terms
         service: magento
+    install_method:
+      label: Install Method
+      description: Choose where the install is coming from.
+      type: string
+      default: ark
+      display-hints:
+        group: application
+        order: 4
+        choice:
+        - name: "Ark"
+          value: ark
+        - name: "Git"
+          value: git
+        - name: "No Install"
+          value: none
+      constraints:
+      - in: ["ark", "git", "none"]
+        message: unsupported install method
+      constrains:
+      - setting: install_method
+        resource_type: application
+        service: magento
+    git_repo:
+      label: Git Repository
+      description: Location of the git repo with the install package.
+      type: string
+      display-hints:
+        group: application
+        order: 5
+        sample: "git@example.com:example/magento"
+      constrains:
+      - setting: git_repo
+        resource_type: application
+        service: magento
+      # TODO: add constraints regex
+    git_revision:
+      label: Git Revision
+      description: Revision of the git repo to install.
+      type: string
+      default: master
+      display-hints:
+        group: application
+        order: 6
+        sample: master
+      constrains:
+        - setting: git_revision
+          service: magento
+          resource_type: application
+    git_deploykey:
+      label: Git Deploy Key
+      description: The Private key used to deploy from git.
+      type: string
+      display-hints:
+        group: application
+        order: 8
+        sample: "-----BEGIN DRSA PRIVATE KEY-----..."
+      constrains:
+      - setting: git_deploykey
+        service: magento
+        resource_type: application
+      # TODO: fix the regex
+      # constraints:
+      #  - regex: '((^-----BEGIN [DR]SA PRIVATE KEY-----($\n^| )(([0-9A-Za-z+/]){64}($\n^| )){1,100}(([0-9A-Za-z+=/]){1,64}($\n^| ))-----END [DR]SA PRIVATE KEY----- ?$)|(^$))'
+      #  message: Must be a valid SSH private key
 #    sampledata:
 #      label: Install Sample Data
 #      description: Determine whether or not to provide sample data
@@ -215,7 +283,7 @@ blueprint:
       default: MagentoAdmin
       display-hints:
         group: application
-        order: 4
+        order: 9
       constrains:
       - setting: resources/magento user/name
       constraints:
@@ -231,12 +299,30 @@ blueprint:
         length.  If no password is provided, one will be generated for you.
       display-hints:
         group: application
-        order: 5
+        order: 10
       constraints:
       - regex: '^((.){8,255})?$'
         message: must be between 8 and 255 characters long if provided
       constrains:
       - setting: resources/magento user/password
+    encryption_key:
+      label: Encryption Key
+      type: password
+      description: Key used to encrypt data
+      default: '=generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])'
+      help: |
+        Optional: Key provided must be between 8 and 255 characters in
+        length.  If no password is provided, one will be generated for you.
+      display-hints:
+        group: application
+        order: 11
+      constraints:
+      - regex: '^((.){8,255})?$'
+        message: must be between 8 and 255 characters long if provided
+      constrains:
+      - setting: encryption_key
+        service: magento
+        resource_type: application
     email:
       label: Admin Email
       type: string
@@ -247,7 +333,7 @@ blueprint:
       required: true
       display-hints:
         group: application
-        order: 6
+        order: 12
       constraints:
       - regex: "^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:[.][A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?[.])+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$"
         message: must be a valid email address
@@ -265,7 +351,7 @@ blueprint:
       required: true
       display-hints:
         group: application
-        order: 7
+        order: 13
       constrains:
       - setting: firstname
         service: magento
@@ -283,7 +369,7 @@ blueprint:
       required: true
       display-hints:
         group: application
-        order: 8
+        order: 14
       constrains:
       - setting: lastname
         service: magento
@@ -299,7 +385,7 @@ blueprint:
         This is the license key from New Relic for your application.
       display-hints:
         group: application
-        order: 8
+        order: 15
       constrains:
       - setting: newrelic
         service: magento
@@ -403,13 +489,6 @@ blueprint:
         service: magento
         resource_type: application
         attribute: password
-#    "encryption key":
-#      type: user
-#      constrains:
-#      - setting: magento_encryption_key
-#        service: magento
-#        attribute: password
-#        resource_type: application
     "root":
       type: user
       constrains:
@@ -429,6 +508,7 @@ blueprint:
       - application: Magento Options
       - server: Server Options
       - database: Database Options
+      - chef: Chef Options
       tattoo: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-tattoo.png
       icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
   documentation:
@@ -551,12 +631,12 @@ blueprint:
       order: 3
       group: application
       is-secret: true
-#    "Magento Encryption Key":
-#      type: password
-#      order: 4
-#      group: application
-#      is-secret: true
-#      source: resources://encryption key/instance/password
+    "Magento Encryption Key":
+      type: password
+      order: 4
+      group: application
+      is-secret: true
+      source: options://encryption_key
     "MySQL Root Password":
       type: password
       order: 5
