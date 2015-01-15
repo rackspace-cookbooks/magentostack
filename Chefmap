@@ -138,7 +138,7 @@ maps:
 - value: {{ setting('encryption_key') }}
   targets:
   - attributes://magentostack/config/encryption_key
-  - outputs://resources/{{resource.index}}/instance/interfaces/magetno/encryption_key
+  - outputs://resources/{{resource.index}}/instance/interfaces/magento/encryption_key
 # Database Setup (Values required by MySQL cookbook)
 - source: requirements://database:mysql/host
   targets:
