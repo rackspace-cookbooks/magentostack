@@ -69,9 +69,12 @@ end
 node.default['apache']['default_modules'] = apache_modules
 
 # install php libraries requirements
-node['magentostack']['php']['packages'].each do |phplib|
+php_version = node['magentostack']['php']['version']
+node['magentostack']["#{php_version}"]['packages'].each do |phplib|
   package phplib
 end
+node.set['php-fpm']['package_name'] = node['php-fpm']["package_name-#{php_version}"]
+
 # enable mcrypt module on Ubuntu 14
 # https://bugs.launchpad.net/ubuntu/+source/php-mcrypt/+bug/1243568
 execute 'enable mcrypt module' do
