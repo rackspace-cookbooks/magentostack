@@ -20,7 +20,8 @@
 
 case node['platform_family']
 when 'rhel'
-  default['php-fpm']['package_name'] = 'php55u-fpm'
+  default['php-fpm']['package_name-php55'] = 'php55u-fpm'
+  default['php-fpm']['package_name-php54'] = 'php54-fpm'
   default['php-fpm']['service_name'] = 'php-fpm'
 when 'debian'
   default['php']['package-name'] = %w(php5-fpm)

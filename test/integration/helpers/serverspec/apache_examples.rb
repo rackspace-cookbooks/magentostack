@@ -1,18 +1,66 @@
+def redhat_family_values
+  res = {}
+  res['docroot'] = '/var/www/html/magento'
+  res['apache_service_name'] = 'httpd'
+  res['fpm_service_name'] = 'php-fpm'
+  res['apache2ctl'] = '/usr/sbin/apachectl'
+  res
+end
+
+def debian_family_values
+  res = {}
+  res['docroot'] = '/var/www/magento'
+  res['apache_service_name'] = 'apache2'
+  res['fpm_service_name'] = 'php5-fpm'
+  res['apache2ctl'] = '/usr/sbin/apache2ctl'
+  res
+end
+
+def family_value(str)
+  if os[:family] == 'redhat'
+    redhat_family_values[str]
+  else
+    debian_family_values[str]
+  end
+end
+
+def docroot
+  family_value('docroot')
+end
+
+def apache_service_name
+  family_value('apache_service_name')
+end
+
+def fpm_service_name
+  family_value('fpm_service_name')
+end
+
+def apache2ctl
+  family_value('apache2ctl')
+end
+
+shared_examples_for 'php55 under apache' do |args|
+  describe command('wget -qO- localhost:8080/phpinfo.php') do
+    index_php_path = "#{docroot}/phpinfo.php"
+    before do
+      File.open(index_php_path, 'w') { |file| file.write('<?php phpinfo(); ?>') }
+    end
+    its(:stdout) { should match(/PHP Version 5.5/) }
+  end
+end
+
+shared_examples_for 'php54 under apache' do |args|
+  describe command('wget -qO- localhost:8080/phpinfo.php') do
+    index_php_path = "#{docroot}/phpinfo.php"
+    before do
+      File.open(index_php_path, 'w') { |file| file.write('<?php phpinfo(); ?>') }
+    end
+    its(:stdout) { should match(/PHP Version 5.4/) }
+  end
+end
 
 shared_examples_for 'magento under apache' do |args|
-  # Apache-fpm
-  if os[:family] == 'redhat'
-    docroot = '/var/www/html/magento'
-    apache_service_name = 'httpd'
-    fpm_service_name = 'php-fpm'
-    apache2ctl = '/usr/sbin/apachectl'
-  else
-    docroot = '/var/www/magento'
-    apache_service_name = 'apache2'
-    fpm_service_name = 'php5-fpm'
-    apache2ctl = '/usr/sbin/apache2ctl'
-  end
-
   describe service(apache_service_name) do
     it { should be_enabled }
     it { should be_running }
@@ -75,7 +123,6 @@ shared_examples_for 'magento under apache' do |args|
     end
     phpinfo = %w(
       FPM\/FastCGI
-      PHP Version 5.5
       opcache.enable<\/td><td class="v">On
       opcache.memory_consumption<\/td><td class="v">256
       opcache.interned_strings_buffer<\/td><td class="v">8
@@ -93,6 +140,8 @@ shared_examples_for 'magento under apache' do |args|
     phpinfo.each do |line|
       its(:stdout) { should match(/#{line}/) }
     end
+
+    its(:stdout) { should match(/PHP Version 5.(4|5)/) }
   end
 
   ## use http://www.magentocommerce.com/knowledge-base/entry/how-do-i-know-if-my-server-is-compatible-with-magento
