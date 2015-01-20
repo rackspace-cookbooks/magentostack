@@ -62,6 +62,10 @@ apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore
   - download and extract Magento from `default['magentostack']['download_url']` to `node['apache']['docroot_dir']`
   - install Magento with install.php (basic configuration, DB bootstrap, SSL url etc...)
 
+### magento_admin
+- what it does
+  - set up a cronjob to run Magento admin tasks
+
 ### mysql_add_drive
 - what it does
   - formats /dev/xvde1 and will prepare it for the mysql datadir.
