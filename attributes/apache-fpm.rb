@@ -19,9 +19,10 @@ default['magentostack']['web']['ssl_key'] = "#{node['apache']['dir']}/ssl/#{site
 default['magentostack']['web']['ssl_cert'] = "#{node['apache']['dir']}/ssl/#{site_name}.pem"
 
 # Install php dependencies for Magento
+default['magentostack']['php']['version'] = 'php55'
 case node['platform_family']
 when 'rhel'
-  default['magentostack']['php']['packages'] = %w(
+  default['magentostack']['php55']['packages'] = %w(
     php55u-gd
     php55u-mysqlnd
     php55u-mcrypt
@@ -30,6 +31,17 @@ when 'rhel'
     php55u-soap
     php55u-pecl-redis
     php55u-opcache
+  )
+
+  default['magentostack']['php54']['packages'] = %w(
+    php54-gd
+    php54-mysqlnd
+    php54-mcrypt
+    php54-xml
+    php54-xmlrpc
+    php54-soap
+    php54-pecl-redis
+    php54-opcache
   )
 ### opcache is built in Php for Ubuntu
 when 'debian'

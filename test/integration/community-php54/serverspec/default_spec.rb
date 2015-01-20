@@ -8,6 +8,6 @@ describe 'community magento under mysql with single redis' do
   it_behaves_like 'magento under mysql'
 end
 
-describe 'community magento with php55' do
-  it_behaves_like 'php55 under apache'
+describe 'community magento with php54' do
+  it_behaves_like 'php54 under apache'
 end
