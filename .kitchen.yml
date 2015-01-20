@@ -47,6 +47,18 @@ suites:
     run_list:
       - recipe[wrapper::default]
 
+  - name: community-php54
+    provisioner:
+        client_rb:
+          environment: default_single
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      magentostack:
+        php:
+          version: 'php54'
+
+
   - name: community-redis
     provisioner:
         client_rb:
@@ -93,4 +105,21 @@ suites:
         install_method: 'cloudfiles'
         download_file: 'magento-ee-1.14.0.1.tar.gz'
         checksum: '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
+
+  - name: enterprise-php54
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      rackspace:
+        cloud_credentials:
+          username: 'rackops'
+          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
+      magentostack:
+        flavor: 'enterprise'
+        install_method: 'cloudfiles'
+        download_file: 'magento-ee-1.14.0.1.tar.gz'
+        checksum: '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
+        php:
+          version: 'php54'
+
 <% end %>
