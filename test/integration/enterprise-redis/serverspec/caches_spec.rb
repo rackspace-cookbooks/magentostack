@@ -8,6 +8,7 @@ describe 'enterprise with separate redis instances for object, page, and session
     clear_out_redis '-a runstatepasswordobject -p 6383 -n 0'
     clear_out_redis '-a runstatepasswordpage -p 6385 -n 1'
     clear_out_redis '-a runstatepasswordsession -p 6381 -n 2'
+    flush_all_magento_caches
     page_returns
   end
   it_behaves_like 'magento redis cache', '-p 6383 -a runstatepasswordobject -n 0'
