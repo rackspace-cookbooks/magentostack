@@ -6,6 +6,7 @@ describe 'community with separate redis' do
   before do
     clear_out_redis '-a runstatepasswordobject -n 0'
     clear_out_redis '-a runstatepasswordsession -n 2'
+    flush_all_magento_caches
     page_returns
   end
   it_behaves_like 'magento redis cache', '-p 6383 -a runstatepasswordobject -n 0'

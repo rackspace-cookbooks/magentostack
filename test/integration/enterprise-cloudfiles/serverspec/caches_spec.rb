@@ -8,6 +8,7 @@ describe 'enterprise-cloudfiles with single redis instance' do
     clear_out_redis '-a runstatepasswordsingle -n 0'
     clear_out_redis '-a runstatepasswordsingle -n 1'
     clear_out_redis '-a runstatepasswordsingle -n 2'
+    flush_all_magento_caches
     page_returns
   end
   it_behaves_like 'magento redis cache', '-a runstatepasswordsingle -n 0'
