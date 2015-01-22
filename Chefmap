@@ -30,6 +30,8 @@ options:
   "install_flavor":
     type: string
     default: community
+  "php_version":
+    type: string
   "install_method":
     type: string
     default: ark
@@ -100,6 +102,9 @@ maps:
 - value: {{ setting('install_method') }}
   targets:
   - attributes://magentostack/install_method
+- value: {{ setting('php_version') }}
+  targets:
+  - attributes://magentostack/php/version
 - value: {{ setting('git_repo') }}
   targets:
   - attributes://magentostack/git_repository

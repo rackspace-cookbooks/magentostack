@@ -215,6 +215,26 @@ blueprint:
       constraints:
       - in: ['community', 'enterprise']
         message: unsupported install flavor
+    php_version:
+      label: Version of PHP
+      description: Choose the version of PHP to intall.
+      type: string
+      default: php55
+      display-hints:
+        group: application
+        order: 4
+        choice:
+        - name: "PHP 5.5"
+          value: php55
+        - name: "PHP 5.4"
+          value: php54
+      constraints:
+      - in: ['php54', 'php55']
+        message: unsupported php version
+      constrains:
+      - setting: php_version
+        service: magento
+        resource_type: application
     install_method:
       label: Install Method
       description: Choose where the install is coming from.
