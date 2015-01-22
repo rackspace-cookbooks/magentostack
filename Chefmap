@@ -89,6 +89,231 @@ run-list:
   - magentostack::newrelic
   - magentostack::_find_mysql
   - magentostack::magento_configure
+  - magentostack::magento_admin
+maps:
+- value: {{ setting('http_port') }}
+  targets:
+  - attributes://magentostack/web/http_port
+- value: {{ setting('https_port') }}
+  targets:
+  - attributes://magentostack/web/https_port
+- value: {{ setting('install_flavor') }}
+  targets:
+  - attributes://magentostack/flavor
+- value: {{ setting('install_method') }}
+  targets:
+  - attributes://magentostack/install_method
+- value: {{ setting('php_version') }}
+  targets:
+  - attributes://magentostack/php/version
+- value: {{ setting('git_repo') }}
+  targets:
+  - attributes://magentostack/git_repository
+- value: {{ setting('git_revision') }}
+  targets:
+  - attributes://magentostack/git_revision
+- value: "{{ setting('git_deploykey') | base64 }}"
+  targets:
+  - attributes://magentostack/git_deploykey
+- value: {{ setting('domain') }}
+  targets:
+  - attributes://magentostack/web/domain
+- value: {{ setting('demo') }}
+  targets:
+  - attributes://magentostack/demo/enabled
+- value: {{ setting('newrelic') }}
+  targets:
+  - attributes://magentostack/newrelic/application_monitoring/php/enabled
+- value: {{ setting('admin_frontname') }}
+  targets:
+  - attributes://magentostack/config/admin_frontname
+- value: {{ setting('firstname') }}
+  targets:
+  - attributes://magentostack/config/admin_user/firstname
+- value: {{ setting('lastname') }}
+  targets:
+  - attributes://magentostack/config/admin_user/lastname
+- value: {{ setting('email') }}
+  targets:
+  - attributes://magentostack/config/admin_user/email
+- value: {{ setting('newrelic') }}
+  targets:
+  - attributes://newrelic/license
+- value: {{ setting('username') }}
+  targets:
+  - attributes://magentostack/config/admin_user/username
+  - outputs://resources/{{resource.index}}/instance/interfaces/magento/username
+- value: {{ setting('password') }}
+  targets:
+  - attributes://magentostack/config/admin_user/password/
+  - outputs://resources/{{resource.index}}/instance/interfaces/magento/password
+- value: {{ setting('encryption_key') }}
+  targets:
+  - attributes://magentostack/config/encryption_key
+  - outputs://resources/{{resource.index}}/instance/interfaces/magento/encryption_key
+# Database Setup (Values required by MySQL cookbook)
+- source: requirements://database:mysql/host
+  targets:
+  - attributes://mysql-multi/master
+  - attributes://magentostack/config/db/host
+- source: requirements://database:mysql/port
+  targets:
+  - attributes://magentostack/config/db/port
+- source: requirements://database:mysql/username
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_user
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/username
+- source: requirements://database:mysql/password
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_password
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
+- value: "all"
+  targets:
+  - attributes://magentostack/mysql/databases/db1/privileges
+- source: supported://session-cache/instance/name
+  targets:
+  - attributes://magentostack/redis/override_session_name
+- source: supported://session-cache/host
+  targets:
+  - attributes://magentostack/redis/override_session_host
+- source: supported://session-cache/port
+  targets:
+  - attributes://magentostack/redis/override_session_port
+- source: supported://session-cache/instance/interfaces/redis/password
+  targets:
+  - attributes://magentostack_redis_password_session
+- source: supported://object-cache/instance/name
+  targets:
+  - attributes://magentostack/redis/override_object_name
+- source: supported://object-cache/host
+  targets:
+  - attributes://magentostack/redis/override_object_host
+- source: supported://object-cache/port
+  targets:
+  - attributes://magentostack/redis/override_object_port
+- source: supported://object-cache/instance/interfaces/redis/password
+  targets:
+  - attributes://magentostack_redis_password_object
+- source: supported://page-cache/instance/name
+  targets:
+  - attributes://magentostack/redis/override_page_name
+- source: supported://page-cache/host
+  targets:
+  - attributes://magentostack/redis/override_page_host
+- source: supported://page-cache/port
+  targets:
+  - attributes://magentostack/redis/override_page_port
+- source: supported://page-cache/instance/interfaces/redis/password
+  targets:
+  - attributes://magentostack_redis_password_page
+
+output:
+  resources:
+    '{{resource.index}}':
+      instance:
+        interfaces:
+          magento:
+            username: {{setting('username')}}
+            password: {{setting('password')}}
+          mysql:
+            server_root_password: {{ setting('database_root_password') }}
+            magento:
+              password: {{setting('database_password')}}
+              username: {{setting('database_username')}}
+              encryption_key: {{setting('encryption_key')}}
+              # note host is written as output of a map
+
+---
+id: magentostack-worker
+name: magento
+roles: [worker]
+is: application
+provides:
+- application: http
+requires:
+- host: linux
+- database: mysql
+supports:
+- session-cache:
+    interface: redis
+    resource_type: cache
+- object-cache:
+    interface: redis
+    resource_type: cache
+- page-cache:
+    interface: redis
+    resource_type: cache
+options:
+  "domain":
+    type: string
+  "http_port":
+    type: integer
+    default: 80
+  "https_port":
+    type: integer
+    default: 443
+  "install_flavor":
+    type: string
+    default: community
+  "php_version":
+    type: string
+  "install_method":
+    type: string
+    default: ark
+  "git_repo":
+    type: string
+  "git_revision":
+    type: string
+    default: master
+  "git_deploykey":
+    type: string
+  "admin_frontname":
+    type: string
+    default: admin
+  "firstname":
+    type: string
+    default: Admin
+  "lastname":
+    type: string
+    default: User
+  "email":
+    type: string
+    required: true
+  "newrelic":
+    type: string
+  "username":
+    type: string
+    default: MagentoAdmin
+    required: true
+  "password":
+    type: string
+    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    required: true
+  "encryption_key":
+    type: string
+    required: true
+  "demo":
+    type: boolean
+    default: true
+    required: true
+  "newrelic":
+    type: boolean
+    default: false
+    required: true
+#  "database_privileges":
+#    type: string
+#    default: all
+#    required: true
+  "database_prefix":
+    type: string
+    default: magento_
+run-list:
+  recipes:
+  - magentostack::apache-fpm
+  - magentostack::magento_install
+  - magentostack::newrelic
+  - magentostack::_find_mysql
+  - magentostack::magento_configure
 maps:
 - value: {{ setting('http_port') }}
   targets:

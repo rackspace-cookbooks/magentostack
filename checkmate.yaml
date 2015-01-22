@@ -19,8 +19,20 @@ blueprint:
         resource_type: application
         role: master
       constraints:
+      - count: 1  # used for manual scaling
+      relations:
+      - data: mysql
+      - session-cache: redis#session-cache
+      - object-cache: redis#object-cache
+      - page-cache: redis#page-cache
+    'magento-worker':
+      component:
+        name: magento
+        resource_type: application
+        role: worker
+      constraints:
       - setting: count  # used for manual scaling
-        greater-than-or-equal-to: 1
+        greater-than-or-equal-to: 0
         less-than: 9
       relations:
       - data: mysql
@@ -153,18 +165,15 @@ blueprint:
         service: lb
         resource_type: load-balancer
       - setting: domain
-        service: magento
+        resource_type: application
         attribute: hostname
       - resource_type: application
-        service: magento
         setting: ssl_intermediate_key
         attribute: intermediate_key
       - setting: ssl_private_key
-        service: magento
         resource_type: application
         attribute: private_key
       - setting: ssl_certificate
-        service: magento
         resource_type: application
         attribute: certificate
 #    version:
@@ -198,7 +207,7 @@ blueprint:
         order: 3
       constrains:
       - setting: terms
-        service: magento
+        resource_type: application
     install_flavor:
       label: Community or Enterprise
       description: Choose whether to install Community or Enterprise.
@@ -233,7 +242,6 @@ blueprint:
         message: unsupported php version
       constrains:
       - setting: php_version
-        service: magento
         resource_type: application
     install_method:
       label: Install Method
@@ -256,7 +264,6 @@ blueprint:
       constrains:
       - setting: install_method
         resource_type: application
-        service: magento
     git_repo:
       label: Git Repository
       description: Location of the git repo with the install package.
@@ -268,7 +275,6 @@ blueprint:
       constrains:
       - setting: git_repo
         resource_type: application
-        service: magento
       # TODO: add constraints regex
     git_revision:
       label: Git Revision
@@ -281,7 +287,6 @@ blueprint:
         sample: master
       constrains:
         - setting: git_revision
-          service: magento
           resource_type: application
     git_deploykey:
       label: Git Deploy Key
@@ -293,7 +298,6 @@ blueprint:
         sample: "-----BEGIN DRSA PRIVATE KEY-----..."
       constrains:
       - setting: git_deploykey
-        service: magento
         resource_type: application
       constraints:
       - regex:
@@ -363,7 +367,6 @@ blueprint:
         message: must be between 8 and 255 characters long if provided
       constrains:
       - setting: encryption_key
-        service: magento
         resource_type: application
     email:
       label: Admin Email
@@ -382,7 +385,6 @@ blueprint:
         message: must be a valid email address
       constrains:
       - setting: email
-        service: magento
         resource_type: application
     firstname:
       label: First Name
@@ -397,7 +399,6 @@ blueprint:
         order: 13
       constrains:
       - setting: firstname
-        service: magento
         resource_type: application
       constraints:
       - regex: '^([a-z0-9A-Z._-]{1,32})$'
@@ -415,7 +416,6 @@ blueprint:
         order: 14
       constrains:
       - setting: lastname
-        service: magento
         resource_type: application
       constraints:
       - regex: '^([a-z0-9A-Z._-]{1,32})$'
@@ -431,7 +431,6 @@ blueprint:
         order: 15
       constrains:
       - setting: newrelic
-        service: magento
         resource_type: application
     os:
       label: Operating System
@@ -456,6 +455,9 @@ blueprint:
       - setting: os
         resource_type: compute
         service: magento
+      - setting: os
+        resource_type: compute
+        service: magento-worker
     server_size:
       label: Server Size
       type: integer
@@ -485,6 +487,9 @@ blueprint:
       - setting: memory
         service: magento
         resource_type: compute
+      - setting: memory
+        service: magento-worker
+        resource_type: compute
       constraints:
       - greater-than-or-equal-to: 4096
         message: must be 4096 or larger
@@ -494,19 +499,19 @@ blueprint:
       label: Magento Servers
       type: integer
       required: true
-      default: 1
+      default: 0
       description: The number of Magento servers to launch (up to 8)
       display-hints:
         group: server
         order: 3
       constraints:
-      - greater-than-or-equal-to: 1
-        message: must be 1 or greater
+      - greater-than-or-equal-to: 0
+        message: must be 0 or greater
       - less-than-or-equal-to: 8
         message: must be 8 or fewer
       constrains:
       - setting: count
-        service: magento
+        service: magento-worker
         resource_type: application
     database_size:
       label: Database Size
@@ -539,11 +544,9 @@ blueprint:
       type: user
       constrains:
       - setting: username
-        service: magento
         resource_type: application
         attribute: name
       - setting: password
-        service: magento
         resource_type: application
         attribute: password
     "db user":
@@ -551,18 +554,15 @@ blueprint:
       name: magentouser
       constrains:
       - setting: database_username
-        service: magento
         resource_type: application
         attribute: name
       - setting: database_password
-        service: magento
         resource_type: application
         attribute: password
     "root":
       type: user
       constrains:
       - setting: database_root_password
-        service: magento
         attribute: password
         resource_type: application
   meta-data:
