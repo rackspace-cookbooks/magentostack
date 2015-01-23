@@ -170,7 +170,7 @@ maps:
 - value: "all"
   targets:
   - attributes://magentostack/mysql/databases/db1/privileges
-- source: "sessions"
+- value: "sessions"
   targets:
   - attributes://magentostack/redis/override_session_name
 - source: supported://session-cache/host
@@ -182,7 +182,7 @@ maps:
 - source: supported://session-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_session
-- source: "objects"
+- value: "objects"
   targets:
   - attributes://magentostack/redis/override_object_name
 - source: supported://object-cache/host
@@ -194,7 +194,7 @@ maps:
 - source: supported://object-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_object
-- source: "FPC"
+- value: "FPC"
   targets:
   - attributes://magentostack/redis/override_page_name
 - source: supported://page-cache/host
