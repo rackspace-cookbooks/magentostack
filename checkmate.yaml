@@ -12,6 +12,7 @@ blueprint:
         - algorithm: ROUND_ROBIN
       relations:
       - magento: http
+      - magento-worker: http
       display-name: Load Balancer
     'magento':
       component:
