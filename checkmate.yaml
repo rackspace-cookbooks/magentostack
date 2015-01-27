@@ -21,6 +21,12 @@ blueprint:
         role: master
       constraints:
       - count: 1  # used for manual scaling
+      - resource_type: compute
+        setting: flavor
+        value: 'compute1-8'
+      - resource_type: compute
+        setting: disk
+        value: 100
       relations:
       - data: mysql
       - session-cache: redis#session-cache
@@ -35,6 +41,12 @@ blueprint:
       - setting: count  # used for manual scaling
         greater-than-or-equal-to: 0
         less-than: 9
+      - resource_type: compute
+        setting: flavor
+        value: 'compute1-8'
+      - resource_type: compute
+        setting: disk
+        value: 100
       relations:
       - data: mysql
       - session-cache: redis#session-cache
