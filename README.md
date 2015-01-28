@@ -90,6 +90,12 @@ mysql_holland package will install python-setup tools preventing to apply this f
   - sets up the mysql slave (runs the mysql_base recipe as well)
   - allows the master to connect (via iptables)
 
+### nfs_client and nfs_server
+- server recipe installs nfs server and configures an export (by default, under /exports)
+  for magento media
+- client recipe creates a mount point, and mounts the export from the server
+  (uses search with a tag to find the server)
+
 ### newrelic
 - what it does
   - sets up newrelic and the php agent for newrelic
@@ -211,6 +217,27 @@ default['magentostack']['web']['server_aliases'] = node['fqdn']
 - default['magentostack']['flavor'] = 'community' # could also be enterprise
   - controls if the stack should try to configure a full page cache or not
 
+### NFS Server and client
+
+# search query for discovery of nfs server
+```
+# Used to override the permitted client IPs on the nfs_server
+node['magentostack']['nfs_server']['override_allow'] = ['1.2.3.4', '5.6.7.8']
+
+# Used to override the NFS mount on clients, not used by default
+node['magentostack']['nfs_server']['override_host'] = '1.2.3.4'
+
+# where the export lives on the NFS server
+node['magentostack']['nfs_server']['export_name'] = 'magento_media'
+node['magentostack']['nfs_server']['export_root'] = '/export'
+
+# how to search for an NFS server
+node['magentostack']['nfs_server']['discovery_query'] = "tags:magentostack_nfs_server AND chef_environment:#{node.chef_environment}"
+
+# clients
+node['magentostack']['nfs_client']['mount_point'] = '/mnt/magento_media'
+node['magentostack']['nfs_client']['symlink_target'] = 'media' # within /var/www/html/magento
+```
 ### gluster
 
 contains attributes used in setting up gluster, node the commented out section, it helps to actually hard code these IPs

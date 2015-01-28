@@ -130,35 +130,50 @@ module MagentostackUtil
   #  If that preset isn't available, under chef solo, it warns and finishes.
   #  Otherwise, it does a search using node['magentostack']['redis']['discovery_query'].
   def self.redis_discovery(current_node)
-    # see if the configuration specified some hard coded values
-    preset_nodes = current_node.deep_fetch('magentostack', 'redis', 'discovery')
+    return discovery(current_node,
+                     current_node.deep_fetch('magentostack', 'redis', 'discovery'),
+                     current_node.deep_fetch('magentostack', 'redis', 'discovery_query'),
+                     'redis_discovery')
+  end
 
+  def self.nfs_server_discovery(current_node)
+    return discovery(current_node,
+                     current_node.deep_fetch('magentostack', 'nfs_server', 'discovery'),
+                     current_node.deep_fetch('magentostack', 'nfs_server', 'discovery_query'),
+                     'nfs_server_discovery')
+  end
+
+  # Find all instances in the scope of the cookbook (see query below).
+  #
+  #  By default, it tries to just use the preset nodes
+  #  If that preset isn't available, under chef solo, it warns and finishes.
+  #  Otherwise, it does a search using supplied query
+  def self.discovery(_current_node, preset_nodes, query, description)
     # use preset if it exists
     if preset_nodes
-      Chef::Log.info("redis_discovery was already set to #{preset_nodes}")
+      Chef::Log.info("#{description} was already set to #{preset_nodes}")
       return preset_nodes
     end
 
     # if solo, just warn
     if Chef::Config[:solo]
-      Chef::Log.warn('redis_cache_find recipe uses search if node[\'magentostack\'][\'redis\'][\'discovery\']  attribute is not set.')
-      Chef::Log.warn('Chef Solo does not support search in redis_discovery.')
+      Chef::Log.warn('discovery recipe uses search if discovery attributes are not set.')
+      Chef::Log.warn('Chef Solo does not support search in discovery.')
       return {}
     end
 
     # otherwise, do the search we want to discover other redis nodes
-    redis_nodes = []
-    query = current_node['magentostack']['redis']['discovery_query']
-    Chef::Search::Query.new.search('node', query) { |o| redis_nodes << o }
+    found_nodes = []
+    Chef::Search::Query.new.search('node', query) { |o| found_nodes << o }
 
-    if redis_nodes.nil? || redis_nodes.count < 1
-      Chef::Log.warn('redis_discovery did not find any redis nodes in discovery, but none were set')
-      redis_nodes = [] # so loop below exits
+    if found_nodes.nil? || found_nodes.count < 1
+      Chef::Log.warn("#{description} did not find any nodes in discovery, but none were set")
+      found_nodes = [] # so loop below exits
     else
-      Chef::Log.debug("redis_discovery found nodes #{redis_nodes.map(&:name).join(', ')}")
+      Chef::Log.debug("#{description} found nodes #{found_nodes.map(&:name).join(', ')}")
     end
 
-    return redis_nodes
+    return found_nodes
   end
 
   # Given a list of node objects, produce a hash of redis instance that maps
@@ -258,6 +273,31 @@ module MagentostackUtil
     else
       password_instance
     end
+  end
+
+  def self.best_nfs_server(current_node)
+    # overrides for service discovery override, etc.
+    host = current_node['magentostack']['nfs_server']['override_host']
+    export_name = current_node['magentostack']['nfs_server']['export_name']
+    export_root = current_node['magentostack']['nfs_server']['export_root']
+
+    return host, export_name, export_root if host
+
+    hosts = nfs_server_discovery(current_node)
+    host = hosts && !hosts.empty? && hosts.first
+
+    ip_for_host = nil
+    if host
+      Chef::Log.info("best_nfs_server found best nfs server to be #{host}")
+      ip_for_host = MagentostackUtil.get_ip_by_name(host.name, current_node)
+    else
+      Chef::Log.warn('best_nfs_server did not find any nfs_server instance, not proceeding')
+    end
+
+    export_name = host && host['magentostack'] && host['magentostack']['nfs_server'] && host['magentostack']['nfs_server']['export_name']
+    export_root = host && host['magentostack'] && host['magentostack']['nfs_server'] && host['magentostack']['nfs_server']['export_root']
+
+    return ip_for_host, export_name, export_root
   end
 
   def self.get_runstate_or_attr(current_node, *attr)
