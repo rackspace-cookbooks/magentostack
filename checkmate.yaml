@@ -197,6 +197,9 @@ blueprint:
       - setting: ssl_certificate
         resource_type: application
         attribute: certificate
+      - setting: domain
+        resource_type: volume
+        attribute: domain
 #    version:
 #      label: Magento Version
 #      help: |
@@ -751,6 +754,7 @@ environment:
     load-balancer: {}
     nova: {}
     database: {}
+    block: {}
     common:
       vendor: rackspace
 inputs:
