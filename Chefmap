@@ -18,6 +18,7 @@ supports:
 - page-cache:
     interface: redis
     resource_type: cache
+- volume: nfs
 options:
   "domain":
     type: string
@@ -90,6 +91,7 @@ run-list:
   - magentostack::_find_mysql
   - magentostack::magento_configure
   - magentostack::magento_admin
+  - magentostack::nfs_client
 maps:
 - value: {{ setting('http_port') }}
   targets:
@@ -206,6 +208,10 @@ maps:
 - source: supported://page-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_page
+# NFS
+- source: supported://volume:nfs/private_ip
+  targets:
+  - attributes://magentostack/nfs_server/override_host
 
 output:
   resources:
@@ -243,6 +249,7 @@ supports:
 - page-cache:
     interface: redis
     resource_type: cache
+- volume: nfs
 options:
   "domain":
     type: string
@@ -314,6 +321,7 @@ run-list:
   - magentostack::newrelic
   - magentostack::_find_mysql
   - magentostack::magento_configure
+  - magentostack::nfs_client
 maps:
 - value: {{ setting('http_port') }}
   targets:
@@ -430,6 +438,10 @@ maps:
 - source: supported://page-cache/instance/interfaces/redis/password
   targets:
   - attributes://magentostack_redis_password_page
+# NFS
+- source: supported://volume:nfs/private_ip
+  targets:
+  - attributes://magentostack/nfs_server/override_host
 
 output:
   resources:
@@ -461,7 +473,8 @@ options:
     type: string
     default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
     required: true
-run_list:
+run-list:
+  recipes:
   - magentostack::mysql_master
   - magentostack::mysql_holland
 maps:
@@ -497,9 +510,10 @@ options:
     type: string
     default: 27017
     required: true
-run_list:
-- magentostack::redis_single
-- magentostack::redis_configure
+run-list:
+  recipes:
+  - magentostack::redis_single
+  - magentostack::redis_configure
 maps:
 - value: {{ setting('name') }}
   targets:
@@ -513,3 +527,36 @@ output:
           redis:
             host: requirements://host:linux/private_ip
             port: {{ setting('port') }}
+
+---
+id: magentonfs-server
+name: nfs
+roles: [server]
+is: volume
+provides:
+- volume: nfs
+requires:
+- host: linux
+options:
+  "export_name":
+    type: string
+    default: data
+    required: true
+  "export_root":
+    type: string
+    default: /mnt
+    required: true
+run-list:
+  recipes:
+  - apt
+  - magentostack::nfs_server
+maps:
+- source: clients://volume:nfs/private_ip
+  targets:
+  - attributes://magentostack/nfs_server/override_allow
+- value: {{ setting('export_name') }}
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+- value: {{ setting('export_root') }}
+  targets:
+  - attributes://magentostack/nfs_server/export_root
