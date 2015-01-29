@@ -20,7 +20,9 @@ describe 'magentostack::magento_admin' do
             allow(Chef::Environment).to receive(:load).and_return(env)
           end.converge(described_recipe)
         end
-
+        it 'set the execute permission on cron.sh' do
+          expect(chef_run).to touch_file('/var/www/html/magento/cron.sh').with(mode: '755')
+        end
         it 'creates cronjob' do
           expect(chef_run).to create_cron('magento_cron').with(minute: '*/5', user: 'apache', command: '/var/www/html/magento/cron.sh', action: [:create])
         end
