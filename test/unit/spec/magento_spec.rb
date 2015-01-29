@@ -21,7 +21,9 @@ describe 'magentostack::magento recipes' do
           end.converge('magentostack::magento_install',
                        'magentostack::redis_single',
                        'magentostack::_find_mysql',
-                       'magentostack::magento_configure')
+                       'magentostack::magento_configure',
+                       'magentostack::nfs_server',
+                       'magentostack::nfs_client')
         end
 
         it 'includes mysql-multi::_find_master' do
@@ -43,6 +45,29 @@ describe 'magentostack::magento recipes' do
           expect(chef_run).to append_if_missing_xml('set session_store to db in ./app/etc/local.xml')
           expect(chef_run).to append_if_missing_xml('set session cache in ./app/etc/local.xml')
           expect(chef_run).to append_if_missing_xml('set object cache in ./app/etc/local.xml')
+        end
+
+        it 'should manage the nfs media directory and link it' do
+          %w(/export /export/magento_media /mnt/magento_media).each do |dir|
+            expect(chef_run).to create_directory(dir)
+          end
+        end
+
+        it 'should create nfs export' do
+          expect(chef_run).to create_nfs_export('/export/magento_media')
+        end
+
+        # has :action none and we can't step into the ruby
+        it 'should delete original directory' do
+          expect(chef_run).to_not delete_directory('/var/www/html/magento/media')
+        end
+
+        it 'should create symlink' do
+          expect(chef_run).to create_link('/var/www/html/magento/media')
+        end
+
+        it 'should mount the nfs export' do
+          expect(chef_run).to mount_mount('/mnt/magento_media')
         end
       end
     end
