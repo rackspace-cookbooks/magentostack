@@ -26,7 +26,7 @@ blueprint:
         value: 'compute1-8'
       - resource_type: compute
         setting: disk
-        value: 100
+        value: 50
       relations:
       - data: mysql
       - session-cache: redis#session-cache
@@ -47,7 +47,7 @@ blueprint:
         value: 'compute1-8'
       - resource_type: compute
         setting: disk
-        value: 100
+        value: 50
       relations:
       - data: mysql
       - session-cache: redis#session-cache
