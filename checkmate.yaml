@@ -188,6 +188,10 @@ blueprint:
         service: lb
         resource_type: load-balancer
       - setting: domain
+        attribute: domain
+        service: lb
+        resource_type: load-balancer
+      - setting: domain
         resource_type: application
         attribute: hostname
       - resource_type: application
@@ -200,7 +204,13 @@ blueprint:
         resource_type: application
         attribute: certificate
       - setting: domain
+        resource_type: compute
+        attribute: domain
+      - setting: domain
         resource_type: volume
+        attribute: domain
+      - setting: domain
+        resource_type: cache
         attribute: domain
 #    version:
 #      label: Magento Version
