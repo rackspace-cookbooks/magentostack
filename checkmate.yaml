@@ -32,6 +32,7 @@ blueprint:
       - session-cache: redis#session-cache
       - object-cache: redis#object-cache
       - page-cache: redis#page-cache
+      - shared-storage: nfs
     'magento-worker':
       component:
         name: magento
@@ -52,6 +53,7 @@ blueprint:
       - session-cache: redis#session-cache
       - object-cache: redis#object-cache
       - page-cache: redis#page-cache
+      - shared-storage: nfs
     'data':
       component:
         resource_type: database
@@ -72,6 +74,12 @@ blueprint:
         resource_type: cache
         interface: redis
         id: redis_cache
+    'shared-storage':
+      component:
+        resource_type: volume
+        interface: nfs
+      constraints:
+      - count: 1
 
   options:
 
@@ -449,20 +457,20 @@ blueprint:
       label: Operating System
       type: string
       description: The operating system for all the servers.
-      default: CentOS 6.5
+      default: CentOS 6.6
       display-hints:
         group: server
         order: 1
         list-type: compute.os
         choice:
-        - name: "CentOS 6.5"
-          value: CentOS 6.5
+        - name: "CentOS 6.6"
+          value: CentOS 6.6
         - name: "Ubuntu 12.04 LTS (Precise Pangolin)"
           value: Ubuntu 12.04
         - name: "Ubuntu 14.04 LTS (Trusty Tahr)"
           value: Ubuntu 14.04
       constraints:
-      - in: ["Ubuntu 12.04", "CentOS 6.5", "Ubuntu 14.04"]
+      - in: ["Ubuntu 12.04", "CentOS 6.6", "Ubuntu 14.04"]
         message: unsupported operating system
       constrains:
       - setting: os
