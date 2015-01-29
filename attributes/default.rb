@@ -44,3 +44,12 @@ default['php']['packages'] = []
 default['mysql']['version'] = '5.6'
 default['mysql-multi']['templates']['my.cnf']['cookbook'] = 'magentostack'
 default['mysql-multi']['templates']['my.cnf']['source'] = 'mysql/my.cnf.erb'
+
+# search query for discovery of nfs server
+default['magentostack']['nfs_server']['export_name'] = 'magento_media'
+default['magentostack']['nfs_server']['export_root'] = '/export'
+default['magentostack']['nfs_server']['discovery_query'] = "tags:magentostack_nfs_server AND chef_environment:#{node.chef_environment}"
+
+# clients
+default['magentostack']['nfs_client']['mount_point'] = '/mnt/magento_media'
+default['magentostack']['nfs_client']['symlink_target'] = 'media' # within /var/www/html/magento

@@ -16,6 +16,8 @@
   magentostack::redis_configure
   magentostack::apache-fpm
   magentostack::magento_install
+  magentostack::nfs_server
+  magentostack::nfs_client
   magentostack::mysql_master
   magentostack::newrelic
   magentostack::_find_mysql

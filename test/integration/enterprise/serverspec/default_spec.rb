@@ -11,3 +11,7 @@ end
 describe 'community magento with php55' do
   it_behaves_like 'php55 under apache'
 end
+
+describe 'enterprise magento' do
+  it_behaves_like 'magento enterprise edition'
+end
