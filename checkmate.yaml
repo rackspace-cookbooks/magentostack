@@ -494,6 +494,9 @@ blueprint:
       - setting: os
         resource_type: compute
         service: magento-worker
+      - setting: os
+        resource_type: compute
+        service: shared-storage
     server_size:
       label: Server Size
       type: integer
