@@ -205,13 +205,13 @@ blueprint:
         attribute: certificate
       - setting: domain
         resource_type: compute
-        attribute: domain
+        attribute: hostname
       - setting: domain
         resource_type: volume
-        attribute: domain
+        attribute: hostname
       - setting: domain
         resource_type: cache
-        attribute: domain
+        attribute: hostname
 #    version:
 #      label: Magento Version
 #      help: |
