@@ -18,6 +18,12 @@
 # limitations under the License.
 #
 
+# Ensure the cron.sh file has correct permission
+file "#{node['apache']['docroot_dir']}/magento/cron.sh" do
+  mode '755'
+  action :touch
+end
+
 cron 'magento_cron' do
   action :create
   path '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin'
