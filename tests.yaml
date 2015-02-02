@@ -224,11 +224,11 @@ test-cases:
           ip: 4.4.4.7
           public_ip: 4.4.4.7
           private_ip: 10.1.2.7
-          flavor: "2"
+          flavor: general1-1
         desired-state:
           os-type: linux
           os: Centos 6.6
-          flavor: "2"
+          flavor: general1-1
       '8':
         dns-name: magento-worker01.magento.cldsrvr.com
         instance:
