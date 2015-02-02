@@ -560,11 +560,6 @@ maps:
 - value: {{ setting('export_root') }}
   targets:
   - attributes://magentostack/nfs_server/export_root
-output:
-  resources:
-    '{{resource.index}}':
-      instance:
-        interfaces:
-          nfs:
-            ip: requirements://host:linux/private_ip
-
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip

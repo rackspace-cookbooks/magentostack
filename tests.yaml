@@ -213,7 +213,7 @@ test-cases:
       '6':
         dns-name: shared-storage.magento.cldsrvr.com
         instance:
-          interface:
+          interfaces:
             nfs:
               ip: 10.1.2.7
       '7':
@@ -222,12 +222,13 @@ test-cases:
         type: compute
         instance:
           ip: 4.4.4.7
-          public_ip: 10.1.2.7
-          flavor: 2
+          public_ip: 4.4.4.7
+          private_ip: 10.1.2.7
+          flavor: "2"
         desired-state:
           os-type: linux
           os: Centos 6.6
-          flavor: 2
+          flavor: "2"
       '8':
         dns-name: magento-worker01.magento.cldsrvr.com
         instance:
