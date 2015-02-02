@@ -188,7 +188,7 @@ blueprint:
         service: lb
         resource_type: load-balancer
       - setting: domain
-        attribute: domain
+        attribute: hostname
         service: lb
         resource_type: load-balancer
       - setting: domain
