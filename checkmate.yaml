@@ -82,6 +82,15 @@ blueprint:
         interface: nfs
       constraints:
       - count: 1
+      - resource_type: volume
+        setting: dedicated  # <-- 100Gb attached disk
+        value: true
+      - resource_type: volume
+        setting: size
+        value: 100
+      - resource_type: compute
+        setting: disk  # <-- 50Gb boot disk
+        value: 50
 
   options:
 
