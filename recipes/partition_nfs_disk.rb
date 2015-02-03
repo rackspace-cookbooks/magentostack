@@ -20,9 +20,10 @@
 #
 
 parted_disk node['magentostack']['nfs_server']['disk']['device'] do
-  part_type "primary"
+  label_type 'gpt'
+  part_type 'primary'
   file_system node['magentostack']['nfs_server']['disk']['fs']
-  action :mkpart
+  action [:mklabel, :mkpart]
 end
 
 export_directory = node['magentostack']['nfs_server']['export_root']
