@@ -538,9 +538,13 @@ provides:
 requires:
 - host: linux
 options:
+  "disk_filesystem":
+    type: string
+    default: ext4
+    required: true
   "export_name":
     type: string
-    default: data
+    default: magento_media
     required: true
   "export_root":
     type: string
@@ -549,8 +553,17 @@ options:
 run-list:
   recipes:
   - apt
+  - parted
+  - magentostack::partition_nfs_disk
   - magentostack::nfs_server
 maps:
+- value: "/dev/xvdb"
+# - source: requirements://host:linux/instance/devices/data
+  targets:
+  - attributes://magentostack/nfs_server/disk/device
+- value: {{ setting('disk_filesystem') }}
+  targets:
+  - attributes://magentostack/nfs_server/disk/fs
 - source: clients://volume:nfs/private_ip
   targets:
   - attributes://magentostack/nfs_server/override_allow
