@@ -1,0 +1,284 @@
+test-cases:
+- name: Check Basic Deployment
+  inputs:
+    blueprint:
+      url: http://magento.cldsrvr.com/
+      version: 1.7.0.2
+      region: IAD
+      terms: true
+      sampledata: false
+      server_size: 4096
+      username: "MagentoAdmin"
+      password: "Mag!345678"
+      encryption_key: 3fdsk3Ajf77aFEDS
+      email: "chkmate@example.com"
+      magento_server_count: 3
+      database_size: 8000
+      firstname: "Test"
+      lastname: "Deployment"
+      chef-server-url: https://api.chef.io/organizations/cloudtest
+      chef-server-username: chefuser
+      install_method: git
+      git_repo: git@github.com:doesnotexist/enterprise-magento.git
+      install_flvor: enterprise
+      php_version: php54
+      validator-username: chef-validator
+      validator-pem: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEogIBAAKCAQEAxwIcCc5+5iZM1KRJ4HnEhyX8SPAbT4AffqbsmSbSHKQGGCR4
+        FwAIO9uhcCPavlcnpuNEAKZt+yE96OwQQBz9OMl0JMMrKhJ9yBJUhxADZezAu41O
+        phOGfAo9Lhj26GhV/yKmroNBglVHJknw4XCgdYOd5W/7q4QGFIbRv22bKeXdcbLm
+        8cRfbKugAVBG5AqzIoraRdiSoCCOP4VEE9pjo/SmDc2egbrorHRV5PEsZoYwXBDW
+        Sh19bHnIxRY8SnpsEzAjiSLqf0AnuiPgJNTkylLpxxgIsazJb+bQ1sDcQWFJ3WJN
+        JS6rKH2WM8uTHYpTw0k1WnaveV3z6Ju29cgsdQIDAQABAoIBACtrh2iQWFmow5yl
+        l8TVbI68N/ZGBP9sifKdQwQLV06ObxH3awhBpopA2lFYUVK0O1+LOHwX0+k2EIbw
+        cn86k/k+4wteVd2hGTZ84VpyoPstE8QYCa/slKwdo8maAs0kbpbzHYD3/GQObS6q
+        dVcKtsfNBrdXnoaGkLkLzVnB9VfHfzV8uqbfDZSU7hGOA8Ebdemp02MBomdPacdm
+        nn2MXT4SSHgcANpda0HgSpQlUdXeeQ3pYE57A2iFOQfsIBwJnrGd/oMehsTJBUPH
+        f4TM0P86Cei248QfJbhjBSYRHmzbqfMzoTHH2gETgUdCoxENpwuCGG8aQeCX7Jie
+        fzotE+ECgYEA/wl5lUQuEV30WfW5Ln73CHmpUuDx7TZO0HSJrzltd+9N/ya7Hhg5
+        Hr/0of9j6tmABTrWafABay0wxyq1Hy0letG0+Y2HD1VYmXfi1PjdSzRVbyLyi8ph
+        E2GCIBdfvKVo5QPJnn5j3wN2GnK6PxHtTQ64x4YERRybBNn7U9ENPr0CgYEAx8J5
+        ze854TYvBHl6v656CaJ+gSqyYQFyMInuyFKGFCQ7sAtRbrwk2/cR5LGCMS8P0dtX
+        /uS6xMCAES0l8U1aeralbnYMk93xwnyIokC2DzXLePsI9ZJmTOsOh6hnk+jq057T
+        xitP2+agfztLnaI4rRifnLKB+U4sfRMeW6XX/BkCgYBKJgkRWsdCCVz3ord6SzOr
+        ZSPTks8Dtpxngtpc9YdcLVkx66LPdx90Tz7isovsRdwwqRCZsEvZS0Q5Q7NxIwEY
+        mkvRmlJAJQIjbHWokcpVCRwlubVm6yoaJmlcxy7we+7pVpaR3BFRT4JQ4jZADAhA
+        NR2H9PDc3xo66N1nWwpMyQKBgCv/ntqIHaSITbTbmPjNUl3654hFwkJxkhg02V5Q
+        Ju4ayPbOl2IfmLLGaa+IlZeFuSNM/8XJ1YVurQabfib3Fb2/qxJ4d+69zPk8es/a
+        Fv+kpquAB4onc9bvUyT4J9BBVi/EZPraIV3bH3DGu7H9wCQIL2fRPaWO3WezJVWk
+        Yr1JAoGAGwA/Dtl6YO829BuASC1M3kQBhvMcC/RjACKPqRXvZeJWXycSjGcVluHP
+        0WNEfySDHthWZND7XF1pZlJLJi7M8gfqRzUc0awOMRcxFlyrPSIosxI+AAhE7Zz8
+        Yc0yRv1w+ej6bBnyg8MBI7rvsCNm2vrIP/4uOeCalQ2ucPZWQdU=
+        -----END RSA PRIVATE KEY-----
+      chef-server-user-key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEogIBAAKCAQEAxwIcCc5+5iZM1KRJ4HnEhyX8SPAbT4AffqbsmSbSHKQGGCR4
+        FwAIO9uhcCPavlcnpuNEAKZt+yE96OwQQBz9OMl0JMMrKhJ9yBJUhxADZezAu41O
+        phOGfAo9Lhj26GhV/yKmroNBglVHJknw4XCgdYOd5W/7q4QGFIbRv22bKeXdcbLm
+        8cRfbKugAVBG5AqzIoraRdiSoCCOP4VEE9pjo/SmDc2egbrorHRV5PEsZoYwXBDW
+        Sh19bHnIxRY8SnpsEzAjiSLqf0AnuiPgJNTkylLpxxgIsazJb+bQ1sDcQWFJ3WJN
+        JS6rKH2WM8uTHYpTw0k1WnaveV3z6Ju29cgsdQIDAQABAoIBACtrh2iQWFmow5yl
+        l8TVbI68N/ZGBP9sifKdQwQLV06ObxH3awhBpopA2lFYUVK0O1+LOHwX0+k2EIbw
+        cn86k/k+4wteVd2hGTZ84VpyoPstE8QYCa/slKwdo8maAs0kbpbzHYD3/GQObS6q
+        dVcKtsfNBrdXnoaGkLkLzVnB9VfHfzV8uqbfDZSU7hGOA8Ebdemp02MBomdPacdm
+        nn2MXT4SSHgcANpda0HgSpQlUdXeeQ3pYE57A2iFOQfsIBwJnrGd/oMehsTJBUPH
+        f4TM0P86Cei248QfJbhjBSYRHmzbqfMzoTHH2gETgUdCoxENpwuCGG8aQeCX7Jie
+        fzotE+ECgYEA/wl5lUQuEV30WfW5Ln73CHmpUuDx7TZO0HSJrzltd+9N/ya7Hhg5
+        Hr/0of9j6tmABTrWafABay0wxyq1Hy0letG0+Y2HD1VYmXfi1PjdSzRVbyLyi8ph
+        E2GCIBdfvKVo5QPJnn5j3wN2GnK6PxHtTQ64x4YERRybBNn7U9ENPr0CgYEAx8J5
+        ze854TYvBHl6v656CaJ+gSqyYQFyMInuyFKGFCQ7sAtRbrwk2/cR5LGCMS8P0dtX
+        /uS6xMCAES0l8U1aeralbnYMk93xwnyIokC2DzXLePsI9ZJmTOsOh6hnk+jq057T
+        xitP2+agfztLnaI4rRifnLKB+U4sfRMeW6XX/BkCgYBKJgkRWsdCCVz3ord6SzOr
+        ZSPTks8Dtpxngtpc9YdcLVkx66LPdx90Tz7isovsRdwwqRCZsEvZS0Q5Q7NxIwEY
+        mkvRmlJAJQIjbHWokcpVCRwlubVm6yoaJmlcxy7we+7pVpaR3BFRT4JQ4jZADAhA
+        NR2H9PDc3xo66N1nWwpMyQKBgCv/ntqIHaSITbTbmPjNUl3654hFwkJxkhg02V5Q
+        Ju4ayPbOl2IfmLLGaa+IlZeFuSNM/8XJ1YVurQabfib3Fb2/qxJ4d+69zPk8es/a
+        Fv+kpquAB4onc9bvUyT4J9BBVi/EZPraIV3bH3DGu7H9wCQIL2fRPaWO3WezJVWk
+        Yr1JAoGAGwA/Dtl6YO829BuASC1M3kQBhvMcC/RjACKPqRXvZeJWXycSjGcVluHP
+        0WNEfySDHthWZND7XF1pZlJLJi7M8gfqRzUc0awOMRcxFlyrPSIosxI+AAhE7Zz8
+        Yc0yRv1w+ej6bBnyg8MBI7rvsCNm2vrIP/4uOeCalQ2ucPZWQdU=
+        -----END RSA PRIVATE KEY-----
+      git_deploykey: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEogIBAAKCAQEAxwIcCc5+5iZM1KRJ4HnEhyX8SPAbT4AffqbsmSbSHKQGGCR4
+        FwAIO9uhcCPavlcnpuNEAKZt+yE96OwQQBz9OMl0JMMrKhJ9yBJUhxADZezAu41O
+        phOGfAo9Lhj26GhV/yKmroNBglVHJknw4XCgdYOd5W/7q4QGFIbRv22bKeXdcbLm
+        8cRfbKugAVBG5AqzIoraRdiSoCCOP4VEE9pjo/SmDc2egbrorHRV5PEsZoYwXBDW
+        Sh19bHnIxRY8SnpsEzAjiSLqf0AnuiPgJNTkylLpxxgIsazJb+bQ1sDcQWFJ3WJN
+        JS6rKH2WM8uTHYpTw0k1WnaveV3z6Ju29cgsdQIDAQABAoIBACtrh2iQWFmow5yl
+        l8TVbI68N/ZGBP9sifKdQwQLV06ObxH3awhBpopA2lFYUVK0O1+LOHwX0+k2EIbw
+        cn86k/k+4wteVd2hGTZ84VpyoPstE8QYCa/slKwdo8maAs0kbpbzHYD3/GQObS6q
+        dVcKtsfNBrdXnoaGkLkLzVnB9VfHfzV8uqbfDZSU7hGOA8Ebdemp02MBomdPacdm
+        nn2MXT4SSHgcANpda0HgSpQlUdXeeQ3pYE57A2iFOQfsIBwJnrGd/oMehsTJBUPH
+        f4TM0P86Cei248QfJbhjBSYRHmzbqfMzoTHH2gETgUdCoxENpwuCGG8aQeCX7Jie
+        fzotE+ECgYEA/wl5lUQuEV30WfW5Ln73CHmpUuDx7TZO0HSJrzltd+9N/ya7Hhg5
+        Hr/0of9j6tmABTrWafABay0wxyq1Hy0letG0+Y2HD1VYmXfi1PjdSzRVbyLyi8ph
+        E2GCIBdfvKVo5QPJnn5j3wN2GnK6PxHtTQ64x4YERRybBNn7U9ENPr0CgYEAx8J5
+        ze854TYvBHl6v656CaJ+gSqyYQFyMInuyFKGFCQ7sAtRbrwk2/cR5LGCMS8P0dtX
+        /uS6xMCAES0l8U1aeralbnYMk93xwnyIokC2DzXLePsI9ZJmTOsOh6hnk+jq057T
+        xitP2+agfztLnaI4rRifnLKB+U4sfRMeW6XX/BkCgYBKJgkRWsdCCVz3ord6SzOr
+        ZSPTks8Dtpxngtpc9YdcLVkx66LPdx90Tz7isovsRdwwqRCZsEvZS0Q5Q7NxIwEY
+        mkvRmlJAJQIjbHWokcpVCRwlubVm6yoaJmlcxy7we+7pVpaR3BFRT4JQ4jZADAhA
+        NR2H9PDc3xo66N1nWwpMyQKBgCv/ntqIHaSITbTbmPjNUl3654hFwkJxkhg02V5Q
+        Ju4ayPbOl2IfmLLGaa+IlZeFuSNM/8XJ1YVurQabfib3Fb2/qxJ4d+69zPk8es/a
+        Fv+kpquAB4onc9bvUyT4J9BBVi/EZPraIV3bH3DGu7H9wCQIL2fRPaWO3WezJVWk
+        Yr1JAoGAGwA/Dtl6YO829BuASC1M3kQBhvMcC/RjACKPqRXvZeJWXycSjGcVluHP
+        0WNEfySDHthWZND7XF1pZlJLJi7M8gfqRzUc0awOMRcxFlyrPSIosxI+AAhE7Zz8
+        Yc0yRv1w+ej6bBnyg8MBI7rvsCNm2vrIP/4uOeCalQ2ucPZWQdU=
+        -----END RSA PRIVATE KEY-----
+  expected:
+    resources:
+      count: 17
+      service:
+        lb:
+          count: 1
+          type: load-balancer
+        'magento':
+          count: 2
+          type1: compute
+          type2: application
+        'magento-worker':
+          count: 6
+          type1: compute
+          type2: application
+        'data':
+          count: 2
+          type1: compute
+          type2: database
+        'session-cache':
+          count: 1
+          type: cache
+        'object-cache':
+          count: 1
+          type: cache
+        'page-cache':
+          count: 1
+          type: cache
+        'shared-storage':
+          count: 3
+          type1: compute
+          type2: volume
+          type3: volume
+      '0':
+        dns-name: session-cache01.magento.cldsrvr.com
+        instance:
+          interfaces:
+            redis:
+              host: redis0.rax.net
+              password: =verify(exists=True)
+              port: 6379
+        desired-state:
+          datastore-type: redis
+      '1':
+        dns-name: lb01.magento.cldsrvr.com
+        instance:
+          protocol: HTTP
+          interfaces:
+            vip:
+              public_ip: 4.4.4.20
+              ip: 4.4.4.20
+          port: 80
+        desired-state:
+          region: IAD
+          protocol: http
+      '2':
+        dns-name: object-cache01.magento.cldsrvr.com
+        instance:
+          interfaces:
+            redis:
+              host: redis2.rax.net
+              password: =verify(exists=True)
+              port: 6379
+        desired-state:
+          datastore-type: redis
+      '3':
+        dns-name: page-cache01.magento.cldsrvr.com
+        instance:
+          interfaces:
+            redis:
+              host: redis3.rax.net
+              password: =verify(exists=True)
+              port: 6379
+        desired-state:
+          datastore-type: redis
+      '4':
+        dns-name: magento.magento.cldsrvr.com
+        instance:
+          interfaces:
+            magento:
+              username: MagentoAdmin
+              password: =verify(exists=True)
+              encryption_key: =verify(exists=True)
+            mysql:
+              server_root_password: =verify(exists=True)
+              magento:
+                username: wp_user_db1
+                password: =verify(exists=True)
+                encryption_key: =verify(exists=True)
+      '5':
+        dns-name: magento.magento.cldsrvr.com
+        component: linux_instance
+        type: compute
+        instance:
+          ip: 4.4.4.5
+          public_ip: 4.4.4.5
+          private_ip: 10.1.2.5
+          flavor: compute1-8
+        desired-state:
+          os-type: linux
+          boot_from_image: true
+          disk: 50
+          os: Centos 6.6
+          flavor: compute1-8
+      '6':
+        dns-name: shared-storage.magento.cldsrvr.com
+        instance:
+          interfaces:
+            nfs:
+              ip: 10.1.2.7
+      '7':
+        dns-name: shared-storage.magento.cldsrvr.com
+        component: linux_instance
+        type: compute
+        instance:
+          ip: 4.4.4.7
+          public_ip: 4.4.4.7
+          private_ip: 10.1.2.7
+          flavor: general1-2
+        desired-state:
+          os-type: linux
+          os: Centos 6.6
+          flavor: general1-2
+      '8':
+        dns-name: shared-storage.magento.cldsrvr.com
+        instance:
+          id: CBS8
+        desired-state:
+          size: 100
+      '9':
+        dns-name: magento-worker01.magento.cldsrvr.com
+        instance:
+          interfaces:
+            magento:
+              username: MagentoAdmin
+              password: =verify(exists=True)
+              encryption_key: =verify(exists=True)
+            mysql:
+              server_root_password: =verify(exists=True)
+              magento:
+                username: wp_user_db1
+                password: =verify(exists=True)
+                encryption_key: =verify(exists=True)
+      '10':
+        dns-name: magento-worker01.magento.cldsrvr.com
+        component: linux_instance
+        type: compute
+        instance:
+          ip: 4.4.4.10
+          public_ip: 4.4.4.10
+          private_ip: 10.1.2.10
+          flavor: compute1-8
+        desired-state:
+          os-type: linux
+          boot_from_image: true
+          disk: 50
+          os: Centos 6.6
+          flavor: compute1-8
+      '15':
+        dns-name: data01.checkmate.local
+        instance:
+          interfaces:
+            mysql:
+              username: wp_user_db1
+              host: srv0.rackdb.net
+              password: =verify(exists=True)
+              database_name: db1
+      '16':
+        dns-name: data01.magento.cldsrvr.com
+        instance:
+          interfaces:
+            mysql:
+              host: mysql16.rax.net
+        desired-state:
+          datastore-type: mysql

@@ -26,12 +26,13 @@ blueprint:
         value: 'compute1-8'
       - resource_type: compute
         setting: disk
-        value: 100
+        value: 50
       relations:
       - data: mysql
       - session-cache: redis#session-cache
       - object-cache: redis#object-cache
       - page-cache: redis#page-cache
+      - shared-storage: nfs
     'magento-worker':
       component:
         name: magento
@@ -46,17 +47,20 @@ blueprint:
         value: 'compute1-8'
       - resource_type: compute
         setting: disk
-        value: 100
+        value: 50
       relations:
       - data: mysql
       - session-cache: redis#session-cache
       - object-cache: redis#object-cache
       - page-cache: redis#page-cache
+      - shared-storage: nfs
     'data':
       component:
         resource_type: database
         interface: mysql
         id: mysql_database
+        constraints:
+        - max_allowed_packet: 268435456
     'session-cache':
       component:
         resource_type: cache
@@ -72,6 +76,21 @@ blueprint:
         resource_type: cache
         interface: redis
         id: redis_cache
+    'shared-storage':
+      component:
+        resource_type: volume
+        interface: nfs
+      constraints:
+      - count: 1
+      - resource_type: volume
+        setting: dedicated  # <-- 100Gb attached disk
+        value: true
+      - resource_type: volume
+        setting: size
+        value: 100
+      - resource_type: compute
+        setting: memory
+        value: 2048
 
   options:
 
@@ -178,6 +197,10 @@ blueprint:
         service: lb
         resource_type: load-balancer
       - setting: domain
+        attribute: hostname
+        service: lb
+        resource_type: load-balancer
+      - setting: domain
         resource_type: application
         attribute: hostname
       - resource_type: application
@@ -189,6 +212,15 @@ blueprint:
       - setting: ssl_certificate
         resource_type: application
         attribute: certificate
+      - setting: domain
+        resource_type: compute
+        attribute: hostname
+      - setting: domain
+        resource_type: volume
+        attribute: hostname
+      - setting: domain
+        resource_type: cache
+        attribute: hostname
 #    version:
 #      label: Magento Version
 #      help: |
@@ -449,20 +481,20 @@ blueprint:
       label: Operating System
       type: string
       description: The operating system for all the servers.
-      default: CentOS 6.5
+      default: CentOS 6.6
       display-hints:
         group: server
         order: 1
         list-type: compute.os
         choice:
-        - name: "CentOS 6.5"
-          value: CentOS 6.5
+        - name: "CentOS 6.6"
+          value: CentOS 6.6
         - name: "Ubuntu 12.04 LTS (Precise Pangolin)"
           value: Ubuntu 12.04
         - name: "Ubuntu 14.04 LTS (Trusty Tahr)"
           value: Ubuntu 14.04
       constraints:
-      - in: ["Ubuntu 12.04", "CentOS 6.5", "Ubuntu 14.04"]
+      - in: ["Ubuntu 12.04", "CentOS 6.6", "Ubuntu 14.04"]
         message: unsupported operating system
       constrains:
       - setting: os
@@ -471,6 +503,9 @@ blueprint:
       - setting: os
         resource_type: compute
         service: magento-worker
+      - setting: os
+        resource_type: compute
+        service: shared-storage
     server_size:
       label: Server Size
       type: integer
@@ -743,6 +778,7 @@ environment:
     load-balancer: {}
     nova: {}
     database: {}
+    block: {}
     common:
       vendor: rackspace
 inputs:
