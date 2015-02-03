@@ -20,7 +20,7 @@ blueprint:
         resource_type: application
         role: master
       constraints:
-      - count: 1  # used for manual scaling
+      - count: 1
       - resource_type: compute
         setting: flavor
         value: 'compute1-8'
@@ -60,7 +60,7 @@ blueprint:
         interface: mysql
         id: mysql_database
         constraints:
-        - max_allowed_packet: 268435456
+        - max_allowed_packet: 268435456  # 256M
         - version: "5.6"
     'session-cache':
       component:
