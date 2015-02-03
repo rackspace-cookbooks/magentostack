@@ -109,7 +109,7 @@ test-cases:
         -----END RSA PRIVATE KEY-----
   expected:
     resources:
-      count: 16
+      count: 17
       service:
         lb:
           count: 1
@@ -136,9 +136,10 @@ test-cases:
           count: 1
           type: cache
         'shared-storage':
-          count: 2
+          count: 3
           type1: compute
           type2: volume
+          type3: volume
       '0':
         dns-name: session-cache01.magento.cldsrvr.com
         instance:
@@ -224,12 +225,18 @@ test-cases:
           ip: 4.4.4.7
           public_ip: 4.4.4.7
           private_ip: 10.1.2.7
-          flavor: general1-1
+          flavor: general1-2
         desired-state:
           os-type: linux
           os: Centos 6.6
-          flavor: general1-1
+          flavor: general1-2
       '8':
+        dns-name: shared-storage.magento.cldsrvr.com
+        instance:
+          id: CBS8
+        desired-state:
+          size: 100
+      '9':
         dns-name: magento-worker01.magento.cldsrvr.com
         instance:
           interfaces:
@@ -243,14 +250,14 @@ test-cases:
                 username: wp_user_db1
                 password: =verify(exists=True)
                 encryption_key: =verify(exists=True)
-      '9':
+      '10':
         dns-name: magento-worker01.magento.cldsrvr.com
         component: linux_instance
         type: compute
         instance:
-          ip: 4.4.4.9
-          public_ip: 4.4.4.9
-          private_ip: 10.1.2.9
+          ip: 4.4.4.10
+          public_ip: 4.4.4.10
+          private_ip: 10.1.2.10
           flavor: compute1-8
         desired-state:
           os-type: linux
@@ -258,7 +265,7 @@ test-cases:
           disk: 50
           os: Centos 6.6
           flavor: compute1-8
-      '14':
+      '15':
         dns-name: data01.checkmate.local
         instance:
           interfaces:
@@ -267,11 +274,11 @@ test-cases:
               host: srv0.rackdb.net
               password: =verify(exists=True)
               database_name: db1
-      '15':
+      '16':
         dns-name: data01.magento.cldsrvr.com
         instance:
           interfaces:
             mysql:
-              host: mysql15.rax.net
+              host: mysql16.rax.net
         desired-state:
           datastore-type: mysql
