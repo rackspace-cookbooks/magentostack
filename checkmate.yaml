@@ -89,8 +89,8 @@ blueprint:
         setting: size
         value: 100
       - resource_type: compute
-        setting: disk  # <-- 50Gb boot disk
-        value: 50
+        setting: memory
+        value: 2048
 
   options:
 
