@@ -60,7 +60,7 @@ blueprint:
         interface: mysql
         id: mysql_database
         constraints:
-        - max_allowed_packet: '256M'
+        - max_allowed_packet: 268435456
     'session-cache':
       component:
         resource_type: cache
