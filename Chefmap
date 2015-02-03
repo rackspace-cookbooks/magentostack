@@ -320,7 +320,7 @@ run-list:
   - magentostack::magento_install
   - magentostack::newrelic
   - magentostack::_find_mysql
-  - magentostack::magento_configure
+  - magentostack::_magento_redis
   - magentostack::nfs_client
 maps:
 - value: {{ setting('http_port') }}
