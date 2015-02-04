@@ -19,12 +19,15 @@
 # limitations under the License.
 #
 
-parted_disk node['magentostack']['nfs_server']['disk']['device'] do
+parted_disk node['disk']['device'] do
   label_type 'gpt'
   part_type 'primary'
-  file_system node['magentostack']['nfs_server']['disk']['fs']
   action [:mklabel, :mkpart]
 end
+
+node.set['disk']['name'] = "#{node['magentostack']['nfs_server']['disk']['device']}1"
+
+include_recipe 'magentostack::format_disk'
 
 export_directory = node['magentostack']['nfs_server']['export_root']
 export_name = node['magentostack']['nfs_server']['export_name']
@@ -32,7 +35,7 @@ export_name = node['magentostack']['nfs_server']['export_name']
 directory "#{export_directory}/#{export_name}"
 
 mount "#{export_directory}/#{export_name}" do
-  device "#{node['magentostack']['nfs_server']['disk']['device']}1"
-  fstype node['magentostack']['nfs_server']['disk']['fs']
+  device "#{node['disk']['device']}1"
+  fstype node['disk']['fs']
   action [:mount, :enable]
 end
