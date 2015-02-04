@@ -60,8 +60,17 @@ blueprint:
         interface: mysql
         id: mysql_database
         constraints:
-        - max_allowed_packet: 268435456  # 256M
         - version: "5.6"
+        - max_allowed_packet: 268435456  # 256M
+        - table_definition_cache: 4096
+        - table_open_cache: 4096
+        - query_cache_size: 67108864 # 64M
+        - query_cache_type: 1
+        - query_cache_limit: 2097152 # 2M
+        - join_buffer_size: 2097152 # 2M
+        - read_buffer_size: 2097152 # 2M
+        - read_rnd_buffer_size: 8388608 # 8M
+        - sort_buffer_size: 2097152 # 2M
     'session-cache':
       component:
         resource_type: cache
