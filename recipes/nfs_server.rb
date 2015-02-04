@@ -21,9 +21,13 @@
 include_recipe 'chef-sugar'
 include_recipe 'nfs::server' # ~RACK002
 
+found_clients = []
 override_allow = node['magentostack']['nfs_server']['override_allow']
+
 if override_allow || Chef::Config[:solo]
-  found_clients = override_allow
+  override_allow.each do |ip|
+    found_clients << ip
+  end
 else
   found_clients = partial_search(:node, "chef_environment:#{node.chef_environment}",
                                  keys: {
