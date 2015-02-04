@@ -560,10 +560,10 @@ maps:
 - value: "/dev/xvdb"
 # - source: requirements://host:linux/instance/devices/data
   targets:
-  - attributes://magentostack/nfs_server/disk/device
+  - attributes://disk/device
 - value: {{ setting('disk_filesystem') }}
   targets:
-  - attributes://magentostack/nfs_server/disk/fs
+  - attributes://disk/fs
 - source: clients://volume:nfs/private_ip
   targets:
   - attributes://magentostack/nfs_server/override_allow
