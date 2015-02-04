@@ -181,7 +181,7 @@ maps:
 - source: supported://session-cache/port
   targets:
   - attributes://magentostack/redis/override_session_port
-- source: supported://session-cache/instance/interfaces/redis/password
+- source: supported://session-cache/password
   targets:
   - attributes://magentostack_redis_password_session
 - value: "objects"
@@ -193,7 +193,7 @@ maps:
 - source: supported://object-cache/port
   targets:
   - attributes://magentostack/redis/override_object_port
-- source: supported://object-cache/instance/interfaces/redis/password
+- source: supported://object-cache/password
   targets:
   - attributes://magentostack_redis_password_object
 - value: "FPC"
@@ -205,11 +205,11 @@ maps:
 - source: supported://page-cache/port
   targets:
   - attributes://magentostack/redis/override_page_port
-- source: supported://page-cache/instance/interfaces/redis/password
+- source: supported://page-cache/password
   targets:
   - attributes://magentostack_redis_password_page
 # NFS
-- source: supported://volume:nfs/private_ip
+- source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
 
@@ -402,7 +402,7 @@ maps:
 - value: "all"
   targets:
   - attributes://magentostack/mysql/databases/db1/privileges
-- source: supported://session-cache/instance/name
+- value: session
   targets:
   - attributes://magentostack/redis/override_session_name
 - source: supported://session-cache/host
@@ -411,10 +411,10 @@ maps:
 - source: supported://session-cache/port
   targets:
   - attributes://magentostack/redis/override_session_port
-- source: supported://session-cache/instance/interfaces/redis/password
+- source: supported://session-cache/password
   targets:
   - attributes://magentostack_redis_password_session
-- source: supported://object-cache/instance/name
+- value: object
   targets:
   - attributes://magentostack/redis/override_object_name
 - source: supported://object-cache/host
@@ -423,10 +423,10 @@ maps:
 - source: supported://object-cache/port
   targets:
   - attributes://magentostack/redis/override_object_port
-- source: supported://object-cache/instance/interfaces/redis/password
+- source: supported://object-cache/password
   targets:
   - attributes://magentostack_redis_password_object
-- source: supported://page-cache/instance/name
+- value: page
   targets:
   - attributes://magentostack/redis/override_page_name
 - source: supported://page-cache/host
@@ -435,11 +435,11 @@ maps:
 - source: supported://page-cache/port
   targets:
   - attributes://magentostack/redis/override_page_port
-- source: supported://page-cache/instance/interfaces/redis/password
+- source: supported://page-cache/password
   targets:
   - attributes://magentostack_redis_password_page
 # NFS
-- source: supported://volume:nfs/private_ip
+- source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
 
