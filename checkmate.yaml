@@ -93,6 +93,9 @@ blueprint:
         setting: dedicated  # <-- 100Gb attached disk
         value: true
       - resource_type: volume
+        setting: device-name
+        value: /dev/xvdb
+      - resource_type: volume
         setting: size
         value: 100
       - resource_type: compute
@@ -475,7 +478,6 @@ blueprint:
     newrelic:
       label: New Relic License
       type: string
-      default: null
       description: License key to enable New Relic
       help: |
         This is the license key from New Relic for your application.
@@ -792,7 +794,7 @@ environment:
 inputs:
   blueprint:
     url: http://magento.cldsrvr.com/
-    version: 1.7.0.2
+    newrelic: null
     region: IAD
     terms: true
     sampledata: false
