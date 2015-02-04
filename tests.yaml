@@ -222,6 +222,10 @@ test-cases:
         component: linux_instance
         type: compute
         instance:
+          attachments:
+            '/dev/xvdb': CBS8
+          devices:
+            data: '/dev/xvdb'
           ip: 4.4.4.7
           public_ip: 4.4.4.7
           private_ip: 10.1.2.7
