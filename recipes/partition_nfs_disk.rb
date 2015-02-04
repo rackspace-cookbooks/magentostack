@@ -25,7 +25,7 @@ parted_disk node['disk']['device'] do
   action [:mklabel, :mkpart]
 end
 
-node.set['disk']['name'] = "#{node['magentostack']['nfs_server']['disk']['device']}1"
+node.set['disk']['name'] = "#{node['disk']['device']}1"
 
 include_recipe 'magentostack::format_disk'
 
