@@ -93,6 +93,9 @@ blueprint:
         setting: dedicated  # <-- 100Gb attached disk
         value: true
       - resource_type: volume
+        setting: device-name
+        value: /dev/xvdb
+      - resource_type: volume
         setting: size
         value: 100
       - resource_type: compute
