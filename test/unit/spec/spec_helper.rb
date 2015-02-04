@@ -26,6 +26,9 @@ def node_resources(node)
   node.set['cloud']['local_ipv4'] = '10.0.0.2'
   # monitoring-custom_http.yaml template relies on the public IP
   node.set['cloud']['public_ipv4'] = '10.0.1.2'
+  # disk partitioning and formatting expectations
+  node.set['disk']['device'] = '/dev/xvde'
+  node.set['disk']['fs'] = 'ext4'
 end
 
 # rubocop:disable Metrics/AbcSize
