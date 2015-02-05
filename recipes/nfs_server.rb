@@ -66,10 +66,10 @@ end
 
 # Open iptables
 include_recipe 'platformstack::iptables'
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport 111 -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m udp -p udp --dport 111 -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport 2049 -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m udp -p udp --dport 2049 -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m tcp -p tcp --dport 111 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m udp -p udp --dport 111 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m tcp -p tcp --dport 2049 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m udp -p udp --dport 2049 -j ACCEPT', 200, 'Allow access to NFS')
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
 add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
