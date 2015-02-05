@@ -662,6 +662,36 @@ blueprint:
       - chef: Chef Options
       tattoo: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-tattoo.png
       icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
+    annotations:
+        gui-zoom:
+          scale: 0.7330444848925274
+          translate:
+            - 130.865999032417
+            - 55.36675569895442
+        lb:
+          gui-x: 495.426
+          gui-y: 59.095
+        magento:
+          gui-x: 401.106
+          gui-y: 263.337
+        magento-worker:
+          gui-x: 610.02
+          gui-y: 262.757
+        data:
+          gui-x: 509.039
+          gui-y: 727.599
+        session-cache:
+          gui-x: 504.053
+          gui-y: 511.211
+        object-cache:
+          gui-x: 358.288
+          gui-y: 511.528
+        page-cache:
+          gui-x: 649.95
+          gui-y: 510.104
+        shared-storage:
+          gui-x: 513.807
+          gui-y: 933.002
   documentation:
     abstract: |
       Linux with [Magento Community
@@ -830,3 +860,74 @@ inputs:
     database_size: 8000
     firstname: "Test"
     lastname: "Deployment"
+flavors:
+  extra-small:
+    blueprint:
+      options:
+        server_size:
+          default: 8192
+        magento_server_count:
+          default: 1
+      meta-data:
+        flavor: Magento for 100 Concurrent Users (Extra Small)
+        flavor-weight: 2
+    inputs:
+      blueprint:
+        server_size: 8192
+        magento_server_count: 1
+  small:
+    blueprint:
+      options:
+        server_size:
+          default: 15360
+        magento_server_count:
+          default: 1
+      meta-data:
+        flavor: Magento for 200 Concurrent Users (Small)
+        flavor-weight: 3
+    inputs:
+      blueprint:
+        server_size: 15360
+        magento_server_count: 1
+  medium:
+    blueprint:
+      options:
+        server_size:
+          default: 15360
+        magento_server_count:
+          default: 2
+      meta-data:
+        flavor: Magento for 400 Concurrent Users (Medium)
+        flavor-weight: 4
+    inputs:
+      blueprint:
+        server_size: 15360
+        magento_server_count: 2
+  large:
+    blueprint:
+      options:
+        server_size:
+          default: 30720
+        magento_server_count:
+          default: 2
+      meta-data:
+        flavor: Magento for 750 Concurrent Users (Large)
+        flavor-weight: 5
+    inputs:
+      blueprint:
+        server_size: 30720
+        magento_server_count: 2
+  extra-large:
+    blueprint:
+      options:
+        server_size:
+          default: 30720
+        magento_server_count:
+          default: 3
+      meta-data:
+        flavor: Magento for 1125 Concurrent Users (Extra Large)
+        flavor-weight: 6
+    inputs:
+      blueprint:
+        server_size: 30720
+        magento_server_count: 3
