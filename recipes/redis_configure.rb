@@ -29,6 +29,26 @@
 ).each do |recipe|
   include_recipe recipe
 end
-MagentostackUtil.build_iptables(node) do |type, str, pri, comment|
-  add_iptables_rule(type, str, pri, comment)
+
+found_clients = []
+override_allow = node['magentostack']['redis']['override_allow']
+
+if override_allow || Chef::Config[:solo]
+  override_allow.each do |ip|
+    found_clients << ip
+  end
+else
+  found_clients = partial_search(:node, 'tags:magento_app_node',
+                                 keys: {
+                                   'name' => ['name'],
+                                   'ip' => ['ipaddress'],
+                                   'cloud' => ['provider', 'local_ipv4', 'public_ipv4']
+                                 }
+  ).map { |n| best_ip_for(n) }
+end
+
+found_clients.each do |node|
+  MagentostackUtil.build_iptables(node) do |type, str, pri, comment|
+    add_iptables_rule(type, str, pri, comment)
+  end
 end
