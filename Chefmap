@@ -564,7 +564,8 @@ maps:
 - value: {{ setting('disk_filesystem') }}
   targets:
   - attributes://disk/fs
-- source: clients://volume:nfs/private_ip
+# - source: clients://volume:nfs/private_ip
+- value: ['*']
   targets:
   - attributes://magentostack/nfs_server/override_allow
 - value: {{ setting('export_name') }}

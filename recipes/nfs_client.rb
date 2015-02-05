@@ -25,12 +25,16 @@ return unless nfs_server_node && export_name && export_root
 
 mount_point_path = node['magentostack']['nfs_client']['mount_point']
 
-directory mount_point_path
+directory mount_point_path do
+  user node['apache']['user']
+  group node['apache']['group']
+end
 
 mount mount_point_path do
   device "#{nfs_server_node}:#{export_root}/#{export_name}"
   fstype 'nfs'
-  options 'rw'
+  options ['rw', 'sec=sys']
+  notifies :create, "directory[#{mount_point_path}]", :immediately
 end
 
 # check at runtime for directory, remove it if it exists, as we can't do this at compile time
@@ -46,9 +50,18 @@ end
 
 directory "#{node['magentostack']['web']['dir']}/media" do
   recursive true
+  user node['apache']['user']
+  group node['apache']['group']
   action :nothing # see ruby block above
 end
 
+directory "#{mount_point_path}/media" do
+  user node['apache']['user']
+  group node['apache']['group']
+end
+
 link "#{node['magentostack']['web']['dir']}/media" do
-  to mount_point_path
+  to "#{mount_point_path}/media"
+  user node['apache']['user']
+  group node['apache']['group']
 end

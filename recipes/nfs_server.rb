@@ -61,8 +61,23 @@ nfs_export export_full_path do
   network found_clients.compact # remove nil
   writeable true
   sync true
-  options ['no_root_squash']
+  options ['no_root_squash', 'sec=sys']
 end
+
+# Open iptables
+include_recipe 'platformstack::iptables'
+add_iptables_rule('INPUT', '-m tcp -p tcp --dport 111 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m udp -p udp --dport 111 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m tcp -p tcp --dport 2049 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', '-m udp -p udp --dport 2049 -j ACCEPT', 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['lockd']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['lockd']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['rquotad']} -j ACCEPT", 200, 'Allow access to NFS')
+add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['rquotad']} -j ACCEPT", 200, 'Allow access to NFS')
 
 # save to help the client recipe find me if it's also running on this same node
 tag('magentostack_nfs_server')
