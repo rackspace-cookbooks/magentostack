@@ -65,11 +65,11 @@ template setup_script do
   group node['apache']['group']
   mode '0700'
   variables(
-  db_name: database_name,
-  db_host: database_host,
-  db_user: database_user,
-  db_pass: database_pass,
-  magento_configured_file: magento_configured_file
+    db_name: database_name,
+    db_host: database_host,
+    db_user: database_user,
+    db_pass: database_pass,
+    magento_configured_file: magento_configured_file
   )
 end
 
