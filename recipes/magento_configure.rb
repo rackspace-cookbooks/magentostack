@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+include_recipe 'chef-sugar'
+
 http_port = node['magentostack']['web']['http_port']
 url = if http_port == 80
         "http://#{node['magentostack']['web']['domain']}/"
@@ -78,6 +80,13 @@ cookbook_file "#{node['magentostack']['web']['dir']}/check-magento-installed.php
   user node['apache']['user']
   group node['apache']['group']
   mode '0700'
+end
+
+unless includes_recipe?('magentostack::magento_admin')
+  execute "wait_for_admin_to_start_config" do
+    command "sleep 60"
+    not_if { File.exist?(magento_configured_file) }
+  end
 end
 
 execute setup_script do
