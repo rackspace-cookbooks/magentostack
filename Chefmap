@@ -212,6 +212,12 @@ maps:
 - source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
+- source: supported://volume:nfs/export_name
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+- source: supported://volume:nfs/export_root
+  targets:
+  - attributes://magentostack/nfs_server/export_root
 
 output:
   resources:
@@ -442,6 +448,12 @@ maps:
 - source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
+- source: supported://volume:nfs/export_name
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+- source: supported://volume:nfs/export_root
+  targets:
+  - attributes://magentostack/nfs_server/export_root
 
 output:
   resources:
@@ -575,9 +587,11 @@ maps:
 - value: {{ setting('export_name') }}
   targets:
   - attributes://magentostack/nfs_server/export_name
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_name
 - value: {{ setting('export_root') }}
   targets:
   - attributes://magentostack/nfs_server/export_root
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_root
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip
