@@ -67,11 +67,11 @@ template setup_script do
   group node['apache']['group']
   mode '0700'
   variables(
-  db_name: database_name,
-  db_host: database_host,
-  db_user: database_user,
-  db_pass: database_pass,
-  magento_configured_file: magento_configured_file
+    db_name: database_name,
+    db_host: database_host,
+    db_user: database_user,
+    db_pass: database_pass,
+    magento_configured_file: magento_configured_file
   )
 end
 
@@ -83,8 +83,8 @@ cookbook_file "#{node['magentostack']['web']['dir']}/check-magento-installed.php
 end
 
 unless includes_recipe?('magentostack::magento_admin')
-  execute "wait_for_admin_to_start_config" do
-    command "sleep 60"
+  execute 'wait_for_admin_to_start_config' do
+    command 'sleep 60'
     not_if { File.exist?(magento_configured_file) }
   end
 end
