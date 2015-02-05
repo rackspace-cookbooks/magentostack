@@ -482,13 +482,15 @@ maps:
   targets:
   - attributes://mysql/server_root_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/server_root_password
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/host
 output:
   resources:
     '{{resource.index}}':
       instance:
         interfaces:
           mysql:
-            host: requirements://host:linux/private_ip
             server_root_password: {{ setting('database_root_password') }}
 
 ---
@@ -508,16 +510,19 @@ options:
     - in: ["sessions", "objects", "FPC"]
   "port":
     type: string
-    default: 27017
+    default: 6379
     required: true
 run-list:
   recipes:
   - magentostack::redis_single
   - magentostack::redis_configure
 maps:
-- value: {{ setting('name') }}
+- value: {{ setting('port') }}
   targets:
   - attributes://magentostack/redis/bind_port_single
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/redis/host
 output:
   resources:
     '{{resource.index}}':
@@ -525,7 +530,6 @@ output:
         name: {{ setting('name') }}
         interfaces:
           redis:
-            host: requirements://host:linux/private_ip
             port: {{ setting('port') }}
 
 ---
