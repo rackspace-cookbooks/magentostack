@@ -19,6 +19,7 @@ supports:
     interface: redis
     resource_type: cache
 - volume: nfs
+- logging: logstash
 options:
   "domain":
     type: string
@@ -92,6 +93,8 @@ run-list:
   - magentostack::magento_configure
   - magentostack::magento_admin
   - magentostack::nfs_client
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: {{ setting('http_port') }}
   targets:
@@ -123,7 +126,7 @@ maps:
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
-- value: {{ bool(setting('newrelic')) }}
+- value: {{ setting('newrelic') }}
   targets:
   - attributes://magentostack/newrelic/application_monitoring/php/enabled
 - value: {{ setting('admin_frontname') }}
@@ -256,6 +259,7 @@ supports:
     interface: redis
     resource_type: cache
 - volume: nfs
+- logging: logstash
 options:
   "domain":
     type: string
@@ -328,6 +332,8 @@ run-list:
   - magentostack::_find_mysql
   - magentostack::magento_configure
   - magentostack::nfs_client
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: {{ setting('http_port') }}
   targets:
@@ -359,7 +365,7 @@ maps:
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
-- value: {{ bool(setting('newrelic')) }}
+- value: {{ setting('newrelic') }}
   targets:
   - attributes://magentostack/newrelic/application_monitoring/php/enabled
 - value: {{ setting('admin_frontname') }}
@@ -480,6 +486,8 @@ provides:
 - database: mysql
 requires:
 - host: linux
+supports:
+- logging: logstash
 options:
   "database_root_password":
     type: string
@@ -489,6 +497,8 @@ run-list:
   recipes:
   - magentostack::mysql_master
   - magentostack::mysql_holland
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: {{ setting('database_root_password') }}
   targets:
@@ -513,6 +523,8 @@ provides:
 - cache: redis
 requires:
 - host: linux
+supports:
+- logging: logstash
 options:
   "name":
     type: string
@@ -528,6 +540,8 @@ run-list:
   recipes:
   - magentostack::redis_single
   - magentostack::redis_configure
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: {{ setting('port') }}
   targets:
@@ -553,6 +567,8 @@ provides:
 - volume: nfs
 requires:
 - host: linux
+supports:
+- logging: logstash
 options:
   "disk_filesystem":
     type: string
@@ -572,6 +588,8 @@ run-list:
   - parted
   - magentostack::partition_nfs_disk
   - magentostack::nfs_server
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: "/dev/xvdb"
 # - source: requirements://host:linux/instance/devices/data
@@ -580,7 +598,8 @@ maps:
 - value: {{ setting('disk_filesystem') }}
   targets:
   - attributes://disk/fs
-- source: clients://volume:nfs/private_ip
+# - source: clients://volume:nfs/private_ip
+- value: ['*']
   targets:
   - attributes://magentostack/nfs_server/override_allow
 - value: {{ setting('export_name') }}
@@ -594,3 +613,33 @@ maps:
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip
+
+---
+id: magento-elkstack
+name: elkstack
+is: logging
+provides:
+- logging: logstash
+requires:
+- host: linux
+options:
+  "username":
+    type: string
+    default: kibana
+  "password":
+    type: string
+    required: true
+run-list:
+  recipes:
+  - elkstack::java
+  - elkstack::cluster
+  - elkstack::acl
+maps:
+- value: {{ setting('username') }}
+  targets:
+  - attributes://elkstack/config/kibana/username
+  - outputs://resources/{{resource.index}}/instance/interfaces/kibana/username
+- value: {{ setting('password') }}
+  targets:
+  - attributes://elkstack_kibana_password
+  - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password
