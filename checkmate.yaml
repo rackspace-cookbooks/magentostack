@@ -95,6 +95,9 @@ blueprint:
         constraints:
         - name: sessions
         - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 512
     'object-cache':
       component:
         resource_type: cache
@@ -103,6 +106,9 @@ blueprint:
         constraints:
         - name: objects
         - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 512
     'page-cache':
       component:
         resource_type: cache
@@ -111,6 +117,9 @@ blueprint:
         constraints:
         - name: FPC
         - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 2560
     'shared-storage':
       component:
         resource_type: volume
