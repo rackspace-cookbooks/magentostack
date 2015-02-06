@@ -60,6 +60,7 @@ blueprint:
         interface: mysql
         id: mysql_database
         constraints:
+        - flavor: percona
         - version: "5.6"
         - max_allowed_packet: 268435456 # 256M
         - table_definition_cache: 4096
