@@ -90,22 +90,25 @@ blueprint:
       component:
         resource_type: cache
         interface: redis
-        id: redis_cache
+        id: magentoredis
         constraints:
+        - name: sessions
         - version: "2.8"
     'object-cache':
       component:
         resource_type: cache
         interface: redis
-        id: redis_cache
+        id: magentoredis
         constraints:
+        - name: objects
         - version: "2.8"
     'page-cache':
       component:
         resource_type: cache
         interface: redis
-        id: redis_cache
+        id: magentoredis
         constraints:
+        - name: FPC
         - version: "2.8"
     'shared-storage':
       component:

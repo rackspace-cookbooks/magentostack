@@ -212,6 +212,12 @@ maps:
 - source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
+- source: supported://volume:nfs/export_name
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+- source: supported://volume:nfs/export_root
+  targets:
+  - attributes://magentostack/nfs_server/export_root
 
 output:
   resources:
@@ -320,7 +326,7 @@ run-list:
   - magentostack::magento_install
   - magentostack::newrelic
   - magentostack::_find_mysql
-  - magentostack::_magento_redis
+  - magentostack::magento_configure
   - magentostack::nfs_client
 maps:
 - value: {{ setting('http_port') }}
@@ -442,6 +448,12 @@ maps:
 - source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
+- source: supported://volume:nfs/export_name
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+- source: supported://volume:nfs/export_root
+  targets:
+  - attributes://magentostack/nfs_server/export_root
 
 output:
   resources:
@@ -482,13 +494,15 @@ maps:
   targets:
   - attributes://mysql/server_root_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/server_root_password
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/host
 output:
   resources:
     '{{resource.index}}':
       instance:
         interfaces:
           mysql:
-            host: requirements://host:linux/private_ip
             server_root_password: {{ setting('database_root_password') }}
 
 ---
@@ -508,16 +522,19 @@ options:
     - in: ["sessions", "objects", "FPC"]
   "port":
     type: string
-    default: 27017
+    default: 6379
     required: true
 run-list:
   recipes:
   - magentostack::redis_single
   - magentostack::redis_configure
 maps:
-- value: {{ setting('name') }}
+- value: {{ setting('port') }}
   targets:
   - attributes://magentostack/redis/bind_port_single
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/redis/host
 output:
   resources:
     '{{resource.index}}':
@@ -525,7 +542,6 @@ output:
         name: {{ setting('name') }}
         interfaces:
           redis:
-            host: requirements://host:linux/private_ip
             port: {{ setting('port') }}
 
 ---
@@ -571,9 +587,11 @@ maps:
 - value: {{ setting('export_name') }}
   targets:
   - attributes://magentostack/nfs_server/export_name
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_name
 - value: {{ setting('export_root') }}
   targets:
   - attributes://magentostack/nfs_server/export_root
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_root
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip

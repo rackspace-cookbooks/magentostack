@@ -18,4 +18,6 @@
 # limitations under the License.
 #
 
+user node['newrelic_meetme_plugin']['user']
+
 include_recipe 'stack_commons::newrelic' # ~RACK002

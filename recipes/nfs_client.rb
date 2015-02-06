@@ -34,6 +34,7 @@ mount mount_point_path do
   device "#{nfs_server_node}:#{export_root}/#{export_name}"
   fstype 'nfs'
   options ['rw', 'sec=sys']
+  action [:mount, :enable]
   notifies :create, "directory[#{mount_point_path}]", :immediately
 end
 
