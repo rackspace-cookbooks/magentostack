@@ -123,7 +123,7 @@ maps:
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
-- value: {{ setting('newrelic') }}
+- value: {{ bool(setting('newrelic')) }}
   targets:
   - attributes://magentostack/newrelic/application_monitoring/php/enabled
 - value: {{ setting('admin_frontname') }}
@@ -359,7 +359,7 @@ maps:
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
-- value: {{ setting('newrelic') }}
+- value: {{ bool(setting('newrelic')) }}
   targets:
   - attributes://magentostack/newrelic/application_monitoring/php/enabled
 - value: {{ setting('admin_frontname') }}
@@ -580,8 +580,7 @@ maps:
 - value: {{ setting('disk_filesystem') }}
   targets:
   - attributes://disk/fs
-# - source: clients://volume:nfs/private_ip
-- value: ['*']
+- source: clients://volume:nfs/private_ip
   targets:
   - attributes://magentostack/nfs_server/override_allow
 - value: {{ setting('export_name') }}
