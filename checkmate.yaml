@@ -60,6 +60,7 @@ blueprint:
         interface: mysql
         id: mysql_database
         constraints:
+        - flavor: percona
         - version: "5.6"
         - max_allowed_packet: 268435456 # 256M
         - table_definition_cache: 4096
@@ -94,6 +95,9 @@ blueprint:
         constraints:
         - name: sessions
         - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 512
     'object-cache':
       component:
         resource_type: cache
@@ -102,6 +106,9 @@ blueprint:
         constraints:
         - name: objects
         - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 512
     'page-cache':
       component:
         resource_type: cache
@@ -110,6 +117,9 @@ blueprint:
         constraints:
         - name: FPC
         - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 2560
     'shared-storage':
       component:
         resource_type: volume
@@ -585,7 +595,7 @@ blueprint:
       type: integer
       required: true
       default: 0
-      description: The number of Magento servers to launch (up to 8)
+      description: The number of additional Magento servers to launch (up to 8)
       display-hints:
         group: server
         order: 3
@@ -599,7 +609,7 @@ blueprint:
         service: magento-worker
         resource_type: application
     database_size:
-      label: Database Size
+      label: Database Memory Size
       type: integer
       default: 4096
       description: The size of the MySQL instances in MB of RAM.
@@ -622,6 +632,18 @@ blueprint:
           value: 30720
       constrains:
       - setting: memory
+        service: data
+        resource_type: compute
+    database_disk:
+      label: Database Disk Size
+      type: integer
+      default: 100
+      description: The size of the MySQL disk in GB of RAM.
+      display-hints:
+        group: database
+        order: 2
+      constrains:
+      - setting: disk
         service: data
         resource_type: compute
   resources:
