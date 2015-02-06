@@ -123,7 +123,7 @@ maps:
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
-- value: {{ setting('newrelic') }}
+- value: {{ bool(setting('newrelic')) }}
   targets:
   - attributes://magentostack/newrelic/application_monitoring/php/enabled
 - value: {{ setting('admin_frontname') }}
@@ -359,7 +359,7 @@ maps:
 - value: {{ setting('demo') }}
   targets:
   - attributes://magentostack/demo/enabled
-- value: {{ setting('newrelic') }}
+- value: {{ bool(setting('newrelic')) }}
   targets:
   - attributes://magentostack/newrelic/application_monitoring/php/enabled
 - value: {{ setting('admin_frontname') }}
