@@ -609,7 +609,7 @@ blueprint:
         service: magento-worker
         resource_type: application
     database_size:
-      label: Database Size
+      label: Database Memory Size
       type: integer
       default: 4096
       description: The size of the MySQL instances in MB of RAM.
@@ -632,6 +632,18 @@ blueprint:
           value: 30720
       constrains:
       - setting: memory
+        service: data
+        resource_type: compute
+    database_disk:
+      label: Database Disk Size
+      type: integer
+      default: 100
+      description: The size of the MySQL disk in GB of RAM.
+      display-hints:
+        group: database
+        order: 2
+      constrains:
+      - setting: disk
         service: data
         resource_type: compute
   resources:
