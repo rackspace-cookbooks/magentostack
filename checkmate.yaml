@@ -91,7 +91,6 @@ blueprint:
       component:
         resource_type: cache
         interface: redis
-        id: magentoredis
         constraints:
         - name: sessions
         - version: "2.8"
@@ -102,7 +101,6 @@ blueprint:
       component:
         resource_type: cache
         interface: redis
-        id: magentoredis
         constraints:
         - name: objects
         - version: "2.8"
@@ -113,7 +111,6 @@ blueprint:
       component:
         resource_type: cache
         interface: redis
-        id: magentoredis
         constraints:
         - name: FPC
         - version: "2.8"
@@ -646,6 +643,25 @@ blueprint:
       - setting: disk
         service: data
         resource_type: compute
+    redis_type:
+      label: Cache Type
+      type: string
+      default: redis_cache
+      display-hints:
+        group: database
+        order: 3
+        choice:
+        - name: Cloud Redis
+          value: redis_cache
+        - name: Redis Server w/ Chef
+          value: magentoredis
+      constrains:
+      - setting: id
+        service: object-cache
+      - setting: id
+        service: session-cache
+      - setting: id
+        service: page-cache
   resources:
     "magento user":
       type: user
@@ -872,6 +888,7 @@ environment:
       vendor: rackspace
 inputs:
   blueprint:
+    redis_type: redis_cache
     url: http://magento.cldsrvr.com/
     newrelic: null
     region: IAD
