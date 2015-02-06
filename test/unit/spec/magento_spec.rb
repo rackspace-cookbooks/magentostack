@@ -66,8 +66,9 @@ describe 'magentostack::magento recipes' do
           expect(chef_run).to create_link('/var/www/html/magento/media')
         end
 
-        it 'should mount the nfs export' do
+        it 'should mount and enable the nfs export' do
           expect(chef_run).to mount_mount('/mnt/magento_media')
+          expect(chef_run).to enable_mount('/mnt/magento_media')
         end
       end
     end

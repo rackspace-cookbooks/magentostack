@@ -27,6 +27,10 @@ node.set['magentostack']['redis']['servers'][server_name] = {
   'port' => bind_port,
   'requirepass' => MagentostackUtil.redis_single_password(node)
 }
+
+include_recipe 'platformstack::iptables'
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['redis']['bind_port_single']} -j ACCEPT", 200, 'Allow access to redis')
+
 tag('magentostack_redis')
 tag('magentostack_redis_single')
 MagentostackUtil.recompute_redis(node)
