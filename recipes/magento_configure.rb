@@ -96,4 +96,5 @@ execute setup_script do
   not_if { File.exist?(magento_configured_file) }
 end
 
+include_recipe 'magentostack::_magento_mysql'
 include_recipe 'magentostack::_magento_redis'
