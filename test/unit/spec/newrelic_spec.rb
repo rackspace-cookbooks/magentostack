@@ -13,6 +13,10 @@ describe 'magentostack::newrelic' do
           end.converge(described_recipe)
         end
 
+        it 'creates the newrelic user' do
+          expect(chef_run).to create_user('newrelic')
+        end
+
         it 'includes recipes' do
           expect(chef_run).to include_recipe('stack_commons::newrelic')
           expect(chef_run).to include_recipe('newrelic::php_agent')
