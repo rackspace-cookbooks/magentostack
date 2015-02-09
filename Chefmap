@@ -641,5 +641,5 @@ maps:
   - outputs://resources/{{resource.index}}/instance/interfaces/kibana/username
 - value: {{ setting('password') }}
   targets:
-  - attributes://elkstack_kibana_password
+  - attributes://elkstack/config/kibana/password
   - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password

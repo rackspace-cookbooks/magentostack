@@ -911,12 +911,12 @@ blueprint:
       is-secret: true
     "Kibana Username":
       type: string
-      source: resources://logging:logstash/instance/interfaces/kibana/username
+      source: services://logging/instance/interfaces/kibana/username
       order: 1
       group: logs
     "Kibana Password":
       type: string
-      source: resources://logging:logstash/instance/interfaces/kibana/password
+      source: services://logging/instance/interfaces/kibana/password
       order: 2
       group: logs
       is-secret: true
