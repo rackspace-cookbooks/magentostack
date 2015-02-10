@@ -224,8 +224,9 @@ blueprint:
       display-hints:
         group: application
         order: 1
-        default-protocol: http
-        sample: http://magento.example.com/
+        default-protocol: https
+        sample: https://magento.example.com/
+        encrypted-protocols: [https]
       constraints:
       - protocols: [http, https]
         message: http and https are the only protocols supported
