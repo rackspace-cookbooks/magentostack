@@ -147,7 +147,7 @@ blueprint:
       - count: 1
       - resource_type: compute
         setting: flavor
-        value: io1-60
+        value: general1-8
 
   options:
 
