@@ -29,6 +29,30 @@
 ).each do |recipe|
   include_recipe recipe
 end
-MagentostackUtil.build_iptables(node) do |type, str, pri, comment|
-  add_iptables_rule(type, str, pri, comment)
+
+# figure out what clients should be allowed to connect
+found_clients = []
+override_allow = node['magentostack']['redis']['override_allow']
+
+if override_allow || Chef::Config[:solo]
+  override_allow.each do |ip|
+    found_clients << ip
+  end
+else
+  found_clients = search(:node, 'tags:magento_app_node')
+end
+found_clients.compact! # remove nil elements
+
+# figure out the local redis instances
+local_redis_instances = MagentostackUtil.redis_instance_info([node], node)
+local_redis_instances.each do |instance_name, instance_config|
+  next unless instance_config['port']
+  dest_port = instance_config['port']
+
+  # allow each client to connect to the redis instance
+  found_clients.each do |other_node|
+    other_node_ip = Chef::Sugar::IP.best_ip_for(node, other_node)
+    comment = "Allow redis client from #{other_node.name}/#{instance_name}:#{dest_port}"
+    add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport #{dest_port} -j ACCEPT", 9998, comment)
+  end
 end
