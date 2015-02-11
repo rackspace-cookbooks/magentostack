@@ -21,7 +21,11 @@
 include_recipe 'chef-sugar'
 
 # see recipes/mod_ssl.rb in apache2 for why this is coded this way
-ports = [node['magentostack']['web']['http_port'], node['magentostack']['web']['https_port']]
+ports = [node['magentostack']['web']['http_port']]
+if node['magentostack']['web']['ssl']
+  ports << node['magentostack']['web']['https_port']
+end
+
 ports.each do |p|
   unless node['apache']['listen_ports'].include?(p)
     node.set['apache']['listen_ports'] =  node['apache']['listen_ports'] + [p]
@@ -34,9 +38,12 @@ apache_modules = %w(
   authn_file authz_default
   authz_groupfile authz_host
   authz_user autoindex dir env mime
-  negotiation setenvif ssl headers
+  negotiation setenvif headers
   expires
 )
+if node['magentostack']['web']['ssl']
+  apache_modules << 'ssl'
+end
 
 # repo dependencies for php-fpm
 if platform_family?('rhel')
@@ -99,7 +106,26 @@ openssl_x509 node['magentostack']['web']['ssl_cert'] do
   org_unit 'Magento'
   country 'US'
   key_file node['magentostack']['web']['ssl_key']
-  only_if { node['magentostack']['web']['ssl_autosigned'] }
+  only_if { node['magentostack']['web']['ssl'] && node['magentostack']['web']['ssl_autosigned'] && !node['magentostack']['web']['ssl_custom'] }
+end
+
+# create custom certificates from a provided data bag
+if node['magentostack']['web']['ssl_custom']
+  custom_ssl = certificate_manage 'magento ssl certificate' do
+    data_bag node['magentostack']['web']['ssl_custom_databag']
+    search_id node['magentostack']['web']['ssl_custom_databag_item']
+    # these help us test without trying to figure out the filenames based on #{node.fqdn}
+    # because different test-kitchen drivers name their nodes differently
+    if node['magentostack']['web']['ssl_custom_basename']
+      cert_file "#{node['magentostack']['web']['ssl_custom_basename']}.pem"
+      key_file "#{node['magentostack']['web']['ssl_custom_basename']}.key"
+      chain_file "#{node['magentostack']['web']['ssl_custom_basename']}-bundle.crt"
+    end
+  end
+
+  node.set['magentostack']['web']['ssl_cert'] = custom_ssl.certificate
+  node.set['magentostack']['web']['ssl_key'] = custom_ssl.key
+  node.set['magentostack']['web']['ssl_chain'] = custom_ssl.chain if custom_ssl.chain
 end
 
 # Fast-cgi configuration
@@ -122,17 +148,21 @@ end
     docroot node['magentostack']['web']['dir']
     server_name node['magentostack']['web']['domain']
     server_aliases node['magentostack']['web']['server_aliases']
-    ssl true if site == 'ssl'
-    https_port node['magentostack']['web']['https_port']
-    ssl_cert node['magentostack']['web']['ssl_cert']
-    ssl_key node['magentostack']['web']['ssl_key']
+    if node['magentostack']['web']['ssl']
+      ssl true if site == 'ssl'
+      https_port node['magentostack']['web']['https_port']
+      ssl_cert node['magentostack']['web']['ssl_cert']
+      ssl_key node['magentostack']['web']['ssl_key']
+      ssl_chain node['magentostack']['web']['ssl_chain']
+    end
   end
 end
 
 # Open ports for Apache
-include_recipe 'platformstack::iptables'
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['http_port']} -j ACCEPT", 100, 'Allow access to apache')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['https_port']} -j ACCEPT", 100, 'Allow access to apache')
+if node['magentostack']['web']['ssl']
+  add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['https_port']} -j ACCEPT", 100, 'Allow access to apache')
+end
 
 # required by stack_commons::mysql_base to find the app nodes (mysql user permission)
 tag('magento_app_node')
@@ -141,4 +171,3 @@ tag('magento_app_node')
 node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['http_port'] = node['magentostack']['web']['http_port']
 node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['domain'] = node['magentostack']['web']['domain']
 node.default['platformstack']['cloud_monitoring']['custom_monitors']['custom_http']['variables']['host'] = node.deep_fetch('cloud', 'public_ipv4') || node['ipaddress']
-include_recipe 'platformstack::monitors' if node.deep_fetch('platformstack', 'cloud_monitoring', 'enabled')
