@@ -23,7 +23,7 @@ test-cases:
       install_flvor: enterprise
       php_version: php54
       validator-username: chef-validator
-      validator-pem: |
+      validator-pem: &rsakey |
         -----BEGIN RSA PRIVATE KEY-----
         MIIEogIBAAKCAQEAxwIcCc5+5iZM1KRJ4HnEhyX8SPAbT4AffqbsmSbSHKQGGCR4
         FwAIO9uhcCPavlcnpuNEAKZt+yE96OwQQBz9OMl0JMMrKhJ9yBJUhxADZezAu41O
@@ -51,62 +51,8 @@ test-cases:
         0WNEfySDHthWZND7XF1pZlJLJi7M8gfqRzUc0awOMRcxFlyrPSIosxI+AAhE7Zz8
         Yc0yRv1w+ej6bBnyg8MBI7rvsCNm2vrIP/4uOeCalQ2ucPZWQdU=
         -----END RSA PRIVATE KEY-----
-      chef-server-user-key: |
-        -----BEGIN RSA PRIVATE KEY-----
-        MIIEogIBAAKCAQEAxwIcCc5+5iZM1KRJ4HnEhyX8SPAbT4AffqbsmSbSHKQGGCR4
-        FwAIO9uhcCPavlcnpuNEAKZt+yE96OwQQBz9OMl0JMMrKhJ9yBJUhxADZezAu41O
-        phOGfAo9Lhj26GhV/yKmroNBglVHJknw4XCgdYOd5W/7q4QGFIbRv22bKeXdcbLm
-        8cRfbKugAVBG5AqzIoraRdiSoCCOP4VEE9pjo/SmDc2egbrorHRV5PEsZoYwXBDW
-        Sh19bHnIxRY8SnpsEzAjiSLqf0AnuiPgJNTkylLpxxgIsazJb+bQ1sDcQWFJ3WJN
-        JS6rKH2WM8uTHYpTw0k1WnaveV3z6Ju29cgsdQIDAQABAoIBACtrh2iQWFmow5yl
-        l8TVbI68N/ZGBP9sifKdQwQLV06ObxH3awhBpopA2lFYUVK0O1+LOHwX0+k2EIbw
-        cn86k/k+4wteVd2hGTZ84VpyoPstE8QYCa/slKwdo8maAs0kbpbzHYD3/GQObS6q
-        dVcKtsfNBrdXnoaGkLkLzVnB9VfHfzV8uqbfDZSU7hGOA8Ebdemp02MBomdPacdm
-        nn2MXT4SSHgcANpda0HgSpQlUdXeeQ3pYE57A2iFOQfsIBwJnrGd/oMehsTJBUPH
-        f4TM0P86Cei248QfJbhjBSYRHmzbqfMzoTHH2gETgUdCoxENpwuCGG8aQeCX7Jie
-        fzotE+ECgYEA/wl5lUQuEV30WfW5Ln73CHmpUuDx7TZO0HSJrzltd+9N/ya7Hhg5
-        Hr/0of9j6tmABTrWafABay0wxyq1Hy0letG0+Y2HD1VYmXfi1PjdSzRVbyLyi8ph
-        E2GCIBdfvKVo5QPJnn5j3wN2GnK6PxHtTQ64x4YERRybBNn7U9ENPr0CgYEAx8J5
-        ze854TYvBHl6v656CaJ+gSqyYQFyMInuyFKGFCQ7sAtRbrwk2/cR5LGCMS8P0dtX
-        /uS6xMCAES0l8U1aeralbnYMk93xwnyIokC2DzXLePsI9ZJmTOsOh6hnk+jq057T
-        xitP2+agfztLnaI4rRifnLKB+U4sfRMeW6XX/BkCgYBKJgkRWsdCCVz3ord6SzOr
-        ZSPTks8Dtpxngtpc9YdcLVkx66LPdx90Tz7isovsRdwwqRCZsEvZS0Q5Q7NxIwEY
-        mkvRmlJAJQIjbHWokcpVCRwlubVm6yoaJmlcxy7we+7pVpaR3BFRT4JQ4jZADAhA
-        NR2H9PDc3xo66N1nWwpMyQKBgCv/ntqIHaSITbTbmPjNUl3654hFwkJxkhg02V5Q
-        Ju4ayPbOl2IfmLLGaa+IlZeFuSNM/8XJ1YVurQabfib3Fb2/qxJ4d+69zPk8es/a
-        Fv+kpquAB4onc9bvUyT4J9BBVi/EZPraIV3bH3DGu7H9wCQIL2fRPaWO3WezJVWk
-        Yr1JAoGAGwA/Dtl6YO829BuASC1M3kQBhvMcC/RjACKPqRXvZeJWXycSjGcVluHP
-        0WNEfySDHthWZND7XF1pZlJLJi7M8gfqRzUc0awOMRcxFlyrPSIosxI+AAhE7Zz8
-        Yc0yRv1w+ej6bBnyg8MBI7rvsCNm2vrIP/4uOeCalQ2ucPZWQdU=
-        -----END RSA PRIVATE KEY-----
-      git_deploykey: |
-        -----BEGIN RSA PRIVATE KEY-----
-        MIIEogIBAAKCAQEAxwIcCc5+5iZM1KRJ4HnEhyX8SPAbT4AffqbsmSbSHKQGGCR4
-        FwAIO9uhcCPavlcnpuNEAKZt+yE96OwQQBz9OMl0JMMrKhJ9yBJUhxADZezAu41O
-        phOGfAo9Lhj26GhV/yKmroNBglVHJknw4XCgdYOd5W/7q4QGFIbRv22bKeXdcbLm
-        8cRfbKugAVBG5AqzIoraRdiSoCCOP4VEE9pjo/SmDc2egbrorHRV5PEsZoYwXBDW
-        Sh19bHnIxRY8SnpsEzAjiSLqf0AnuiPgJNTkylLpxxgIsazJb+bQ1sDcQWFJ3WJN
-        JS6rKH2WM8uTHYpTw0k1WnaveV3z6Ju29cgsdQIDAQABAoIBACtrh2iQWFmow5yl
-        l8TVbI68N/ZGBP9sifKdQwQLV06ObxH3awhBpopA2lFYUVK0O1+LOHwX0+k2EIbw
-        cn86k/k+4wteVd2hGTZ84VpyoPstE8QYCa/slKwdo8maAs0kbpbzHYD3/GQObS6q
-        dVcKtsfNBrdXnoaGkLkLzVnB9VfHfzV8uqbfDZSU7hGOA8Ebdemp02MBomdPacdm
-        nn2MXT4SSHgcANpda0HgSpQlUdXeeQ3pYE57A2iFOQfsIBwJnrGd/oMehsTJBUPH
-        f4TM0P86Cei248QfJbhjBSYRHmzbqfMzoTHH2gETgUdCoxENpwuCGG8aQeCX7Jie
-        fzotE+ECgYEA/wl5lUQuEV30WfW5Ln73CHmpUuDx7TZO0HSJrzltd+9N/ya7Hhg5
-        Hr/0of9j6tmABTrWafABay0wxyq1Hy0letG0+Y2HD1VYmXfi1PjdSzRVbyLyi8ph
-        E2GCIBdfvKVo5QPJnn5j3wN2GnK6PxHtTQ64x4YERRybBNn7U9ENPr0CgYEAx8J5
-        ze854TYvBHl6v656CaJ+gSqyYQFyMInuyFKGFCQ7sAtRbrwk2/cR5LGCMS8P0dtX
-        /uS6xMCAES0l8U1aeralbnYMk93xwnyIokC2DzXLePsI9ZJmTOsOh6hnk+jq057T
-        xitP2+agfztLnaI4rRifnLKB+U4sfRMeW6XX/BkCgYBKJgkRWsdCCVz3ord6SzOr
-        ZSPTks8Dtpxngtpc9YdcLVkx66LPdx90Tz7isovsRdwwqRCZsEvZS0Q5Q7NxIwEY
-        mkvRmlJAJQIjbHWokcpVCRwlubVm6yoaJmlcxy7we+7pVpaR3BFRT4JQ4jZADAhA
-        NR2H9PDc3xo66N1nWwpMyQKBgCv/ntqIHaSITbTbmPjNUl3654hFwkJxkhg02V5Q
-        Ju4ayPbOl2IfmLLGaa+IlZeFuSNM/8XJ1YVurQabfib3Fb2/qxJ4d+69zPk8es/a
-        Fv+kpquAB4onc9bvUyT4J9BBVi/EZPraIV3bH3DGu7H9wCQIL2fRPaWO3WezJVWk
-        Yr1JAoGAGwA/Dtl6YO829BuASC1M3kQBhvMcC/RjACKPqRXvZeJWXycSjGcVluHP
-        0WNEfySDHthWZND7XF1pZlJLJi7M8gfqRzUc0awOMRcxFlyrPSIosxI+AAhE7Zz8
-        Yc0yRv1w+ej6bBnyg8MBI7rvsCNm2vrIP/4uOeCalQ2ucPZWQdU=
-        -----END RSA PRIVATE KEY-----
+      chef-server-user-key: *rsakey
+      git_deploykey: *rsakey
   expected:
     resources:
       count: 17
@@ -204,13 +150,13 @@ test-cases:
           ip: 4.4.4.5
           public_ip: 4.4.4.5
           private_ip: 10.1.2.5
-          flavor: compute1-8
+          flavor: compute1-15
         desired-state:
           os-type: linux
           boot_from_image: true
           disk: 50
           os: Centos 6.6
-          flavor: compute1-8
+          flavor: compute1-15
       '6':
         dns-name: shared-storage.magento.cldsrvr.com
         instance:
@@ -251,7 +197,7 @@ test-cases:
             mysql:
               server_root_password: =verify(exists=True)
               magento:
-                username: wp_user_db1
+                username: db_user_db1
                 password: =verify(exists=True)
                 encryption_key: =verify(exists=True)
       '10':
@@ -262,19 +208,19 @@ test-cases:
           ip: 4.4.4.10
           public_ip: 4.4.4.10
           private_ip: 10.1.2.10
-          flavor: compute1-8
+          flavor: compute1-15
         desired-state:
           os-type: linux
           boot_from_image: true
           disk: 50
           os: Centos 6.6
-          flavor: compute1-8
+          flavor: compute1-15
       '15':
         dns-name: data01.checkmate.local
         instance:
           interfaces:
             mysql:
-              username: wp_user_db1
+              username: db_user_db1
               host: srv0.rackdb.net
               password: =verify(exists=True)
               database_name: db1
@@ -283,6 +229,73 @@ test-cases:
         instance:
           interfaces:
             mysql:
-              host: mysql16.rax.net
+              host: percona16.rax.net
         desired-state:
           datastore-type: mysql
+- name: Check SSL deployment
+  inputs:
+    blueprint:
+      url:
+        url: https://magento.cldsrvr.com/
+        certificate: &cert |
+          -----BEGIN CERTIFICATE-----
+          MIICkjCCAfsCAgXeMA0GCSqGSIb3DQEBBQUAMIG2MQswCQYDVQQGEwJVUzEOMAwG
+          A1UECBMFVGV4YXMxFDASBgNVBAcTC1NhbiBBbnRvbmlvMRIwEAYDVQQKEwlSYWNr
+          c3BhY2UxHjAcBgNVBAsTFVN5c3RlbSBBZG1pbmlzdHJhdGlvbjEjMCEGA1UEAxMa
+          UmFja3NwYWNlIEludGVybmFsIFJvb3QgQ0ExKDAmBgkqhkiG9w0BCQEWGVNlcnZp
+          Y2VEZXNrQHJhY2tzcGFjZS5jb20wHhcNMTMwNTE2MDYxMDQ3WhcNMTQwNTE2MDYx
+          MDQ3WjBrMQswCQYDVQQGEwJVUzEOMAwGA1UECBMFVGV4YXMxEjAQBgNVBAoTCVJh
+          Y2tzcGFjZTEVMBMGA1UECxMMWmlhZCBTYXdhbGhhMSEwHwYDVQQDExhjaGVja21h
+          dGUuY2xvdWQuaW50ZXJuYWwwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALin
+          K4gUwoQVt6mapFqmFBHAL1YUqabjWeyQNGD4Vt7L9XVgh6l1k+uqdzOKP7vlKh+T
+          diUnDh/VTpq8HZ+bHI8HhDLLIXG61+3LDa+CkgRi4RuwgWIUUY7rs9rUCnJ2HeYa
+          gRR+moptp+OK9rIwPv0k4O2Q29efBnZaL5Yyk3dPAgMBAAEwDQYJKoZIhvcNAQEF
+          BQADgYEAYxnk0LCk+kZB6M93Cr4Br0brE/NvNguJVoep8gb1sHI0bbnKY9yAfwvF
+          0qrcpuTvCS7ggfg1nCtXteJiYsRxZaleQeQSXBswXT3s3ZrUR9RSRPfGqJ9XiGlz
+          /YrPhnGGC24lpqLV8lBZkLsdnnoKwQfI+aRGbg0x2pi+Zh22H8U=
+          -----END CERTIFICATE-----
+        private_key: &pk |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIICXQIBAAKBgQC4pyuIFMKEFbepmqRaphQRwC9WFKmm41nskDRg+Fbey/V1YIep
+          dZPrqnczij+75Sofk3YlJw4f1U6avB2fmxyPB4QyyyFxutftyw2vgpIEYuEbsIFi
+          FFGO67Pa1Apydh3mGoEUfpqKbafjivayMD79JODtkNvXnwZ2Wi+WMpN3TwIDAQAB
+          AoGAI4D5DMQ5Fl56nuC+AzP1nege8eUtLYp/Ss37VD3LrjD3NCdoTjvuQhzXqJBH
+          auBINiQLTl9xBsvjvjq3U23mkoHVncDp8IxJY4ryFMkWMFg8v34ZzXIt86t1o1qx
+          l9GLvi4KGNuNdOnTpJ3lbg/MMTGhhzOfK8A8jrQRTZetmakCQQDrlXJ87xgSNMZk
+          heEhYDO37zCKODfaMcAI6xSUHqyZ3T+Yhs4y8ZeYxk5hI5BpQFQwaGS7XhX+KhAB
+          GN/vPLyTAkEAyKfL2rpGMQoJbYbbVnflYZpXqNmJ39pUvReVV7tzjtuqeUbeD+Jk
+          bpmTBO4h72sLklnXNZ5GQyM+DInZSbbL1QJBAJtv4rdN5hr1GUVwFCe6WsVsmyFH
+          kIp1stfvi4djacynb3OK1nhEcRrLFSIAniLj3+iEqJn7rRUi2aZvrCkkcOMCQB4W
+          Yw/qLIo/6gf9V7hQhBmtjgVokS76ywgLmD4ugnZiY96JjNSu6sZWyt/LYVVIJNUO
+          GaIVmI2KpEw3A1j1Sv0CQQDL5UizLxGG2WOfiP2PSTqJRsETofYeDjUIgTmIiAC6
+          qtIGUIskX+5D30cJqjlW1GDsZnkNBIMA//pBXwjEnX4B
+          -----END RSA PRIVATE KEY-----
+      version: 1.7.0.2
+      region: IAD
+      terms: true
+      sampledata: false
+      server_size: 4096
+      username: "MagentoAdmin"
+      password: "Mag!345678"
+      encryption_key: 3fdsk3Ajf77aFEDS
+      email: "chkmate@example.com"
+      magento_server_count: 3
+      database_size: 8000
+      firstname: "Test"
+      lastname: "Deployment"
+      chef-server-url: https://api.chef.io/organizations/cloudtest
+      chef-server-username: chefuser
+      install_method: git
+      git_repo: git@github.com:doesnotexist/enterprise-magento.git
+      install_flvor: enterprise
+      php_version: php54
+      validator-username: chef-validator
+      validator-pem: *rsakey
+      chef-server-user-key: *rsakey
+      git_deploykey: *rsakey
+  expected:
+    encrypted-databags:
+      certificates:
+        magento:
+          cert: *cert
+          key: *pk
