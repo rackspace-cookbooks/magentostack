@@ -102,6 +102,18 @@ maps:
 - value: {{ setting('https_port') }}
   targets:
   - attributes://magentostack/web/https_port
+- value: |
+    {{ parse_url(setting('url')).certificate | indent(4) }}
+  targets:
+  - encrypted-databags://certificates/magento/cert
+- value: |
+    {{ parse_url(setting('url')).private_key | indent(4) }}
+  targets:
+  - encrypted-databags://certificates/magento/key
+- value: |
+    {{ parse_url(setting('url')).intermediate_key | indent(4) }}
+  targets:
+  - encrypted-databags://certificates/magento/chain
 - value: {{ setting('install_flavor') }}
   targets:
   - attributes://magentostack/flavor
@@ -341,6 +353,18 @@ maps:
 - value: {{ setting('https_port') }}
   targets:
   - attributes://magentostack/web/https_port
+- value: |
+    {{ parse_url(setting('url')).certificate | indent(4) }}
+  targets:
+  - encrypted-databags://certificates/magento/cert
+- value: |
+    {{ parse_url(setting('url')).private_key | indent(4) }}
+  targets:
+  - encrypted-databags://certificates/magento/key
+- value: |
+    {{ parse_url(setting('url')).intermediate_key | indent(4) }}
+  targets:
+  - encrypted-databags://certificates/magento/chain
 - value: {{ setting('install_flavor') }}
   targets:
   - attributes://magentostack/flavor
