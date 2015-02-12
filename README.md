@@ -45,6 +45,17 @@ This recipe sets Apache2 configuration so you can deploy your Magento code.
 - toggles
   - certificate generation node['magentostack']['web']['ssl_autosigned']
 
+You may disable SSL support by setting `node.set['magentostack']['web']['ssl'] = false`. Note that you may still need to be sure Magento redirects work correctly in this case.
+
+You may supply a custom SSL certificate by setting one or more of these values:
+```
+node['magentostack']['web']['ssl_custom'] = true
+node['magentostack']['web']['ssl_custom_databag'] = 'certificates'
+node['magentostack']['web']['ssl_custom_databag_item'] = 'magento'
+```
+
+See instructions in [the certificate cookbook](https://github.com/atomic-penguin/cookbook-certificate#requirements) for how to prepare an appropriate encrypted data bag.
+
 > Only Community Edition >= 1.9 and Enterprise Edition >= 1.14.1 are supported by Magentostack, therefore it's PHP 5.5 only
 
 <!---
@@ -204,8 +215,8 @@ default['magentostack']['web']['server_aliases'] = node['fqdn']
   - where to find the Fast-cgi templates
 - `default['magentostack']['web']['dir']`
   - Documenent root (where to put Magento code)
-- `default['magentostack']['web']['ssl_key']` and `default['magentostack']['web']['ssl_cert']`
-  - where are the certificates and keys (might be useful when disabling self-signed)
+- `default['magentostack']['web']['ssl_key']` and `default['magentostack']['web']['ssl_cert']` and `default['magentostack']['web']['ssl_chain']`
+  - where are the certificates and keys and a chain/intermediate(might be useful when disabling self-signed)
 
 ### Magento
 - `default['magentostack']['config'][*]`
