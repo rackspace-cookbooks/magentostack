@@ -69,6 +69,33 @@ suites:
     run_list:
       - recipe[wrapper::default_expanded]
 
+  # disables SSL entirely for those who want to do SSL offloading
+  - name: community-nossl
+    provisioner:
+        client_rb:
+          environment: default_single
+    run_list:
+      - recipe[magentostack::apache-fpm] # only test web components so this doesn't take too long
+    attributes:
+      magentostack:
+        web:
+          ssl: false
+
+  # configures a custom SSL certificate from an encrypted data bag
+  - name: community-customssl
+    data_bags_path: "test/integration/community-customssl/data_bags"
+    encrypted_data_bag_secret_key_path: "test/integration/community-customssl/encrypted_data_bag_secret"
+    provisioner:
+        client_rb:
+          environment: default_single
+    run_list:
+      - recipe[magentostack::apache-fpm] # only test web components so this doesn't take too long
+    attributes:
+      magentostack:
+        web:
+          ssl_custom: true
+          ssl_custom_basename: 'test'
+
 <% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
   - name: enterprise
     run_list:

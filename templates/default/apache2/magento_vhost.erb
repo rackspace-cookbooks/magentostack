@@ -3,6 +3,8 @@
 
   SSLEngine on
   SSLCertificateFile <%= @params[:ssl_cert] %>
+
+  <% if @params[:ssl_chain] %>SSLCertificateChainFile <%= @params[:ssl_chain] %><% end %>
   SSLCertificateKeyFile <%= @params[:ssl_key] %>
 <%- else %>
 <VirtualHost *:<%= @params[:http_port] %>>

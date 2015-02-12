@@ -18,7 +18,7 @@ describe 'magentostack::apache-fpm' do
             env.name 'chefspec' # matches ./test/integration/
             allow(node).to receive(:chef_environment).and_return(env.name)
             allow(Chef::Environment).to receive(:load).and_return(env)
-          end.converge(described_recipe) # *splat operator for array to vararg
+          end.converge(described_recipe, 'platformstack::monitors') # *splat operator for array to vararg
         end
 
         property = load_platform_properties(platform: platform, platform_version: version)
@@ -95,9 +95,6 @@ describe 'magentostack::apache-fpm' do
         end
 
         shared_examples_for 'cloud monitoring' do
-          it 'includes platformstack::monitors' do
-            expect(chef_run).to include_recipe('platformstack::monitors')
-          end
           it 'configures rackspace monitoring agent' do
             expect(chef_run).to render_file('/etc/rackspace-monitoring-agent.conf.d/monitoring-custom_http.yaml').with_content('target_hostname: 10.0.1.2')
             expect(chef_run).to render_file('/etc/rackspace-monitoring-agent.conf.d/monitoring-custom_http.yaml').with_content('  hostname: localhost')
