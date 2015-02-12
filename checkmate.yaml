@@ -23,7 +23,7 @@ blueprint:
       - count: 1
       - resource_type: compute
         setting: flavor
-        value: 'compute1-8'
+        value: 'compute1-15'
       - resource_type: compute
         setting: disk
         value: 50
@@ -45,7 +45,7 @@ blueprint:
         less-than: 9
       - resource_type: compute
         setting: flavor
-        value: 'compute1-8'
+        value: 'compute1-15'
       - resource_type: compute
         setting: disk
         value: 50
@@ -208,11 +208,11 @@ blueprint:
       label: Region
       type: string
       required: true
-      default: ORD
+      default: IAD
       display-hints:
         group: deployment
         list-type: region
-      constrains:
+      constraints:
       - in:
         #- DFW does not yet support Cloud Redis
         #- ORD does not yet support Cloud Redis
@@ -220,6 +220,8 @@ blueprint:
         # - SYD does not yet support Cloud DBs
         # - HKG does not yet support Cloud DBs
         # - LON does not yet support Cloud DBs
+        message: must be a valid region
+      constrains:
       - setting: region
         provider: load-balancer
 
@@ -237,8 +239,9 @@ blueprint:
       display-hints:
         group: application
         order: 1
-        default-protocol: http
-        sample: http://magento.example.com/
+        default-protocol: https
+        sample: https://magento.example.com/
+        encrypted-protocols: [https]
       constraints:
       - protocols: [http, https]
         message: http and https are the only protocols supported
