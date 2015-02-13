@@ -198,7 +198,7 @@ maps:
   - attributes://magentostack/redis/override_session_port
 - source: supported://session-cache/password
   targets:
-  - attributes://magentostack/redis/password/session
+  - attributes://magentostack/redis/password_session
 - value: "objects"
   targets:
   - attributes://magentostack/redis/override_object_name
@@ -210,7 +210,7 @@ maps:
   - attributes://magentostack/redis/override_object_port
 - source: supported://object-cache/password
   targets:
-  - attributes://magentostack/redis/password/object
+  - attributes://magentostack/redis/password_object
 - value: "FPC"
   targets:
   - attributes://magentostack/redis/override_page_name
@@ -222,7 +222,7 @@ maps:
   - attributes://magentostack/redis/override_page_port
 - source: supported://page-cache/password
   targets:
-  - attributes://magentostack/redis/password/page
+  - attributes://magentostack/redis/password_page
 # NFS
 - source: supported://volume:nfs/ip
   targets:
@@ -449,7 +449,7 @@ maps:
   - attributes://magentostack/redis/override_session_port
 - source: supported://session-cache/password
   targets:
-  - attributes://magentostack/redis/password/session
+  - attributes://magentostack/redis/password_session
 - value: object
   targets:
   - attributes://magentostack/redis/override_object_name
@@ -461,7 +461,7 @@ maps:
   - attributes://magentostack/redis/override_object_port
 - source: supported://object-cache/password
   targets:
-  - attributes://magentostack/redis/password/object
+  - attributes://magentostack/redis/password_object
 - value: page
   targets:
   - attributes://magentostack/redis/override_page_name
@@ -473,7 +473,7 @@ maps:
   - attributes://magentostack/redis/override_page_port
 - source: supported://page-cache/password
   targets:
-  - attributes://magentostack/redis/password/page
+  - attributes://magentostack/redis/password_page
 # NFS
 - source: supported://volume:nfs/ip
   targets:
