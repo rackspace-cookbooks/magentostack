@@ -624,7 +624,7 @@ maps:
   - attributes://disk/fs
 #- source: clients://volume:nfs/private_ip
 - value: ['*']
-    targets:
+  targets:
   - attributes://magentostack/nfs_server/override_allow
 - value: {{ setting('export_name') }}
   targets:
