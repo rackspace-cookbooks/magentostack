@@ -20,7 +20,15 @@ cookbook 'ark', git:'https://github.com/burtlo/ark.git', ref: '1f7c092ffe8007340
 # until https://github.com/opscode-cookbooks/openssl/pull/11
 cookbook 'openssl', git: 'https://github.com/racker/openssl.git'
 
-cookbook 'kibana', git: 'git@github.com:lusis/chef-kibana.git', branch: 'KIBANA3'
-
 # Until https://github.com/newrelic-platform/newrelic_plugins_chef/pull/29 is merged
 cookbook 'newrelic_plugins', git: 'git@github.com:rackspace-cookbooks/newrelic_plugins_chef.git'
+
+
+## elkstack-related pins
+cookbook 'kibana', git: 'git@github.com:lusis/chef-kibana.git', branch: 'KIBANA3'
+# until https://github.com/elasticsearch/cookbook-elasticsearch/pull/230
+cookbook 'elasticsearch', '~> 0.3', git:'git@github.com:racker/cookbook-elasticsearch.git'
+# until https://github.com/poise/python/pull/120
+cookbook 'python', git: 'git@github.com:racker/python.git'
+# until https://github.com/lusis/chef-logstash/issues/394
+cookbook 'logstash', git: 'git@github.com:lusis/chef-logstash.git'
