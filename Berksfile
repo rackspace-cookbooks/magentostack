@@ -9,6 +9,8 @@ group :integration do
   cookbook 'yum'
 end
 
+cookbook 'varnish', '< 1.1.0'
+
 # Fixes in master@HEAD, but not latest release 2.2.4
 # This line may be removed once a newer version has been released
 cookbook 'redisio', git:'https://github.com/brianbianco/redisio.git'
