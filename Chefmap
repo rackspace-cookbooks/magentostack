@@ -93,8 +93,6 @@ run-list:
   - magentostack::magento_configure
   - magentostack::magento_admin
   - magentostack::nfs_client
-  - elkstack::java
-  - elkstack::agent
 maps:
 - value: {{ setting('http_port') }}
   targets:
@@ -344,8 +342,6 @@ run-list:
   - magentostack::_find_mysql
   - magentostack::magento_configure
   - magentostack::nfs_client
-  - elkstack::java
-  - elkstack::agent
 maps:
 - value: {{ setting('http_port') }}
   targets:
@@ -521,8 +517,6 @@ run-list:
   recipes:
   - magentostack::mysql_master
   - magentostack::mysql_holland
-  - elkstack::java
-  - elkstack::agent
 maps:
 - value: {{ setting('database_root_password') }}
   targets:
@@ -564,8 +558,6 @@ run-list:
   recipes:
   - magentostack::redis_single
   - magentostack::redis_configure
-  - elkstack::java
-  - elkstack::agent
 maps:
 - value: {{ setting('port') }}
   targets:
@@ -612,8 +604,6 @@ run-list:
   - parted
   - magentostack::partition_nfs_disk
   - magentostack::nfs_server
-  - elkstack::java
-  - elkstack::agent
 maps:
 - value: "/dev/xvdb"
 # - source: requirements://host:linux/instance/devices/data
