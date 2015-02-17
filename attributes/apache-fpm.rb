@@ -66,6 +66,7 @@ end
 default['php-fpm']['pools'] = {
   'www' => {
     enable: true,
+    listen: '127.0.0.1:9000',
     php_options: {
       'php_admin_flag[opcache.enable]' => '1',
       'php_admin_value[opcache.memory_consumption]' => '256',
