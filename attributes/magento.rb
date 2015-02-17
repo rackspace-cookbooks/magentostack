@@ -1,5 +1,10 @@
 # Where to get Magento, can be http link or git path
 default['magentostack']['install_method'] = 'ark' # can be ark, git, cloudfiles, or none
+
+# How to configure magento initially
+default['magentostack']['configure_method'] = 'installer' # can be installer, template, or none
+
+# Distribution of magento and a checksum for that download
 default['magentostack']['checksum'] = '338df88796a445cd3be2a10b5c79c50e9900a4a1b1d8e9113a79014d3186a8e0'
 default['magentostack']['flavor'] = 'community' # could also be enterprise
 
@@ -42,6 +47,7 @@ default['magentostack']['config']['admin_user']['username'] = 'MagentoAdmin'
 default['magentostack']['config']['admin_user']['password'] = 'magPass.123'
 
 ## Other configs
+default['magentostack']['config']['crypt_key'] = nil
 default['magentostack']['config']['session']['save'] = 'db'
 
 default['magentostack']['config']['use_rewrites'] = 'yes'
