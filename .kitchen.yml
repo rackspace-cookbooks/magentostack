@@ -110,6 +110,12 @@ suites:
           crypt_key: 'abc123secret'
           db_table_prefix: 'magento2_'
           admin_front_name: 'admin1'
+          connection:
+              initStatements: 'SET NAMES utf8'
+              model: 'mysql4'
+              type: 'pdo_mysql'
+              pdoType: ''
+
 
 <% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
   - name: enterprise
