@@ -100,18 +100,25 @@ maps:
 - value: {{ setting('https_port') }}
   targets:
   - attributes://magentostack/web/https_port
+- value: {{ deployment.id }}
+  targets:
+  - attributes://magentostack/web/ssl_custom_databag_item
+- value: {{ bool(parse_url(setting('url')).scheme == 'https') }}
+  targets:
+  - attributes://magentostack/web/ssl_custom
+  - attributes://magentostack/web/ssl
 - value: |
     {{ parse_url(setting('url')).certificate | indent(4) }}
   targets:
-  - encrypted-databags://certificates/magento/cert
+  - encrypted-databags://certificates/{{deployment.id}}/cert
 - value: |
     {{ parse_url(setting('url')).private_key | indent(4) }}
   targets:
-  - encrypted-databags://certificates/magento/key
+  - encrypted-databags://certificates/{{deployment.id}}/key
 - value: |
     {{ parse_url(setting('url')).intermediate_key | indent(4) }}
   targets:
-  - encrypted-databags://certificates/magento/chain
+  - encrypted-databags://certificates/{{deployment.id}}/chain
 - value: {{ setting('install_flavor') }}
   targets:
   - attributes://magentostack/flavor
@@ -349,18 +356,25 @@ maps:
 - value: {{ setting('https_port') }}
   targets:
   - attributes://magentostack/web/https_port
+- value: {{ deployment.id }}
+  targets:
+  - attributes://magentostack/web/ssl_custom_databag_item
+- value: {{ bool(parse_url(setting('url')).scheme == 'https') }}
+  targets:
+  - attributes://magentostack/web/ssl_custom
+  - attributes://magentostack/web/ssl
 - value: |
     {{ parse_url(setting('url')).certificate | indent(4) }}
   targets:
-  - encrypted-databags://certificates/magento/cert
+  - encrypted-databags://certificates/{{deployment.id}}/cert
 - value: |
     {{ parse_url(setting('url')).private_key | indent(4) }}
   targets:
-  - encrypted-databags://certificates/magento/key
+  - encrypted-databags://certificates/{{deployment.id}}/key
 - value: |
     {{ parse_url(setting('url')).intermediate_key | indent(4) }}
   targets:
-  - encrypted-databags://certificates/magento/chain
+  - encrypted-databags://certificates/{{deployment.id}}/chain
 - value: {{ setting('install_flavor') }}
   targets:
   - attributes://magentostack/flavor
