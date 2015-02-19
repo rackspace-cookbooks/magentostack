@@ -29,12 +29,12 @@ dbh = node['magentostack']['config']['db']['host']
 dbp = node['magentostack']['config']['db']['port']
 
 node.run_state['magentostack_installer_database_host'] = if dbh && dbp
-                  "#{dbh}:#{dbp}"
-                elsif dbh
-                  dbh
-                else
-                  false
-                end
+                                                           "#{dbh}:#{dbp}"
+                                                         elsif dbh
+                                                           dbh
+                                                         else
+                                                           false
+                                                         end
 database_name = node.run_state['magentostack_installer_database_name']
 node.run_state['magentostack_installer_database_user'] = node['magentostack']['mysql']['databases'][database_name]['mysql_user']
 node.run_state['magentostack_installer_database_pass'] = node['magentostack']['mysql']['databases'][database_name]['mysql_password']

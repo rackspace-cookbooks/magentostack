@@ -31,7 +31,6 @@ else
   Chef::Log.warn("Configuration method was #{node['magentostack']['configure_method']}, not configuring. local.xml may not exist.")
 end
 
-
 # things below this point need an existing local.xml
 include_recipe 'magentostack::_magento_mysql' # enable persistent connections to mysql
 include_recipe 'magentostack::_magento_redis' # enable redis caching

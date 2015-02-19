@@ -8,11 +8,11 @@
 ruby_block 'fail if missing local.xml.template' do
   block do
     fail 'local.xml.template did not exist' \
-      unless File.exists?("#{node['magentostack']['web']['dir']}/app/etc/local.xml.template")
+      unless File.exist?("#{node['magentostack']['web']['dir']}/app/etc/local.xml.template")
   end
 end
 
-remote_file "copy local.xml.template to local.xml" do
+remote_file 'copy local.xml.template to local.xml' do
   path "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
   source "file://#{node['magentostack']['web']['dir']}/app/etc/local.xml.template"
   owner node['apache']['user']
@@ -95,4 +95,20 @@ xml_edit 'add admin front name to local.xml' do
   fragment "<frontName><![CDATA[#{node['magentostack']['localxml']['admin_front_name']}]]></frontName>"
   action :append_if_missing
   only_if { node['magentostack']['localxml']['admin_front_name'] }
+end
+
+%w(
+  initStatements
+  model
+  type
+  pdoType
+).each do |connection_item|
+  xml_edit "add #{connection_item} to local.xml" do
+    path "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
+    target "/config/global/resources/default_setup/connection/#{connection_item}"
+    parent '/config/global/resources/default_setup/connection'
+    fragment "<#{connection_item}><![CDATA[#{node['magentostack']['localxml']['connection'][connection_item]}]]></#{connection_item}>"
+    action :append_if_missing
+    only_if { node['magentostack']['localxml']['connection'][connection_item] }
+  end
 end
