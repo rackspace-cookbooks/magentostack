@@ -34,18 +34,18 @@ xml_edit 'add crypt key to local.xml' do
   path "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
   target '/config/global/crypt/key'
   parent '/config/global/crypt'
-  fragment "<key><![CDATA[#{node['magentostack']['localxml']['crypt_key']}]]></key>"
+  fragment "<key><![CDATA[#{node['magentostack']['config']['encryption_key']}]]></key>"
   action :append_if_missing
-  only_if { node['magentostack']['localxml']['crypt_key'] }
+  only_if { node['magentostack']['config']['encryption_key'] }
 end
 
 xml_edit 'add db prefix to local.xml' do
   path "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
   target '/config/global/resources/db/table_prefix'
   parent '/config/global/resources/db'
-  fragment "<table_prefix><![CDATA[#{node['magentostack']['localxml']['db_table_prefix']}]]></table_prefix>"
+  fragment "<table_prefix><![CDATA[#{node['magentostack']['config']['db']['prefix']}]]></table_prefix>"
   action :append_if_missing
-  only_if { node['magentostack']['localxml']['db_table_prefix'] }
+  only_if { node['magentostack']['config']['db']['prefix'] }
 end
 
 database_host = node.run_state['magentostack_installer_database_host']
@@ -92,14 +92,22 @@ xml_edit 'add admin front name to local.xml' do
   path "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
   target '/config/admin/routers/adminhtml/args/frontName'
   parent '/config/admin/routers/adminhtml/args'
-  fragment "<frontName><![CDATA[#{node['magentostack']['localxml']['admin_front_name']}]]></frontName>"
+  fragment "<frontName><![CDATA[#{node['magentostack']['config']['admin_frontname']}]]></frontName>"
   action :append_if_missing
-  only_if { node['magentostack']['localxml']['admin_front_name'] }
+  only_if { node['magentostack']['config']['admin_frontname'] }
+end
+
+xml_edit 'add db model to local.xml' do
+  path "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
+  target '/config/global/resources/default_setup/connection/model'
+  parent '/config/global/resources/default_setup/connection'
+  fragment "<model><![CDATA[#{node['magentostack']['config']['db']['model']}]]></model>"
+  action :append_if_missing
+  only_if { node['magentostack']['config']['db']['model']
 end
 
 %w(
   initStatements
-  model
   type
   pdoType
 ).each do |connection_item|
