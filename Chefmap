@@ -96,6 +96,9 @@ run-list:
   - elkstack::java
   - elkstack::agent
 maps:
+- value: installer
+  targets:
+  - attributes://magentostack/configure_method
 - value: {{ setting('http_port') }}
   targets:
   - attributes://magentostack/web/http_port
@@ -347,6 +350,9 @@ run-list:
   - elkstack::java
   - elkstack::agent
 maps:
+- value: template
+  targets:
+  - attributes://magentostack/configure_method
 - value: {{ setting('http_port') }}
   targets:
   - attributes://magentostack/web/http_port
