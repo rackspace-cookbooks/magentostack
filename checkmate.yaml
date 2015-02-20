@@ -1,6 +1,6 @@
 blueprint:
   id: 8363F2D2284D4871BC618E92D152994F
-  name: "magentostack-cloud"
+  name: "bkstack-cloud"
   description: "Magento Community Edition installed using Cloud Datastores"
   version: 1.0.0
   services:
