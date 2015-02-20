@@ -96,6 +96,18 @@ suites:
           ssl_custom: true
           ssl_custom_basename: 'test'
 
+  # configures a custom SSL certificate from an encrypted data bag
+  - name: community-localxmltemplate
+    provisioner:
+        client_rb:
+          environment: default_single
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      magentostack:
+        configure_method: template
+
+
 <% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
   - name: enterprise
     run_list:

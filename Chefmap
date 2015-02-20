@@ -94,6 +94,9 @@ run-list:
   - magentostack::magento_admin
   - magentostack::nfs_client
 maps:
+- value: installer
+  targets:
+  - attributes://magentostack/configure_method
 - value: {{ setting('http_port') }}
   targets:
   - attributes://magentostack/web/http_port
@@ -350,6 +353,9 @@ run-list:
   - magentostack::magento_configure
   - magentostack::nfs_client
 maps:
+- value: template
+  targets:
+  - attributes://magentostack/configure_method
 - value: {{ setting('http_port') }}
   targets:
   - attributes://magentostack/web/http_port
