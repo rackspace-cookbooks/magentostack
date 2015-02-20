@@ -103,7 +103,7 @@ xml_edit 'add db model to local.xml' do
   parent '/config/global/resources/default_setup/connection'
   fragment "<model><![CDATA[#{node['magentostack']['config']['db']['model']}]]></model>"
   action :append_if_missing
-  only_if { node['magentostack']['config']['db']['model']
+  only_if { node['magentostack']['config']['db']['model'] }
 end
 
 %w(
