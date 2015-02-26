@@ -116,7 +116,7 @@ suites:
       magentostack:
         flavor: 'enterprise'
         install_method: 'git'
-        git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
+        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
         git_revision: 'v1.14.0.1'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 
@@ -131,7 +131,7 @@ suites:
       magentostack:
         flavor: 'enterprise'
         install_method: 'git'
-        git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
+        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
         git_revision: 'v1.14.0.1'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 
@@ -146,7 +146,7 @@ suites:
       magentostack:
         flavor: 'enterprise'
         install_method: 'git'
-        git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
+        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
         git_revision: 'v1.14.0.1'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
         php:
@@ -163,7 +163,7 @@ suites:
       magentostack:
         flavor: 'enterprise'
         install_method: 'git'
-        git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
+        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
         git_revision: 'v1.13.1.0'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 
@@ -178,7 +178,7 @@ suites:
       magentostack:
         flavor: 'enterprise'
         install_method: 'git'
-        git_repository: 'git@github.com:racker/enterprise-magento-chef-demo.git'
+        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
         git_revision: 'v1.13.1.0-php54'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
         php:
