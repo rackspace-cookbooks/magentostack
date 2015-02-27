@@ -117,7 +117,7 @@ suites:
         flavor: 'enterprise'
         install_method: 'git'
         git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
-        git_revision: 'v1.14.0.1'
+        git_revision: 'v1.14.1.0'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 
   - name: enterprise-redis
@@ -132,7 +132,7 @@ suites:
         flavor: 'enterprise'
         install_method: 'git'
         git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
-        git_revision: 'v1.14.0.1'
+        git_revision: 'v1.14.1.0'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 
   - name: enterprise-php54
@@ -147,7 +147,7 @@ suites:
         flavor: 'enterprise'
         install_method: 'git'
         git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
-        git_revision: 'v1.14.0.1'
+        git_revision: 'v1.14.1.0'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
         php:
           version: 'php54'
