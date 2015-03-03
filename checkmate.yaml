@@ -87,36 +87,45 @@ blueprint:
         - innodb_lock_wait_timeout: 300
         - long_query_time: 2
         - slow_query_log: 1
-    'session-cache':
+    'cache-redis':
       component:
         resource_type: cache
         interface: redis
         constraints:
-        - name: sessions
         - version: "2.8"
         - setting: memory
           resource_type: cache
-          value: 512
-    'object-cache':
-      component:
-        resource_type: cache
-        interface: redis
-        constraints:
-        - name: objects
-        - version: "2.8"
-        - setting: memory
-          resource_type: cache
-          value: 512
-    'page-cache':
-      component:
-        resource_type: cache
-        interface: redis
-        constraints:
-        - name: FPC
-        - version: "2.8"
-        - setting: memory
-          resource_type: cache
-          value: 2560
+          value: 3000
+    #'session-cache':
+    #  component:
+    #    resource_type: cache
+    #    interface: redis
+    #    constraints:
+    #    - name: sessions
+    #    - version: "2.8"
+    #    - setting: memory
+    #      resource_type: cache
+    #      value: 512
+    #'object-cache':
+    #  component:
+    #    resource_type: cache
+    #    interface: redis
+    #    constraints:
+    #    - name: objects
+    #    - version: "2.8"
+    #    - setting: memory
+    #      resource_type: cache
+    #      value: 512
+    #'page-cache':
+    #  component:
+    #    resource_type: cache
+    #    interface: redis
+    #    constraints:
+    #    - name: FPC
+    #    - version: "2.8"
+    #    - setting: memory
+    #      resource_type: cache
+    #      value: 2560
     'shared-storage':
       component:
         resource_type: volume
@@ -655,14 +664,16 @@ blueprint:
         - name: Cloud Redis
           value: redis_cache
         - name: Redis Server w/ Chef
-          value: magentoredis
+          value: magentoredisall
       constrains:
       - setting: id
-        service: object-cache
-      - setting: id
-        service: session-cache
-      - setting: id
-        service: page-cache
+        service: cache-redis
+      #- setting: id
+      #  service: object-cache
+      #- setting: id
+      #  service: session-cache
+      #- setting: id
+      #  service: page-cache
   resources:
     "magento user":
       type: user
