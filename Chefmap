@@ -195,9 +195,6 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
-- value: "all"
-  targets:
-  - attributes://magentostack/mysql/databases/db1/privileges
 - value: "sessions"
   targets:
   - attributes://magentostack/redis/override_session_name
@@ -460,9 +457,6 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
-- value: "all"
-  targets:
-  - attributes://magentostack/mysql/databases/db1/privileges
 - value: "session"
   targets:
   - attributes://magentostack/redis/override_session_name
@@ -530,7 +524,7 @@ output:
               # note host is written as output of a map
 
 ---
-id: mysqlmaster
+id: magentomysqlmaster
 name: mysql
 roles: [master]
 is: database
@@ -545,6 +539,11 @@ options:
     type: string
     default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
     required: true
+options:
+  "magento_db_password":
+    type: string
+    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    required: true
 run-list:
   recipes:
   - magentostack::mysql_master
@@ -554,6 +553,20 @@ maps:
   targets:
   - attributes://mysql/server_root_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/server_root_password
+- value: "3306"
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/port
+- value: "magento_db_user"
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_user
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/username
+- value: {{ setting('magento_db_password') }}
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_password
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/password
+- value: ["all"]
+  targets:
+  - attributes://magentostack/mysql/databases/db1/privileges
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/host
