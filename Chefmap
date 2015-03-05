@@ -89,6 +89,7 @@ options:
     default: magento_
 run-list:
   recipes:
+  - platformstack
   - magentostack::apache-fpm
   - magentostack::magento_install
   - magentostack::newrelic
@@ -244,6 +245,15 @@ maps:
 - source: supported://volume:nfs/export_root
   targets:
   - attributes://magentostack/nfs_server/export_root
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 output:
   resources:
@@ -352,6 +362,7 @@ options:
     default: magento_
 run-list:
   recipes:
+  - platformstack
   - magentostack::apache-fpm
   - magentostack::magento_install
   - magentostack::newrelic
@@ -506,6 +517,15 @@ maps:
 - source: supported://volume:nfs/export_root
   targets:
   - attributes://magentostack/nfs_server/export_root
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 output:
   resources:
@@ -546,6 +566,7 @@ options:
     required: true
 run-list:
   recipes:
+  - platformstack
   - magentostack::mysql_master
   - magentostack::mysql_holland
 maps:
@@ -570,6 +591,15 @@ maps:
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/host
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 output:
   resources:
     '{{resource.index}}':
@@ -601,6 +631,7 @@ options:
     required: true
 run-list:
   recipes:
+  - platformstack
   - magentostack::redis_single
   - magentostack::redis_configure
 maps:
@@ -610,6 +641,15 @@ maps:
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/redis/host
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 output:
   resources:
     '{{resource.index}}':
@@ -631,6 +671,7 @@ supports:
 - logging: logstash
 run-list:
   recipes:
+  - platformstack
   - magentostack::redis_page
   - magentostack::redis_object
   - magentostack::redis_session
@@ -639,6 +680,15 @@ maps:
 - value: "not needed"
   targets:
   - attributes://not/needed
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 ---
 id: magentonfs-server
@@ -668,6 +718,7 @@ run-list:
   recipes:
   - apt
   - parted
+  - platformstack
   - magentostack::partition_nfs_disk
   - magentostack::nfs_server
 maps:
@@ -693,6 +744,15 @@ maps:
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 ---
 id: magento-elkstack
@@ -711,6 +771,7 @@ options:
     required: true
 run-list:
   recipes:
+  - platformstack
   - elkstack::java
   - elkstack::cluster
   - elkstack::acl
@@ -723,3 +784,12 @@ maps:
   targets:
   - attributes://elkstack/config/kibana/password
   - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
