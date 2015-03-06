@@ -30,9 +30,6 @@ blueprint:
       relations:
       - data: mysql
       - all-redis: redis#all-redis
-      #- session-cache: redis#session-cache
-      #- object-cache: redis#object-cache
-      #- page-cache: redis#page-cache
       - shared-storage: nfs
     'magento-worker':
       component:
@@ -52,9 +49,6 @@ blueprint:
       relations:
       - data: mysql
       - all-redis: redis#all-redis
-      #- session-cache: redis#session-cache
-      #- object-cache: redis#object-cache
-      #- page-cache: redis#page-cache
       - shared-storage: nfs
     'data':
       component:
@@ -93,41 +87,6 @@ blueprint:
       component:
         resource_type: cache
         interface: redis
-        #constraints:
-        #- version: "2.8"
-        #- setting: memory
-        #  resource_type: cache
-        #  value: 3000
-    #'session-cache':
-    #  component:
-    #    resource_type: cache
-    #    interface: redis
-    #    constraints:
-    #    - name: sessions
-    #    - version: "2.8"
-    #    - setting: memory
-    #      resource_type: cache
-    #      value: 512
-    #'object-cache':
-    #  component:
-    #    resource_type: cache
-    #    interface: redis
-    #    constraints:
-    #    - name: objects
-    #    - version: "2.8"
-    #    - setting: memory
-    #      resource_type: cache
-    #      value: 512
-    #'page-cache':
-    #  component:
-    #    resource_type: cache
-    #    interface: redis
-    #    constraints:
-    #    - name: FPC
-    #    - version: "2.8"
-    #    - setting: memory
-    #      resource_type: cache
-    #      value: 2560
     'shared-storage':
       component:
         resource_type: volume
@@ -670,12 +629,6 @@ blueprint:
       constrains:
       - setting: id
         service: all-redis
-      #- setting: id
-      #  service: object-cache
-      #- setting: id
-      #  service: session-cache
-      #- setting: id
-      #  service: page-cache
   resources:
     "magento user":
       type: user
