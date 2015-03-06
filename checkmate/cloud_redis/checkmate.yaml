@@ -23,13 +23,15 @@ blueprint:
       - count: 1
       - resource_type: compute
         setting: flavor
-        value: 'compute1-8'
+        value: 'compute1-15'
       - resource_type: compute
         setting: disk
         value: 50
       relations:
       - data: mysql
-      - all-redis: redis#all-redis
+      - session-cache: redis#session-cache
+      - object-cache: redis#object-cache
+      - page-cache: redis#page-cache
       - shared-storage: nfs
     'magento-worker':
       component:
@@ -42,13 +44,15 @@ blueprint:
         less-than: 9
       - resource_type: compute
         setting: flavor
-        value: 'compute1-8'
+        value: 'compute1-15'
       - resource_type: compute
         setting: disk
         value: 50
       relations:
       - data: mysql
-      - all-redis: redis#all-redis
+      - session-cache: redis#session-cache
+      - object-cache: redis#object-cache
+      - page-cache: redis#page-cache
       - shared-storage: nfs
     'data':
       component:
@@ -83,14 +87,36 @@ blueprint:
         - innodb_lock_wait_timeout: 300
         - long_query_time: 2
         - slow_query_log: 1
-    'all-redis':
+    'session-cache':
       component:
         resource_type: cache
         interface: redis
-      constraints:
-      - resource_type: compute
-        setting: flavor
-        value: 'general1-4'
+        constraints:
+        - name: sessions
+        - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 512
+    'object-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        constraints:
+        - name: objects
+        - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 512
+    'page-cache':
+      component:
+        resource_type: cache
+        interface: redis
+        constraints:
+        - name: FPC
+        - version: "2.8"
+        - setting: memory
+          resource_type: cache
+          value: 2560
     'shared-storage':
       component:
         resource_type: volume
@@ -629,10 +655,14 @@ blueprint:
         - name: Cloud Redis
           value: redis_cache
         - name: Redis Server w/ Chef
-          value: magentoredisall
+          value: magentoredis
       constrains:
       - setting: id
-        service: all-redis
+        service: object-cache
+      - setting: id
+        service: session-cache
+      - setting: id
+        service: page-cache
   resources:
     "magento user":
       type: user

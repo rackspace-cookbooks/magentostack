@@ -18,6 +18,9 @@ supports:
 - page-cache:
     interface: redis
     resource_type: cache
+- all-redis:
+    interface: redis
+    resource_type: cache
 - volume: nfs
 - logging: logstash
 options:
@@ -86,6 +89,7 @@ options:
     default: magento_
 run-list:
   recipes:
+  - platformstack
   - magentostack::apache-fpm
   - magentostack::magento_install
   - magentostack::newrelic
@@ -192,9 +196,6 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
-- value: "all"
-  targets:
-  - attributes://magentostack/mysql/databases/db1/privileges
 - value: "sessions"
   targets:
   - attributes://magentostack/redis/override_session_name
@@ -231,7 +232,10 @@ maps:
 - source: supported://page-cache/password
   targets:
   - attributes://magentostack/redis/password_page
-# NFS
+- source: supported://all-redis/private_ip
+  targets:
+  - attributes://magentostack/all-redis/host
+## NFS
 - source: supported://volume:nfs/ip
   targets:
   - attributes://magentostack/nfs_server/override_host
@@ -241,6 +245,15 @@ maps:
 - source: supported://volume:nfs/export_root
   targets:
   - attributes://magentostack/nfs_server/export_root
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 output:
   resources:
@@ -276,6 +289,9 @@ supports:
     interface: redis
     resource_type: cache
 - page-cache:
+    interface: redis
+    resource_type: cache
+- all-redis:
     interface: redis
     resource_type: cache
 - volume: nfs
@@ -346,6 +362,7 @@ options:
     default: magento_
 run-list:
   recipes:
+  - platformstack
   - magentostack::apache-fpm
   - magentostack::magento_install
   - magentostack::newrelic
@@ -451,10 +468,7 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
-- value: "all"
-  targets:
-  - attributes://magentostack/mysql/databases/db1/privileges
-- value: session
+- value: "session"
   targets:
   - attributes://magentostack/redis/override_session_name
 - source: supported://session-cache/host
@@ -466,7 +480,7 @@ maps:
 - source: supported://session-cache/password
   targets:
   - attributes://magentostack/redis/password_session
-- value: object
+- value: "object"
   targets:
   - attributes://magentostack/redis/override_object_name
 - source: supported://object-cache/host
@@ -478,7 +492,7 @@ maps:
 - source: supported://object-cache/password
   targets:
   - attributes://magentostack/redis/password_object
-- value: page
+- value: "FPC"
   targets:
   - attributes://magentostack/redis/override_page_name
 - source: supported://page-cache/host
@@ -490,6 +504,9 @@ maps:
 - source: supported://page-cache/password
   targets:
   - attributes://magentostack/redis/password_page
+- source: supported://all-redis/private_ip
+  targets:
+  - attributes://magentostack/all-redis/host
 # NFS
 - source: supported://volume:nfs/ip
   targets:
@@ -500,6 +517,15 @@ maps:
 - source: supported://volume:nfs/export_root
   targets:
   - attributes://magentostack/nfs_server/export_root
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 output:
   resources:
@@ -518,7 +544,7 @@ output:
               # note host is written as output of a map
 
 ---
-id: mysqlmaster
+id: magentomysqlmaster
 name: mysql
 roles: [master]
 is: database
@@ -533,8 +559,14 @@ options:
     type: string
     default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
     required: true
+options:
+  "magento_db_password":
+    type: string
+    default: =generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    required: true
 run-list:
   recipes:
+  - platformstack
   - magentostack::mysql_master
   - magentostack::mysql_holland
 maps:
@@ -542,9 +574,32 @@ maps:
   targets:
   - attributes://mysql/server_root_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/server_root_password
+- value: "3306"
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/port
+- value: "magento_db_user"
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_user
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/username
+- value: {{ setting('magento_db_password') }}
+  targets:
+  - attributes://magentostack/mysql/databases/db1/mysql_password
+  - outputs://resources/{{resource.index}}/instance/interfaces/mysql/password
+- value: ["all"]
+  targets:
+  - attributes://magentostack/mysql/databases/db1/privileges
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/host
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 output:
   resources:
     '{{resource.index}}':
@@ -576,6 +631,7 @@ options:
     required: true
 run-list:
   recipes:
+  - platformstack
   - magentostack::redis_single
   - magentostack::redis_configure
 maps:
@@ -585,6 +641,15 @@ maps:
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/redis/host
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 output:
   resources:
     '{{resource.index}}':
@@ -593,6 +658,37 @@ output:
         interfaces:
           redis:
             port: {{ setting('port') }}
+
+---
+id: magentoredisall
+name: redis
+is: cache
+provides:
+- cache: redis
+requires:
+- host: linux
+supports:
+- logging: logstash
+run-list:
+  recipes:
+  - platformstack
+  - magentostack::redis_page
+  - magentostack::redis_object
+  - magentostack::redis_session
+  - magentostack::redis_configure
+maps:
+- value: "not needed"
+  targets:
+  - attributes://not/needed
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 ---
 id: magentonfs-server
@@ -622,6 +718,7 @@ run-list:
   recipes:
   - apt
   - parted
+  - platformstack
   - magentostack::partition_nfs_disk
   - magentostack::nfs_server
 maps:
@@ -647,6 +744,15 @@ maps:
 - source: requirements://host:linux/private_ip
   targets:
   - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
 
 ---
 id: magento-elkstack
@@ -665,6 +771,7 @@ options:
     required: true
 run-list:
   recipes:
+  - platformstack
   - elkstack::java
   - elkstack::cluster
   - elkstack::acl
@@ -677,3 +784,12 @@ maps:
   targets:
   - attributes://elkstack/config/kibana/password
   - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
