@@ -1,0 +1,990 @@
+blueprint:
+  id: 8363F2D2284D4871BC618E92D152994F
+  name: "magentostack-cloud"
+  description: "Magento Community Edition installed using Cloud Datastores"
+  version: 1.0.0
+  services:
+    lb:
+      component:
+        interface: http
+        type: load-balancer
+        constraints:
+        - algorithm: ROUND_ROBIN
+      relations:
+      - magento: http
+      - magento-worker: http
+      display-name: Load Balancer
+    'magento':
+      component:
+        name: magento
+        resource_type: application
+        role: master
+      constraints:
+      - count: 1
+      - resource_type: compute
+        setting: flavor
+        value: 'compute1-8'
+      - resource_type: compute
+        setting: disk
+        value: 50
+      relations:
+      - data: mysql
+      - all-redis: redis#all-redis
+      #- session-cache: redis#session-cache
+      #- object-cache: redis#object-cache
+      #- page-cache: redis#page-cache
+      - shared-storage: nfs
+    'magento-worker':
+      component:
+        name: magento
+        resource_type: application
+        role: worker
+      constraints:
+      - setting: count  # used for manual scaling
+        greater-than-or-equal-to: 0
+        less-than: 9
+      - resource_type: compute
+        setting: flavor
+        value: 'compute1-8'
+      - resource_type: compute
+        setting: disk
+        value: 50
+      relations:
+      - data: mysql
+      - all-redis: redis#all-redis
+      #- session-cache: redis#session-cache
+      #- object-cache: redis#object-cache
+      #- page-cache: redis#page-cache
+      - shared-storage: nfs
+    'data':
+      component:
+        resource_type: database
+        interface: mysql
+        id: mysql_database
+        constraints:
+        - flavor: percona
+        - version: "5.6"
+        - max_allowed_packet: 268435456 # 256M
+        - table_definition_cache: 4096
+        - table_open_cache: 4096
+        - query_cache_size: 67108864 # 64M
+        - query_cache_type: 1
+        - query_cache_limit: 2097152 # 2M
+        - join_buffer_size: 2097152 # 2M
+        - read_buffer_size: 2097152 # 2M
+        - read_rnd_buffer_size: 8388608 # 8M
+        - sort_buffer_size: 2097152 # 2M
+        - max_heap_table_size: 100663296 # 96M
+        - tmp_table_size: 100663296 # 96M
+        - max_connections: 500
+        - max_user_connections: 400
+        - max_connect_errors: 1000000
+        - max_allowed_packet: 268435456 # 256M
+        - wait_timeout: 600
+        - key_buffer_size: 33554432 # 32M
+        - myisam_sort_buffer_size: 268435456 # 256M
+        - innodb_buffer_pool_size: 805306368 # 6G
+        - innodb_file_per_table: 1
+        - innodb_thread_concurrency: 32
+        - innodb_lock_wait_timeout: 300
+        - long_query_time: 2
+        - slow_query_log: 1
+    'all-redis':
+      component:
+        resource_type: cache
+        interface: redis
+        #constraints:
+        #- version: "2.8"
+        #- setting: memory
+        #  resource_type: cache
+        #  value: 3000
+    #'session-cache':
+    #  component:
+    #    resource_type: cache
+    #    interface: redis
+    #    constraints:
+    #    - name: sessions
+    #    - version: "2.8"
+    #    - setting: memory
+    #      resource_type: cache
+    #      value: 512
+    #'object-cache':
+    #  component:
+    #    resource_type: cache
+    #    interface: redis
+    #    constraints:
+    #    - name: objects
+    #    - version: "2.8"
+    #    - setting: memory
+    #      resource_type: cache
+    #      value: 512
+    #'page-cache':
+    #  component:
+    #    resource_type: cache
+    #    interface: redis
+    #    constraints:
+    #    - name: FPC
+    #    - version: "2.8"
+    #    - setting: memory
+    #      resource_type: cache
+    #      value: 2560
+    'shared-storage':
+      component:
+        resource_type: volume
+        interface: nfs
+      constraints:
+      - count: 1
+      - resource_type: volume
+        setting: dedicated  # <-- 100Gb attached disk
+        value: true
+      - resource_type: volume
+        setting: device-name
+        value: /dev/xvdb
+      - resource_type: volume
+        setting: size
+        value: 100
+      - resource_type: compute
+        setting: memory
+        value: 2048
+
+  options:
+
+    # Chef Server Options
+    chef-server-url:
+      constrains:
+        - setting: server-url
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 1
+      type: string
+      required: true
+      label: Chef Server Org URL
+    chef-server-username:
+      label: Chef Server Username
+      constrains:
+        - setting: server-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 2
+      type: string
+      required: true
+    chef-server-user-key:
+      label: Chef User Key
+      constrains:
+        - setting: server-user-key
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 3
+      type: text
+      required: true
+    validator-username:
+      label: Validator Username
+      constrains:
+        - setting: validator-username
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 4
+      type: string
+      required: true
+    validator-pem:
+      label: Chef Validator Key
+      constrains:
+        - setting: validator-pem
+          provider: chef-server
+      display-hints:
+        group: chef
+        order: 5
+      type: text
+      required: true
+
+    # Cloud Deployment Options
+    region:
+      label: Region
+      type: string
+      required: true
+      default: IAD
+      display-hints:
+        group: deployment
+        list-type: region
+      constraints:
+      - in:
+        #- DFW does not yet support Cloud Redis
+        #- ORD does not yet support Cloud Redis
+        - IAD
+        # - SYD does not yet support Cloud DBs
+        # - HKG does not yet support Cloud DBs
+        # - LON does not yet support Cloud DBs
+        message: must be a valid region
+      constrains:
+      - setting: region
+        provider: load-balancer
+
+    # Application Options
+    url:
+      label: Site Address
+      description: 'The address you wish to host your site on.'
+      help: |
+        Required: The domain used is required for site configuration. You may
+        need to set modify your hosts file if you intend on pointing DNS over
+        at a later date.
+      type: url
+      required: true
+      default: http://magento.example.com/
+      display-hints:
+        group: application
+        order: 1
+        default-protocol: https
+        sample: https://magento.example.com/
+        encrypted-protocols: [https]
+      constraints:
+      - protocols: [http, https]
+        message: http and https are the only protocols supported
+      - regex: '^([a-zA-Z]{2,}?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$'
+        message: must be a valid web address
+      constrains:
+      - setting: allow_insecure
+        service: lb
+        resource_type: load-balancer
+        value: true  # turn on HTTP if protocol is HTTPS (provider handles it)
+      - setting: protocol
+        attribute: protocol
+        service: lb
+        resource_type: load-balancer
+      - setting: domain
+        attribute: hostname
+        service: lb
+        resource_type: load-balancer
+      - setting: domain
+        resource_type: application
+        attribute: hostname
+      - resource_type: application
+        setting: ssl_intermediate_key
+        attribute: intermediate_key
+      - setting: ssl_private_key
+        resource_type: application
+        attribute: private_key
+      - setting: ssl_certificate
+        resource_type: application
+        attribute: certificate
+      - setting: domain
+        resource_type: compute
+        attribute: hostname
+      - setting: domain
+        resource_type: volume
+        attribute: hostname
+      - setting: domain
+        resource_type: cache
+        attribute: hostname
+#    version:
+#      label: Magento Version
+#      help: |
+#        Required: Version of Magento Community Edition to install. If this
+#        deployment is part of a migration, select the version you are currently
+#        using.
+#      required: true
+#      type: string
+#      default: 1.7.0.2
+#      display-hints:
+#        group: application
+#        order: 2
+#      constrains:
+#      - setting: version
+#        service: magento
+#      constraints:
+#      - in: ["1.7.0.2", "1.8.1.0"]
+#        message: unsupported version
+    terms:
+      label: Agree to Terms
+      description: You must agree to the Magento Community Edition License.
+      type: boolean
+      help: |
+        Required: You must agree to the Magento Community Edition License which
+        can be found here: http://opensource.org/licenses/osl-3.0.php
+      required: true
+      display-hints:
+        group: application
+        order: 3
+      constrains:
+      - setting: terms
+        resource_type: application
+    install_flavor:
+      label: Community or Enterprise
+      description: Choose whether to install Community or Enterprise.
+      type: string
+      default: community
+      display-hints:
+        group: application
+        order: 3
+        choice:
+        - name: "Community"
+          value: community
+        - name: "Enterprise"
+          value: enterprise
+      constraints:
+      - in: ['community', 'enterprise']
+        message: unsupported install flavor
+    php_version:
+      label: Version of PHP
+      description: Choose the version of PHP to intall.
+      type: string
+      default: php55
+      display-hints:
+        group: application
+        order: 4
+        choice:
+        - name: "PHP 5.5"
+          value: php55
+        - name: "PHP 5.4"
+          value: php54
+      constraints:
+      - in: ['php54', 'php55']
+        message: unsupported php version
+      constrains:
+      - setting: php_version
+        resource_type: application
+    install_method:
+      label: Install Method
+      description: Choose where the install is coming from.
+      type: string
+      default: ark
+      display-hints:
+        group: application
+        order: 4
+        choice:
+        - name: "Ark"
+          value: ark
+        - name: "Git"
+          value: git
+      constraints:
+      - in: ["ark", "git"]
+        message: unsupported install method
+      constrains:
+      - setting: install_method
+        resource_type: application
+    git_repo:
+      label: Git Repository
+      description: Location of the git repo with the install package.
+      type: string
+      display-hints:
+        group: application
+        order: 5
+        sample: "git@example.com:example/magento"
+      constrains:
+      - setting: git_repo
+        resource_type: application
+      # TODO: add constraints regex
+    git_revision:
+      label: Git Revision
+      description: Revision of the git repo to install.
+      type: string
+      default: master
+      display-hints:
+        group: application
+        order: 6
+        sample: master
+      constrains:
+        - setting: git_revision
+          resource_type: application
+    git_deploykey:
+      label: Git Deploy Key
+      description: The Private key used to deploy from git.
+      type: text
+      display-hints:
+        group: application
+        order: 8
+        sample: "-----BEGIN DRSA PRIVATE KEY-----..."
+      constrains:
+      - setting: git_deploykey
+        resource_type: application
+      constraints:
+      - regex:
+          value: patterns.regex.private_key.required
+        message: Must be a valid SSH private key
+#    sampledata:
+#      label: Install Sample Data
+#      description: Determine whether or not to provide sample data
+#      type: boolean
+#      help: |
+#        Optional: If selected, this will install sample data into your Magento
+#        deployment.
+#      display-hints:
+#        group: application
+#        order: 9
+#      constrains:
+#      - setting: sampledata
+#        service: magento
+    username:
+      label: Admin Username
+      type: string
+      description: |
+        The user name to use for Magento and the deployment servers and
+        database.
+      help: |
+        Required: This will be the administrative user for your Magento
+        deployment.
+      required: true
+      default: MagentoAdmin
+      display-hints:
+        group: application
+        order: 9
+      constrains:
+      - setting: resources/magento user/name
+      constraints:
+      - regex: '^([a-zA-Z0-9]{1,16})$'
+        message: must be an alpha numeric string with fewer than 16 characters
+    password:
+      label: Admin Password
+      type: password
+      description: Password to use to administer your Magento site.
+      default: '=generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])'
+      help: |
+        Optional: Password provided must be between 8 and 255 characters in
+        length.  If no password is provided, one will be generated for you.
+      display-hints:
+        group: application
+        order: 10
+      constraints:
+      - regex: '^((.){8,255})?$'
+        message: must be between 8 and 255 characters long if provided
+      constrains:
+      - setting: resources/magento user/password
+    encryption_key:
+      label: Encryption Key
+      type: password
+      description: Key used to encrypt data
+      default: '=generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])'
+      help: |
+        Optional: Key provided must be between 8 and 255 characters in
+        length.  If no password is provided, one will be generated for you.
+      display-hints:
+        group: application
+        order: 11
+      constraints:
+      - regex: '^((.){8,255})?$'
+        message: must be between 8 and 255 characters long if provided
+      constrains:
+      - setting: encryption_key
+        resource_type: application
+    email:
+      label: Admin Email
+      type: string
+      description: The email address for the Magento admin user.
+      help: |
+        Required: This is the email address for the admin user for the Magento
+        site.  This value is required for configuring Magento.
+      required: true
+      display-hints:
+        group: application
+        order: 12
+      constraints:
+      - regex:
+          value: patterns.regex.email_address.required
+        message: must be a valid email address
+      constrains:
+      - setting: email
+        resource_type: application
+    firstname:
+      label: First Name
+      type: string
+      description: First name for Magento admin user.
+      help: |
+        Required: This is the first name of the Magento admin user.  This value
+        is required for configuring Magento.
+      required: true
+      display-hints:
+        group: application
+        order: 13
+      constrains:
+      - setting: firstname
+        resource_type: application
+      constraints:
+      - regex: '^([a-z0-9A-Z._-]{1,32})$'
+        message: must be alpha numeric string with fewer than 32 characters
+    lastname:
+      label: Last Name
+      type: string
+      description: Last name for Magento admin user.
+      help: |
+        Required: This is the last name for the Magento admin user.  This value
+        is required for configuring Magento.
+      required: true
+      display-hints:
+        group: application
+        order: 14
+      constrains:
+      - setting: lastname
+        resource_type: application
+      constraints:
+      - regex: '^([a-z0-9A-Z._-]{1,32})$'
+        message: must be alpha numeric string with fewer than 32 characters
+    newrelic:
+      label: New Relic License
+      type: string
+      description: License key to enable New Relic
+      help: |
+        This is the license key from New Relic for your application.
+      display-hints:
+        group: application
+        order: 15
+      constrains:
+      - setting: newrelic
+        resource_type: application
+    os:
+      label: Operating System
+      type: string
+      description: The operating system for all the servers.
+      default: CentOS 6.6
+      display-hints:
+        group: server
+        order: 1
+        list-type: compute.os
+        choice:
+        - name: "CentOS 6.6"
+          value: CentOS 6.6
+        - name: "Ubuntu 12.04 LTS (Precise Pangolin)"
+          value: Ubuntu 12.04
+        - name: "Ubuntu 14.04 LTS (Trusty Tahr)"
+          value: Ubuntu 14.04
+      constraints:
+      - in: ["Ubuntu 12.04", "CentOS 6.6", "Ubuntu 14.04"]
+        message: unsupported operating system
+      constrains:
+      - setting: os
+        resource_type: compute
+        service: magento
+      - setting: os
+        resource_type: compute
+        service: magento-worker
+      - setting: os
+        resource_type: compute
+        service: shared-storage
+    server_size:
+      label: Server Size
+      type: integer
+      default: 4096
+      description: The size of the Magento server instances in MB of RAM.
+      help: |
+        Server sizes are based on amount of RAM allocated to the system. Disk
+        space will be dependent on server flavors available in the region
+        selected. By default, we will build the best performing server
+        available.
+      display-hints:
+        group: server
+        order: 2
+        list-type: compute.memory
+        choice:
+        - name: 4 GB
+          value: 4096
+        - name: 8 GB
+          value: 8192
+        - name: 15 GB
+          value: 15360
+        - name: 30 GB
+          value: 30720
+        - name: 60 GB
+          value: 61440
+      constrains:
+      - setting: memory
+        service: magento
+        resource_type: compute
+      - setting: memory
+        service: magento-worker
+        resource_type: compute
+      constraints:
+      - greater-than-or-equal-to: 4096
+        message: must be 4096 or larger
+      - less-than-or-equal-to: 61440
+        message: must be 61440 or smaller
+    magento_server_count:
+      label: Magento Servers
+      type: integer
+      required: true
+      default: 0
+      description: The number of additional Magento servers to launch (up to 8)
+      display-hints:
+        group: server
+        order: 3
+      constraints:
+      - greater-than-or-equal-to: 0
+        message: must be 0 or greater
+      - less-than-or-equal-to: 8
+        message: must be 8 or fewer
+      constrains:
+      - setting: count
+        service: magento-worker
+        resource_type: application
+    database_size:
+      label: Database Memory Size
+      type: integer
+      default: 4096
+      description: The size of the MySQL instances in MB of RAM.
+      display-hints:
+        group: database
+        order: 1
+        list-type: compute.memory
+        choice:
+        - name: 1 GB
+          value: 1024
+        - name: 2 GB
+          value: 2048
+        - name: 4 GB
+          value: 4096
+        - name: 8 GB
+          value: 8192
+        - name: 15 GB
+          value: 15360
+        - name: 30 GB
+          value: 30720
+      constrains:
+      - setting: memory
+        service: data
+        resource_type: compute
+    database_disk:
+      label: Database Disk Size
+      type: integer
+      default: 100
+      description: The size of the MySQL disk in GB of RAM.
+      display-hints:
+        group: database
+        order: 2
+      constrains:
+      - setting: disk
+        service: data
+        resource_type: compute
+    redis_type:
+      label: Cache Type
+      type: string
+      default: redis_cache
+      display-hints:
+        group: database
+        order: 3
+        choice:
+        - name: Cloud Redis
+          value: redis_cache
+        - name: Redis Server w/ Chef
+          value: magentoredisall
+      constrains:
+      - setting: id
+        service: all-redis
+      #- setting: id
+      #  service: object-cache
+      #- setting: id
+      #  service: session-cache
+      #- setting: id
+      #  service: page-cache
+  resources:
+    "magento user":
+      type: user
+      constrains:
+      - setting: username
+        resource_type: application
+        attribute: name
+      - setting: password
+        resource_type: application
+        attribute: password
+    "db user":
+      type: user
+      name: magentouser
+      constrains:
+      - setting: database_username
+        resource_type: application
+        attribute: name
+      - setting: database_password
+        resource_type: application
+        attribute: password
+    "root":
+      type: user
+      constrains:
+      - setting: database_root_password
+        attribute: password
+        resource_type: application
+  meta-data:
+    schema-version: v0.7
+    blueprint-type: Application
+    application-name: Magento
+    flavor: |
+      Single Linux server with Magento Community Edition and MySQL 5.5
+    flavor-weight: 1
+    reach-info:
+      option-groups:
+      - application: Magento Options
+      - server: Server Options
+      - database: Database Options
+      - chef: Chef Options
+      - logging: Kibana Options
+      tattoo: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-tattoo.png
+      icon-20x20: https://600861890ddb34a8670a-744765205721eed93c384dae790e86aa.ssl.cf2.rackcdn.com/magento-icon-20x20.png
+    annotations:
+        gui-zoom:
+          scale: 0.7330444848925274
+          translate:
+            - 130.865999032417
+            - 55.36675569895442
+        lb:
+          gui-x: 495.426
+          gui-y: 59.095
+        magento:
+          gui-x: 401.106
+          gui-y: 263.337
+        magento-worker:
+          gui-x: 610.02
+          gui-y: 262.757
+        data:
+          gui-x: 509.039
+          gui-y: 727.599
+        session-cache:
+          gui-x: 504.053
+          gui-y: 511.211
+        object-cache:
+          gui-x: 358.288
+          gui-y: 511.528
+        page-cache:
+          gui-x: 649.95
+          gui-y: 510.104
+        shared-storage:
+          gui-x: 513.807
+          gui-y: 933.002
+  documentation:
+    abstract: |
+      Linux with [Magento Community
+      Edition](http://www.magentocommerce.com/product/community-edition/)
+      installed with [nginx](http://nginx.org/en/), [PHP
+      FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
+
+      This deployment is intended for simple test cases and low traffic
+      scenarios.  It is not for high traffic events and is not easily scalable.
+    instructions: |
+      #### Getting Started
+      If you're new to Magento Community Edition, the [Magento User
+      Guide](http://www.magentocommerce.com/resources/user-guide-download)
+      will step you through the process of configuring and managing your store.
+      This guide is free, but does require you to provide a valid email address
+      to receive it.
+
+      The [Magento Forum](http://www.magentocommerce.com/boards/) provides a
+      place to get answers to both simple and advanced questions regarding
+      configuration and management of Magento Community Edition.
+
+      #### Logging into Magento
+      To login, go to the URL listed above in a browser. If your DNS is not
+      pointing to this installation, you can add a line in your [hosts
+      file](http://www.rackspace.com/knowledge_center/article/how-do-i-modify-my-hosts-file)
+      to point your domain to the IP of this Cloud Server. Once you've done
+      this, restart your browser and navigate to the site. The backend can be
+      accessed by adding '/admin' to the end of the URL, and you can login with
+      the credentials provided above.
+
+      #### Logging in via SSH
+      The private key provided in the passwords section can be used to login as
+      root via SSH.  We have an article on how to use these keys with [Mac OS X
+      and Linux](http://www.rackspace.com/knowledge_center/article/logging-in-with-a-ssh-private-key-on-linuxmac)
+      as well as [Windows using
+      PuTTY](http://www.rackspace.com/knowledge_center/article/logging-in-with-a-ssh-private-key-on-windows).
+
+      #### Details of Your Setup
+      This deployment was stood up using
+      [chef-server](http://docs.opscode.com/chef_server.html).  Chef will run
+      continuously and override any changes, so it is not safe to modify
+      configurations.
+
+      A system user named 'magento' has been created.  This user does not have
+      a password set, so if you wish to use the account, a password will need to
+      be set.  This account is the system user for PHP-FPM, so deletion of this
+      user will take eCommerce site down.
+
+      [Nginx](http://nginx.org/en/) is used as the web server and listens on
+      port 8080 and 443 to handle web traffic. The configuration for your site
+      can be found in /etc/nginx/sites-enabled. There will be a default site
+      configuration, and a seperate one for SSL traffic. Magento itself is
+      installed in /var/www/vhosts. You will find a directory with the name of
+      website you entered as a part of this deployment. The SSL certificates
+      used are self signed and were generated when this deployment was created.
+      You can replace the private key and certificate by overwriting the ones in
+      /etc/nginx/ssl.
+
+      [PHP-FPM](http://php.net/manual/en/install.fpm.php) is used to handle
+      evaluation of all PHP-based pages. The configuration for this
+      installation is in /etc/php5/fpm/pools/magento.conf. By default, PHP-FPM
+      is running as the 'magento' user, listens on 127.0.0.1:9001.
+
+      [Varnish](https://www.varnish-cache.org/) is listening on port 80, and
+      will handle all HTTP traffic. Varnish provides a caching layer to serve
+      static content directly from memory. Anything that is not in cache will
+      be passed onto Nginx. Varnish will greatly improve your site's
+      performance, especially as traffic grows.  We leverage the VCL provided by
+      the Magento PageCache module.  The configuration file is
+      /etc/varnish/default.vcl.
+
+      Object and session caching are handled by
+      [Memcached](http://www.memcached.org/).  Memcache helps performance by
+      storing data in memory for faster responses to clients. These caches help
+      lessen the number of queries required to the database.  There are two
+      seperate instances of Memcached running to ensure session and object
+      caching are handled seperately.  The session cache is listening on
+      127.0.0.1:11211, and is set as a 512MB cache.  The object cache is
+      listening on 127.0.0.1:11212, and it is set as a 1.5GB cache.  The
+      configuration files are memcached_sessions.conf and memcached_backend.conf
+      in /etc.
+
+      [MySQL 5.5](http://www.mysql.com/) is installed as the database backend.
+      All configuration with Magento has been handled as a part of the setup.
+      The MySQL root password is provided as a part of this deployment.  If you
+      lose or forget the password, it can also be found in /root/.my.cnf.
+
+      MySQL backups are performed nightly by
+      [Holland](https://github.com/holland-backup/holland).  Backups can be
+      found in /var/lib/mysqlbackup.
+
+      #### Magento Plugins
+      There are thousands of plugins that have been developed for Magento by the
+      developer community. [Magento
+      Connect](http://www.magentocommerce.com/magento-connect/) provides an easy
+      way to discover popular plugins that other users have found to be helpful.
+      Not all plugins are free, and we recommend only installing the plugins
+      that you need.
+
+      #### Additional Notes
+      This blueprint supports adding additional nodes to the deployment.
+  display-outputs:
+    "Site Address":
+      type: url
+      source: options://url
+      extra-sources:
+        ipv4: "services://lb/interfaces/vip/ip_address"
+      order: 1
+      group: application
+    "Admin Username":
+      type: string
+      source: resources://magento user/instance/name
+      order: 2
+      group: application
+    "Admin Password":
+      type: password
+      source: resources://magento user/instance/password
+      order: 3
+      group: application
+      is-secret: true
+    "Magento Encryption Key":
+      type: password
+      order: 4
+      group: application
+      is-secret: true
+      source: options://encryption_key
+    "MySQL Root Password":
+      type: password
+      order: 5
+      group: application
+      is-secret: true
+      source: resources://root/instance/password
+    "Private Key":
+      type: private-key
+      source: "resources://deployment-keys/instance/private_key"
+      order: 6
+      group: application
+      is-secret: true
+environment:
+  description: This environment uses next-gen cloud servers.
+  name: Next-Gen Open Cloud
+  providers:
+    chef-server:
+      vendor: opscode # This should be chef now since the company is "Chef Software, Inc.
+      constraints:
+      - source: %repo_url%
+      - bootstrap-version: "11.16.4-1"
+    load-balancer: {}
+    nova: {}
+    database: {}
+    block: {}
+    common:
+      vendor: rackspace
+inputs:
+  blueprint:
+    redis_type: redis_cache
+    url: http://magento.cldsrvr.com/
+    newrelic: null
+    region: IAD
+    terms: true
+    sampledata: false
+    server_size: 4096
+    username: "MagentoAdmin"
+    password: "Mag!345678"
+    email: "chkmate@example.com"
+    magento_server_count: 1
+    database_size: 8000
+    firstname: "Test"
+    lastname: "Deployment"
+flavors:
+  extra-small:
+    blueprint:
+      options:
+        server_size:
+          default: 8192
+        magento_server_count:
+          default: 1
+      meta-data:
+        flavor: Magento for 100 Concurrent Users (Extra Small)
+        flavor-weight: 2
+    inputs:
+      blueprint:
+        server_size: 8192
+        magento_server_count: 1
+  small:
+    blueprint:
+      options:
+        server_size:
+          default: 15360
+        magento_server_count:
+          default: 1
+      meta-data:
+        flavor: Magento for 200 Concurrent Users (Small)
+        flavor-weight: 3
+    inputs:
+      blueprint:
+        server_size: 15360
+        magento_server_count: 1
+  medium:
+    blueprint:
+      options:
+        server_size:
+          default: 15360
+        magento_server_count:
+          default: 2
+      meta-data:
+        flavor: Magento for 400 Concurrent Users (Medium)
+        flavor-weight: 4
+    inputs:
+      blueprint:
+        server_size: 15360
+        magento_server_count: 2
+  large:
+    blueprint:
+      options:
+        server_size:
+          default: 30720
+        magento_server_count:
+          default: 2
+      meta-data:
+        flavor: Magento for 750 Concurrent Users (Large)
+        flavor-weight: 5
+    inputs:
+      blueprint:
+        server_size: 30720
+        magento_server_count: 2
+  extra-large:
+    blueprint:
+      options:
+        server_size:
+          default: 30720
+        magento_server_count:
+          default: 3
+      meta-data:
+        flavor: Magento for 1125 Concurrent Users (Extra Large)
+        flavor-weight: 6
+    inputs:
+      blueprint:
+        server_size: 30720
+        magento_server_count: 3
