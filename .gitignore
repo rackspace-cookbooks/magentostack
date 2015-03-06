@@ -26,3 +26,6 @@ bin/*
 # misc
 .DS_Store
 .chef
+
+# Python related things
+.ropeproject
