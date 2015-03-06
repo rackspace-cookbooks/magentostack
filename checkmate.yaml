@@ -87,6 +87,10 @@ blueprint:
       component:
         resource_type: cache
         interface: redis
+      constraints:
+      - resource_type: compute
+        setting: flavor
+        value: 'general1-4'
     'shared-storage':
       component:
         resource_type: volume
