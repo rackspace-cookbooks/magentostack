@@ -22,9 +22,6 @@ blueprint:
       constraints:
       - count: 1
       - resource_type: compute
-        setting: flavor
-        value: 'compute1-8'
-      - resource_type: compute
         setting: disk
         value: 50
       relations:
@@ -40,9 +37,6 @@ blueprint:
       - setting: count  # used for manual scaling
         greater-than-or-equal-to: 0
         less-than: 9
-      - resource_type: compute
-        setting: flavor
-        value: 'compute1-8'
       - resource_type: compute
         setting: disk
         value: 50
@@ -525,43 +519,31 @@ blueprint:
       - setting: os
         resource_type: compute
         service: shared-storage
+
     server_size:
       label: Server Size
-      type: integer
-      default: 4096
-      description: The size of the Magento server instances in MB of RAM.
-      help: |
-        Server sizes are based on amount of RAM allocated to the system. Disk
-        space will be dependent on server flavors available in the region
-        selected. By default, we will build the best performing server
-        available.
+      type: string
+      default: compute1-8
+      description: The size and type of the Magento server instances.
       display-hints:
         group: server
         order: 2
-        list-type: compute.memory
         choice:
-        - name: 4 GB
-          value: 4096
-        - name: 8 GB
-          value: 8192
-        - name: 15 GB
-          value: 15360
-        - name: 30 GB
-          value: 30720
-        - name: 60 GB
-          value: 61440
+        - name: Compute Optimized 15Gb
+          value: compute1-15
+        - name: Compute Optimized 8Gb
+          value: compute1-8
+        - name: General Purpose 8Gb
+          value: general1-8
+        - name: OnMetal
+          value: onmetal-compute1
       constrains:
-      - setting: memory
+      - setting: flavor
         service: magento
         resource_type: compute
-      - setting: memory
+      - setting: flavor
         service: magento-worker
         resource_type: compute
-      constraints:
-      - greater-than-or-equal-to: 4096
-        message: must be 4096 or larger
-      - less-than-or-equal-to: 61440
-        message: must be 61440 or smaller
     magento_server_count:
       label: Magento Servers
       type: integer
@@ -866,7 +848,7 @@ inputs:
     region: IAD
     terms: true
     sampledata: false
-    server_size: 4096
+    server_size: compute1-8
     username: "MagentoAdmin"
     password: "Mag!345678"
     email: "chkmate@example.com"
