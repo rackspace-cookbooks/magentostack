@@ -12,6 +12,8 @@ Enterprise Edition >= 1.14.1
 
 ## Requirements
 
+- Chef 12 or greater.
+
 ### Cookbooks
 
 - `apache2`
@@ -295,7 +297,7 @@ node.run_state['magentostack_redis_password_single'] = 'runstatepasswordsingle'
 {
     "run_list": [
       "recipe[platformstack::default]",
-      "recipe[rackops_rolebook::default]",
+      "recipe[platformstack::rackops_rolebook]",
       "recipe[magentostack::mysql_master]"
     ]
 }
@@ -306,7 +308,7 @@ node.run_state['magentostack_redis_password_single'] = 'runstatepasswordsingle'
 {
     "run_list": [
       "recipe[platformstack::default]",
-      "recipe[rackops_rolebook::default]",
+      "recipe[platformstack::rackops_rolebook]",
       "recipe[magentostack::mysql_master]"
     ]
 }
@@ -317,7 +319,7 @@ node.run_state['magentostack_redis_password_single'] = 'runstatepasswordsingle'
 {
     "run_list": [
       "recipe[platformstack::default]",
-      "recipe[rackops_rolebook::default]",
+      "recipe[platformstack::rackops_rolebook]",
       "recipe[magentostack::mysql_slave]"
     ]
 }
