@@ -87,6 +87,8 @@ blueprint:
       - resource_type: compute
         setting: flavor
         value: 'general1-4'
+      relations:
+      - logs: logstash
     'shared-storage':
       component:
         resource_type: volume
