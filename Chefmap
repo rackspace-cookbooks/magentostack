@@ -693,6 +693,8 @@ run-list:
   - magentostack::redis_object
   - magentostack::redis_session
   - magentostack::redis_configure
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: "not needed"
   targets:
