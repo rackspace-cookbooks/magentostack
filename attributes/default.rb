@@ -28,8 +28,6 @@ default['stack_commons']['stackname'] = 'magentostack'
 default['magentostack']['db-autocreate']['enabled'] = false
 default['magentostack']['demo']['enabled'] = false
 default['magentostack']['mysql']['databases'] = {}
-default['magentostack']['varnish']['backend_nodes'] = {}
-default['magentostack']['varnish']['multi'] = true
 
 # Toggle newrelic application monitoring
 default['stack_commons']['application_monitoring']['php']['enabled'] = true
