@@ -23,12 +23,25 @@ include_recipe 'chef-sugar'
 include_recipe 'magentostack::_magento_installprep' # prepare variables
 
 # figure out how to create local.xml
-if node['magentostack']['configure_method']
+configure_method = node['magentostack']['configure_method']
+case configure_method
+when 'installer'
+
+  # 'installer' - run installer script with provided values
+  include_recipe 'magentostack::_magento_localxml_installer'
+
+  # then do the template behavior! it won't overwrite the local.xml from the installer
+  include_recipe 'magentostack::_magento_localxml_template'
+
+when 'template'
+
   # 'template' - copy local.xml from local.xml.template
-  # 'installer' - run installer script
-  include_recipe "magentostack::_magento_localxml_#{node['magentostack']['configure_method']}"
+  include_recipe 'magentostack::_magento_localxml_template'
+
+when 'none'
+  Chef::Log.info('Magento configure method none was requested, not configuring magento')
 else
-  Chef::Log.warn("Configuration method was #{node['magentostack']['configure_method']}, not configuring. local.xml may not exist.")
+  fail "You have specified to configure magento with method #{configure_method}, which is not valid."
 end
 
 # things below this point need an existing local.xml
