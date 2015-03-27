@@ -750,14 +750,6 @@ blueprint:
       installation is in /etc/php5/fpm/pools/magento.conf. By default, PHP-FPM
       is running as the 'magento' user, listens on 127.0.0.1:9001.
 
-      [Varnish](https://www.varnish-cache.org/) is listening on port 80, and
-      will handle all HTTP traffic. Varnish provides a caching layer to serve
-      static content directly from memory. Anything that is not in cache will
-      be passed onto Nginx. Varnish will greatly improve your site's
-      performance, especially as traffic grows.  We leverage the VCL provided by
-      the Magento PageCache module.  The configuration file is
-      /etc/varnish/default.vcl.
-
       Object and session caching are handled by
       [Memcached](http://www.memcached.org/).  Memcache helps performance by
       storing data in memory for faster responses to clients. These caches help

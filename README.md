@@ -177,16 +177,6 @@ Example to get a sentinel only:
   - should be used after any calls to the redis_(single/object/page/session/sentinel) recipes
   - build any iptables rules and call `add_iptables_rule` on them
 
-### varnish
-- what it does
-  - allows clients to connect to the varnish port (via iptables)
-  - enables the cloud monitoring plugin for varnish
-  - sets the default backend port to the first useful port it can find
-  - sets up varnish if for multi backend load ballancing per vhost/port combination
-- toggles
-  - `node['varnish']['multi']` controls if varnish is simple or complex (multi backend or not)
-    - it is also controled by if any backend nodes are found
-
 ## Data_Bags
 
 No Data_Bag configured for this cookbook
@@ -278,12 +268,6 @@ Single redis instance
 ```
 node.run_state['magentostack_redis_password_single'] = 'runstatepasswordsingle'
 ```
-
-### varnish
-- `default['magentostack']['varnish']['multi'] = true`
-  - allows us to use more complex logic for the varnish configuration
-- `default['magentostack']['varnish']['backend_nodes'] = []`
-  - a list of nodes to use for backends. if empty or nil, search is the default behavior
 
 ## Usage
 

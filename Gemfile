@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
 group :lint do
-  gem 'foodcritic'
+  gem 'foodcritic', '>= 4.0'
   gem 'foodcritic-rackspace-rules', '>= 1.3.2'
-  gem 'rubocop', '~> 0.24'
+  gem 'rubocop'
 end
 
 group :unit do
   gem 'berkshelf', '~> 3'
-  gem 'chefspec', '>= 4'
+  gem 'chefspec', '>= 4.2'
   gem 'chef-sugar'
 end
 
@@ -17,7 +17,7 @@ group :kitchen_common do
 end
 
 group :kitchen_vagrant do
-  gem 'kitchen-vagrant'
+  gem 'kitchen-vagrant', '<= 0.15.0'
   gem 'vagrant-wrapper'
 end
 
