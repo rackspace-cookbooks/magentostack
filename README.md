@@ -70,14 +70,19 @@ apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore
   - sets up glusterfs based on the `node['rackspace_gluster']['config']['server']['glusters']` attribute
     - this may involve some manual setup, it is glusterfs afterall
 
-### magento
-- what it does
-  - download and extract Magento from `default['magentostack']['download_url']` to `node['apache']['docroot_dir']`
-  - install Magento with install.php (basic configuration, DB bootstrap, SSL url etc...)
-
 ### magento_admin
 - what it does
   - set up a cronjob to run Magento admin tasks
+
+### magento_install
+- what it does
+  - download and extract Magento, consulting `node['magentostack']['install_method']` for 'cloudfiles', 'ark', or 'git'
+
+### magento_configure
+- what it does
+  - install Magento by running install.php (basic configuration, DB bootstrap, SSL url etc...)
+  - or by copying a provided local.xml.template and editing it in-place from there
+  - *Note*: It will always edit the local.xml after the fact with values from chef.
 
 ### mysql_add_drive
 - what it does
