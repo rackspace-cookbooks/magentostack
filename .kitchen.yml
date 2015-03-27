@@ -61,7 +61,6 @@ suites:
         php:
           version: 'php54'
 
-
   - name: community-redis
     provisioner:
         client_rb:
@@ -106,7 +105,11 @@ suites:
     attributes:
       magentostack:
         configure_method: template
-
+        config:
+          encryption_key: 'abc123'
+          admin_frontname: 'superstore'
+          db:
+            prefix: 'moverride_'
 
 <% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
   - name: enterprise

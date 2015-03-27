@@ -39,6 +39,7 @@ def stub_resources
   stub_command('test -f /etc/httpd/mods-available/fastcgi.conf').and_return(0)
   stub_command('test -d /etc/php5/fpm/pool.d || mkdir -p /etc/php5/fpm/pool.d').and_return(0)
   stub_command('test -d /etc/php-fpm.d || mkdir -p /etc/php-fpm.d').and_return(0)
+  stub_command("grep -q '{{date}}' /var/www/html/magento/app/etc/local.xml").and_return(0)
 
   # Stubs and mocks for mysql_add_drive
   shellout = double
