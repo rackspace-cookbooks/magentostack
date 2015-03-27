@@ -4,7 +4,7 @@ require_relative 'spec_helper'
 
 # the runlist came from test-kitchen's default suite
 describe 'magentostack all in one demo' do
-  recipes_for_demo = %w(mysql_master varnish redis_single magento_install magento_configure).map { |r| "magentostack::#{r}" }
+  recipes_for_demo = %w(mysql_master redis_single magento_install magento_configure).map { |r| "magentostack::#{r}" }
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|
