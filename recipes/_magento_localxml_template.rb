@@ -35,7 +35,7 @@ xml_edit 'add crypt key to local.xml' do
   target '/config/global/crypt/key'
   parent '/config/global/crypt'
   fragment "<key><![CDATA[#{node['magentostack']['config']['encryption_key']}]]></key>"
-  action :append_if_missing
+  action :replace
   only_if { node['magentostack']['config']['encryption_key'] }
 end
 
@@ -44,7 +44,7 @@ xml_edit 'add db prefix to local.xml' do
   target '/config/global/resources/db/table_prefix'
   parent '/config/global/resources/db'
   fragment "<table_prefix><![CDATA[#{node['magentostack']['config']['db']['prefix']}]]></table_prefix>"
-  action :append_if_missing
+  action :replace
   only_if { node['magentostack']['config']['db']['prefix'] }
 end
 
@@ -54,7 +54,7 @@ xml_edit 'add database host to local.xml' do
   target '/config/global/resources/default_setup/connection/host'
   parent '/config/global/resources/default_setup/connection'
   fragment "<host><![CDATA[#{database_host}]]></host>"
-  action :append_if_missing
+  action :replace
   only_if { database_host }
 end
 
@@ -64,7 +64,7 @@ xml_edit 'add database username to local.xml' do
   target '/config/global/resources/default_setup/connection/username'
   parent '/config/global/resources/default_setup/connection'
   fragment "<username><![CDATA[#{database_user}]]></username>"
-  action :append_if_missing
+  action :replace
   only_if { database_user }
 end
 
@@ -74,7 +74,7 @@ xml_edit 'add database password to local.xml' do
   target '/config/global/resources/default_setup/connection/password'
   parent '/config/global/resources/default_setup/connection'
   fragment "<password><![CDATA[#{database_pass}]]></password>"
-  action :append_if_missing
+  action :replace
   only_if { database_pass }
 end
 
@@ -84,7 +84,7 @@ xml_edit 'add database name to local.xml' do
   target '/config/global/resources/default_setup/connection/dbname'
   parent '/config/global/resources/default_setup/connection'
   fragment "<dbname><![CDATA[#{database_name}]]></dbname>"
-  action :append_if_missing
+  action :replace
   only_if { database_name }
 end
 
@@ -93,7 +93,7 @@ xml_edit 'add admin front name to local.xml' do
   target '/config/admin/routers/adminhtml/args/frontName'
   parent '/config/admin/routers/adminhtml/args'
   fragment "<frontName><![CDATA[#{node['magentostack']['config']['admin_frontname']}]]></frontName>"
-  action :append_if_missing
+  action :replace
   only_if { node['magentostack']['config']['admin_frontname'] }
 end
 
@@ -102,7 +102,7 @@ xml_edit 'add db model to local.xml' do
   target '/config/global/resources/default_setup/connection/model'
   parent '/config/global/resources/default_setup/connection'
   fragment "<model><![CDATA[#{node['magentostack']['config']['db']['model']}]]></model>"
-  action :append_if_missing
+  action :replace
   only_if { node['magentostack']['config']['db']['model'] }
 end
 
