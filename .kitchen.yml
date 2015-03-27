@@ -126,7 +126,7 @@ suites:
     attributes:
       rackspace:
         cloud_credentials:
-          username: 'rackops'
+          username: <%= ENV['RACKSPACE_USERNAME'] %>
           api_key: <%= ENV['RACKSPACE_API_KEY'] %>
       magentostack:
         flavor: 'enterprise'
@@ -141,7 +141,7 @@ suites:
     attributes:
       rackspace:
         cloud_credentials:
-          username: 'rackops'
+          username: <%= ENV['RACKSPACE_USERNAME'] %>
           api_key: <%= ENV['RACKSPACE_API_KEY'] %>
       magentostack:
         flavor: 'enterprise'
@@ -158,7 +158,7 @@ suites:
     attributes:
       rackspace:
         cloud_credentials:
-          username: 'rackops'
+          username: <%= ENV['RACKSPACE_USERNAME'] %>
           api_key: <%= ENV['RACKSPACE_API_KEY'] %>
       magentostack:
         flavor: 'enterprise'
@@ -173,7 +173,7 @@ suites:
     attributes:
       rackspace:
         cloud_credentials:
-          username: 'rackops'
+          username: <%= ENV['RACKSPACE_USERNAME'] %>
           api_key: <%= ENV['RACKSPACE_API_KEY'] %>
       magentostack:
         flavor: 'enterprise'
@@ -191,7 +191,7 @@ suites:
     attributes:
       rackspace:
         cloud_credentials:
-          username: 'rackops'
+          username: <%= ENV['RACKSPACE_USERNAME'] %>
           api_key: <%= ENV['RACKSPACE_API_KEY'] %>
       magentostack:
         flavor: 'enterprise'

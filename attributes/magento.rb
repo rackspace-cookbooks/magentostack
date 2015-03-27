@@ -12,7 +12,7 @@ default['magentostack']['flavor'] = 'community' # could also be enterprise
 default['magentostack']['download_url'] = 'http://www.magentocommerce.com/downloads/assets/1.9.0.1/magento-1.9.0.1.tar.gz'
 
 # for cloudfiles download method
-default['magentostack']['download_region'] = 'ORD'
+default['magentostack']['download_region'] = 'iad'
 default['magentostack']['download_dir'] = 'magento'
 default['magentostack']['download_file'] = 'magento.tar.gz'
 
