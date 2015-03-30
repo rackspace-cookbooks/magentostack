@@ -529,6 +529,8 @@ blueprint:
         group: server
         order: 2
         choice:
+        - name: Compute Optimized 30Gb
+          value: compute1-30
         - name: Compute Optimized 15Gb
           value: compute1-15
         - name: Compute Optimized 8Gb
