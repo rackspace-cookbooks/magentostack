@@ -827,7 +827,7 @@ environment:
       vendor: opscode # This should be chef now since the company is "Chef Software, Inc.
       constraints:
       - source: %repo_url%
-      - bootstrap-version: "11.16.4-1"
+      - bootstrap-version: "12.2.1"
     load-balancer: {}
     nova: {}
     database: {}
