@@ -37,6 +37,7 @@ when 'rhel'
     php55u-soap
     php55u-pecl-redis
     php55u-opcache
+    php55u-mbstring
   )
 
   default['magentostack']['php54']['packages'] = %w(
@@ -48,6 +49,7 @@ when 'rhel'
     php54-soap
     php54-pecl-redis
     php54-opcache
+    php54-mbstring
   )
 ### opcache is built in Php for Ubuntu
 when 'debian'
@@ -58,6 +60,7 @@ when 'debian'
     php5-xmlrpc
     php5-redis
     php5-curl
+    php5-mbstring
   )
 end
 #    php5-soap
