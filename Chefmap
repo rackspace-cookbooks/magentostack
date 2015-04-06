@@ -86,7 +86,6 @@ options:
 #    required: true
   "database_prefix":
     type: string
-    default: magento_
 run-list:
   recipes:
   - platformstack
@@ -181,6 +180,9 @@ maps:
   - attributes://magentostack/config/encryption_key
   - outputs://resources/{{resource.index}}/instance/interfaces/magento/encryption_key
 # Database Setup (Values required by MySQL cookbook)
+- value: {{ setting('database_prefix') }}
+  targets:
+  - attributes://magentostack/config/db/prefix
 - source: requirements://database:mysql/host
   targets:
   - attributes://mysql-multi/master
@@ -359,7 +361,6 @@ options:
 #    required: true
   "database_prefix":
     type: string
-    default: magento_
 run-list:
   recipes:
   - platformstack
@@ -453,6 +454,9 @@ maps:
   - attributes://magentostack/config/encryption_key
   - outputs://resources/{{resource.index}}/instance/interfaces/magento/encryption_key
 # Database Setup (Values required by MySQL cookbook)
+- value: {{ setting('database_prefix') }}
+  targets:
+  - attributes://magentostack/config/db/prefix
 - source: requirements://database:mysql/host
   targets:
   - attributes://mysql-multi/master
