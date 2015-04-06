@@ -564,6 +564,24 @@ blueprint:
       - setting: count
         service: magento-worker
         resource_type: application
+    database_prefix:
+      label: Database Prefix
+      type: string
+      description: The prefix string for database tables.
+      display-hints:
+        group: database
+        order: 1
+        sample: magento_
+        constraints:
+        - regex:
+            value: patterns.mysql.table_prefix.optional
+        constrains:
+        - setting: database_prefix
+          service: magento
+          resource_type: application
+        - setting: database_prefix
+          service: magento-worker
+          resource_type: application
     database_size:
       label: Database Memory Size
       type: integer
@@ -571,7 +589,7 @@ blueprint:
       description: The size of the MySQL instances in MB of RAM.
       display-hints:
         group: database
-        order: 1
+        order: 2
         list-type: compute.memory
         choice:
         - name: 1 GB
@@ -597,7 +615,7 @@ blueprint:
       description: The size of the MySQL disk in GB of RAM.
       display-hints:
         group: database
-        order: 2
+        order: 3
       constrains:
       - setting: disk
         service: data
@@ -608,7 +626,7 @@ blueprint:
       default: redis_cache
       display-hints:
         group: database
-        order: 3
+        order: 4
         choice:
         - name: Cloud Redis
           value: redis_cache
