@@ -35,7 +35,7 @@ else
                                    'ip'   => ['ipaddress'],
                                    'cloud' => ['provider', 'local_ipv4', 'public_ipv4']
                                  }
-  ).map { |n| best_ip_for(n) }
+                                ).map { |n| best_ip_for(n) }
 end
 
 Chef::Log.warn('Did not find any clients to permit on NFS export of media') unless found_clients && !found_clients.empty?
