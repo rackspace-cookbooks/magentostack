@@ -583,6 +583,7 @@ blueprint:
       label: Database Prefix
       type: string
       description: The prefix string for database tables.
+      default: ""
       display-hints:
         group: database
         order: 1
@@ -650,6 +651,40 @@ blueprint:
       constrains:
       - setting: id
         service: all-redis
+    kibana_username:
+      label: Kibana Username
+      type: string
+      description: |
+        The user name to use for the Kibana interface.
+      help: |
+        Required: This will be the administrative user for your Kibana
+        deployment.
+      required: true
+      default: KibanaAdmin
+      display-hints:
+        group: logs
+        order: 1
+      constrains:
+      - setting: resources/kibana user/name
+      constraints:
+      - regex: '^([a-zA-Z0-9]{1,16})$'
+        message: must be an alpha numeric string with fewer than 16 characters
+    kibana_password:
+      label: Kibana Password
+      type: password
+      description: Password to use to administer your Kibana interface.
+      default: '=generate_password(min_length=12, required_chars=["0123456789", "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])'
+      help: |
+        Optional: Password provided must be between 8 and 255 characters in
+        length.  If no password is provided, one will be generated for you.
+      display-hints:
+        group: logs
+        order: 2
+      constraints:
+      - regex: patterns.regex.linux_password.optional
+        message: must be between 8 and 255 characters long if provided
+      constrains:
+      - setting: resources/kibana user/password
   resources:
     "magento user":
       type: user
@@ -676,6 +711,17 @@ blueprint:
       - setting: database_root_password
         attribute: password
         resource_type: application
+    "kibana user":
+      type: user
+      constrains:
+      - setting: username
+        service: logs
+        resource_type: application
+        attribute: name
+      - setting: password
+        service: logs
+        resource_type: application
+        attribute: password
   meta-data:
     schema-version: v0.7
     blueprint-type: Application
