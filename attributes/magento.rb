@@ -35,7 +35,7 @@ default['magentostack']['config']['default_currency'] = 'GBP'
 
 ## Database
 ### run_state rather than default?
-default['magentostack']['config']['db']['prefix'] = 'magento_'
+default['magentostack']['config']['db']['prefix'] = ''
 default['magentostack']['config']['db']['model'] = 'mysql4'
 
 ## Admin user
