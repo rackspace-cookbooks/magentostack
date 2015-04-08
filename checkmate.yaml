@@ -681,7 +681,8 @@ blueprint:
         group: logs
         order: 2
       constraints:
-      - regex: patterns.regex.linux_password.optional
+      - regex:
+          value: patterns.regex.linux_password.optional
         message: must be between 8 and 255 characters long if provided
       constrains:
       - setting: resources/kibana user/password
@@ -716,11 +717,11 @@ blueprint:
       constrains:
       - setting: username
         service: logs
-        resource_type: application
+        resource_type: logging
         attribute: name
       - setting: password
         service: logs
-        resource_type: application
+        resource_type: logging
         attribute: password
   meta-data:
     schema-version: v0.7
@@ -900,12 +901,12 @@ blueprint:
       is-secret: true
     "Kibana Username":
       type: string
-      source: services://logging/instance/interfaces/kibana/username
+      source: resources://kibana user/instance/name
       order: 1
       group: logs
     "Kibana Password":
-      type: string
-      source: services://logging/instance/interfaces/kibana/password
+      type: password
+      source: resources://kibana user/instance/password
       order: 2
       group: logs
       is-secret: true
