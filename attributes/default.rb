@@ -59,3 +59,13 @@ default['newrelic_meetme_plugin']['user'] = 'newrelic'
 default['magentostack']['localxml']['connection']['initStatements'] = 'SET NAMES utf8'
 default['magentostack']['localxml']['connection']['type'] = 'pdo_mysql'
 default['magentostack']['localxml']['connection']['pdoType'] = ''
+
+# redis cleanup cron job
+default['magentostack']['redis']['tag_cleanup']['minute'] = '0'
+default['magentostack']['redis']['tag_cleanup']['hour'] = '3'
+default['magentostack']['redis']['tag_cleanup']['day'] = '*'
+default['magentostack']['redis']['tag_cleanup']['weekday'] = '*'
+default['magentostack']['redis']['tag_cleanup']['month'] = '*'
+default['magentostack']['redis']['tag_cleanup']['databases'] = '0,1'
+# sticking to this revision to avoid pulling breaking changes
+default['magentostack']['redis']['tag_cleanup']['revision'] = '065b6e0b35517f2eae95f366ecd72010e7616ea2'

@@ -31,3 +31,24 @@ cron 'magento_cron' do
   user node['apache']['user']
   command "#{node['apache']['docroot_dir']}/magento/cron.sh"
 end
+
+package 'git'
+
+git '/root/cm_redis_tools' do
+  repository 'https://github.com/samm-git/cm_redis_tools'
+  revision node['magentostack']['redis']['tag_cleanup']['revision']
+  action :checkout
+end
+
+_redis_name, redis_ip, redis_port = MagentostackUtil.best_redis_object_master(node)
+databases = node['magentostack']['redis']['tag_cleanup']['databases']
+
+cron 'redis_tag_cleanup' do
+  command "/usr/bin/php /root/cm_redis_tools/rediscli.php -s #{redis_ip} -p #{redis_port} -d #{databases}"
+  minute node['magentostack']['redis']['tag_cleanup']['minute']
+  hour node['magentostack']['redis']['tag_cleanup']['hour']
+  day node['magentostack']['redis']['tag_cleanup']['day']
+  weekday node['magentostack']['redis']['tag_cleanup']['weekday']
+  month node['magentostack']['redis']['tag_cleanup']['month']
+  action :create
+end
