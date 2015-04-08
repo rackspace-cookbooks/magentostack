@@ -97,6 +97,8 @@ run-list:
   - magentostack::magento_configure
   - magentostack::magento_admin
   - magentostack::nfs_client
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: installer
   targets:
@@ -372,6 +374,8 @@ run-list:
   - magentostack::_find_mysql
   - magentostack::magento_configure
   - magentostack::nfs_client
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: template
   targets:
@@ -576,6 +580,8 @@ run-list:
   - platformstack::rackops_rolebook
   - magentostack::mysql_master
   - magentostack::mysql_holland
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: {{ setting('database_root_password') }}
   targets:
@@ -642,6 +648,8 @@ run-list:
   - platformstack::rackops_rolebook
   - magentostack::redis_single
   - magentostack::redis_configure
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: {{ setting('port') }}
   targets:
@@ -685,6 +693,8 @@ run-list:
   - magentostack::redis_object
   - magentostack::redis_session
   - magentostack::redis_configure
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: "not needed"
   targets:
@@ -731,6 +741,8 @@ run-list:
   - platformstack::rackops_rolebook
   - magentostack::partition_nfs_disk
   - magentostack::nfs_server
+  - elkstack::java
+  - elkstack::agent
 maps:
 - value: "/dev/xvdb"
 # - source: requirements://host:linux/instance/devices/data
