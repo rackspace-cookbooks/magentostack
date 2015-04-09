@@ -26,7 +26,6 @@ blueprint:
         value: 50
       relations:
       - data: mysql
-      - all-redis: redis#all-redis
       - shared-storage: nfs
       - logs: logstash
     'magento-worker':
@@ -43,7 +42,6 @@ blueprint:
         value: 50
       relations:
       - data: mysql
-      - all-redis: redis#all-redis
       - shared-storage: nfs
       - logs: logstash
     'data':
@@ -79,13 +77,6 @@ blueprint:
         - innodb_lock_wait_timeout: 300
         - long_query_time: 2
         - slow_query_log: 1
-    'all-redis':
-      component:
-        id: magentoredisall
-        resource_type: cache
-        interface: redis
-      relations:
-      - logs: logstash
     'shared-storage':
       component:
         resource_type: volume
@@ -645,22 +636,6 @@ blueprint:
       - setting: disk
         service: data
         resource_type: compute
-    redis_size:
-      label: Cache Server Size
-      type: string
-      default: compute1-4
-      display-hints:
-        group: database
-        order: 4
-        choice:
-        - name: Compute 4G
-          value: compute1-4
-        - name: Compute 8G
-          value: compute1-8
-      constrains:
-      - setting: flavor
-        service: all-redis
-        resource_type: compute
     kibana_username:
       label: Kibana Username
       type: string
@@ -964,10 +939,33 @@ flavors:
         flavor-weight: 2
     inputs:
       blueprint:
+        services:
+          'magento':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - all-redis: redis#all-redis
+          'magento-worker':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - all-redis: redis#all-redis
+          'all-redis':
+            id: magentoredisall
+            component:
+              resource_type: cache
+              interface: redis
+            constraints:
+            - resource_type: compute
+              setting: flavor
+              value: 'general1-4'
+            relations:
+            - logs: logstash
         server_size: compute1-15
         magento_server_count: 1
         database_size: 2048
-        redis_type: magentoredisall
   small:
     blueprint:
       options:
@@ -980,10 +978,33 @@ flavors:
         flavor-weight: 3
     inputs:
       blueprint:
+        services:
+          'magento':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - all-redis: redis#all-redis
+          'magento-worker':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - all-redis: redis#all-redis
+          'all-redis':
+            id: magentoredisall
+            component:
+              resource_type: cache
+              interface: redis
+            constraints:
+            - resource_type: compute
+              setting: flavor
+              value: 'general1-4'
+            relations:
+            - logs: logstash
         server_size: compute1-15
         magento_server_count: 1
         database_size: 4096
-        redis_type: magentoredisall
   medium:
     blueprint:
       options:
@@ -996,10 +1017,59 @@ flavors:
         flavor-weight: 4
     inputs:
       blueprint:
+        services:
+          'magento':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - session-cache: redis#session-cache
+            - object-cache: redis#object-cache
+            - page-cache: redis#page-cache
+          'magento-worker':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - session-cache: redis#session-cache
+            - object-cache: redis#object-cache
+            - page-cache: redis#page-cache
+          'session-cache':
+            id: redis_cache
+            component:
+              resource_type: cache
+              interface: redis
+              constraints:
+              - name: sessions
+              - version: "2.8"
+              - setting: memory
+                resource_type: cache
+                value: 512
+          'object-cache':
+            id: redis_cache
+            component:
+              resource_type: cache
+              interface: redis
+              constraints:
+              - name: objects
+              - version: "2.8"
+              - setting: memory
+                resource_type: cache
+                value: 512
+          'page-cache':
+            id: redis_cache
+            component:
+              resource_type: cache
+              interface: redis
+              constraints:
+              - name: FPC
+              - version: "2.8"
+              - setting: memory
+                resource_type: cache
+                value: 2560
         server_size: compute1-15
         magento_server_count: 2
         database_size: 4096
-        redis_type: redis_cache
   large:
     blueprint:
       options:
@@ -1012,7 +1082,56 @@ flavors:
         flavor-weight: 5
     inputs:
       blueprint:
+        services:
+          'magento':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - session-cache: redis#session-cache
+            - object-cache: redis#object-cache
+            - page-cache: redis#page-cache
+          'magento-worker':
+            relations:
+            - data: mysql
+            - shared-storage: nfs
+            - logs: logstash
+            - session-cache: redis#session-cache
+            - object-cache: redis#object-cache
+            - page-cache: redis#page-cache
+          'session-cache':
+            id: redis_cache
+            component:
+              resource_type: cache
+              interface: redis
+              constraints:
+              - name: sessions
+              - version: "2.8"
+              - setting: memory
+                resource_type: cache
+                value: 512
+          'object-cache':
+            id: redis_cache
+            component:
+              resource_type: cache
+              interface: redis
+              constraints:
+              - name: objects
+              - version: "2.8"
+              - setting: memory
+                resource_type: cache
+                value: 512
+          'page-cache':
+            id: redis_cache
+            component:
+              resource_type: cache
+              interface: redis
+              constraints:
+              - name: FPC
+              - version: "2.8"
+              - setting: memory
+                resource_type: cache
+                value: 2560
         server_size: onmetal-compute1
         magento_server_count: 2
         database_size: 8192
-        redis_type: redis_cache
