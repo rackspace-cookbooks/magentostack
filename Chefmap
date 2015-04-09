@@ -9,6 +9,7 @@ requires:
 - host: linux
 - database: mysql
 supports:
+- database-replica: mysql
 - session-cache:
     interface: redis
     resource_type: cache
@@ -34,12 +35,12 @@ options:
     default: 443
   "install_flavor":
     type: string
-    default: community
+    default: enterprise
   "php_version":
     type: string
   "install_method":
     type: string
-    default: ark
+    default: git
   "git_repo":
     type: string
   "git_revision":
@@ -201,6 +202,12 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
+- source: requirements://database-replica:mysql/host
+  targets:
+  - attributes://magentostack/config/db_read/host
+- source: requirements://database-replica:mysql/port
+  targets:
+  - attributes://magentostack/config/db_read/port
 - value: "sessions"
   targets:
   - attributes://magentostack/redis/override_session_name
@@ -287,6 +294,7 @@ requires:
 - host: linux
 - database: mysql
 supports:
+- database-replica: mysql
 - session-cache:
     interface: redis
     resource_type: cache
@@ -312,12 +320,12 @@ options:
     default: 443
   "install_flavor":
     type: string
-    default: community
+    default: enterprise
   "php_version":
     type: string
   "install_method":
     type: string
-    default: ark
+    default: git
   "git_repo":
     type: string
   "git_revision":
@@ -478,6 +486,12 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
+- source: requirements://database-replica:mysql/host
+  targets:
+  - attributes://magentostack/config/db_read/host
+- source: requirements://database-replica:mysql/port
+  targets:
+  - attributes://magentostack/config/db_read/port
 - value: "session"
   targets:
   - attributes://magentostack/redis/override_session_name
@@ -806,6 +820,77 @@ maps:
   targets:
   - attributes://elkstack/config/kibana/password
   - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login
+
+---
+id: magento-utility
+name: utility
+roles: [server]
+is: logging
+provides:
+- logging: logstash
+- volume: nfs
+requires:
+- host: linux
+options:
+  "export_name":
+    type: string
+    default: magento_media
+    required: true
+  "export_root":
+    type: string
+    default: /export/data
+    required: true
+  "username":
+    type: string
+    default: kibana
+  "password":
+    type: string
+    required: true
+run-list:
+  recipes:
+  - apt
+  - platformstack
+  - platformstack::rackops_rolebook
+  - magentostack::nfs_server
+  - elkstack::java
+  - elkstack::cluster
+  - elkstack::acl
+maps:
+#- source: clients://volume:nfs/private_ip
+- value: ['*']
+  targets:
+  - attributes://magentostack/nfs_server/override_allow
+- value: {{ setting('export_name') }}
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_name
+- value: {{ setting('export_root') }}
+  targets:
+  - attributes://magentostack/nfs_server/export_root
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_root
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip
+- value: {{ setting('username') }}
+  targets:
+  - attributes://elkstack/config/kibana/username
+  - outputs://resources/{{resource.index}}/instance/interfaces/kibana/username
+- value: {{ setting('password') }}
+  targets:
+  - attributes://elkstack/config/kibana/password
+  - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password
+- value: "{{ setting('export_root') }}/elasticsearch"
+  targets:
+  - attributes://elasticsearch/path/data
 ## Platformstack
 - value: false
   targets:
