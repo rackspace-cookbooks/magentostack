@@ -269,6 +269,18 @@ blueprint:
 #      constraints:
 #      - in: ["1.7.0.2", "1.8.1.0"]
 #        message: unsupported version
+    create_dns:
+      label: Create DNS entry
+      description: Create the DNS entry for this deployment.
+      type: boolean
+      default: false
+      display-hints:
+        group: application
+        order: 2
+      constrains:
+      - service: lb
+        resource_type: load-balancer
+        setting: create_dns
     terms:
       label: Agree to Terms
       description: You must agree to the Magento Community Edition License.
