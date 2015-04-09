@@ -956,69 +956,63 @@ flavors:
     blueprint:
       options:
         server_size:
-          default: 8192
+          default: compute1-15
         magento_server_count:
           default: 1
       meta-data:
-        flavor: Magento for 100 Concurrent Users (Extra Small)
+        flavor: Performance 1
         flavor-weight: 2
     inputs:
       blueprint:
-        server_size: 8192
+        server_size: compute1-15
         magento_server_count: 1
+        database_size: 2048
+        redis_type: magentoredisall
   small:
     blueprint:
       options:
         server_size:
-          default: 15360
+          default: compute1-15
         magento_server_count:
           default: 1
       meta-data:
-        flavor: Magento for 200 Concurrent Users (Small)
+        flavor: Performance 2
         flavor-weight: 3
     inputs:
       blueprint:
-        server_size: 15360
+        server_size: compute1-15
         magento_server_count: 1
+        database_size: 4096
+        redis_type: magentoredisall
   medium:
     blueprint:
       options:
         server_size:
-          default: 15360
+          default: compute1-15
         magento_server_count:
           default: 2
       meta-data:
-        flavor: Magento for 400 Concurrent Users (Medium)
+        flavor: Enterprise 1
         flavor-weight: 4
     inputs:
       blueprint:
-        server_size: 15360
+        server_size: compute1-15
         magento_server_count: 2
+        database_size: 4096
+        redis_type: redis_cache
   large:
     blueprint:
       options:
         server_size:
-          default: 30720
+          default: onmetal-compute1
         magento_server_count:
           default: 2
       meta-data:
-        flavor: Magento for 750 Concurrent Users (Large)
+        flavor: Enterprise 2
         flavor-weight: 5
     inputs:
       blueprint:
-        server_size: 30720
+        server_size: onmetal-compute1
         magento_server_count: 2
-  extra-large:
-    blueprint:
-      options:
-        server_size:
-          default: 30720
-        magento_server_count:
-          default: 3
-      meta-data:
-        flavor: Magento for 1125 Concurrent Users (Extra Large)
-        flavor-weight: 6
-    inputs:
-      blueprint:
-        server_size: 30720
-        magento_server_count: 3
+        database_size: 8192
+        redis_type: redis_cache
