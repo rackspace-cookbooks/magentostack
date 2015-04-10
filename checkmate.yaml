@@ -1021,6 +1021,7 @@ flavors:
           'magento':
             relations:
             - data: mysql
+            - data-slave: mysql
             - shared-storage: nfs
             - logs: logstash
             - session-cache: redis#session-cache
@@ -1029,11 +1030,47 @@ flavors:
           'magento-worker':
             relations:
             - data: mysql
+            - data-slave: mysql
             - shared-storage: nfs
             - logs: logstash
             - session-cache: redis#session-cache
             - object-cache: redis#object-cache
             - page-cache: redis#page-cache
+          'data-slave':
+            component:
+              resource_type: database-replica
+              interface: mysql
+              id: mysql_database
+              constraints:
+              - flavor: percona
+              - version: "5.6"
+              - max_allowed_packet: 268435456 # 256M
+              - table_definition_cache: 4096
+              - table_open_cache: 4096
+              - query_cache_size: 67108864 # 64M
+              - query_cache_type: 1
+              - query_cache_limit: 2097152 # 2M
+              - join_buffer_size: 2097152 # 2M
+              - read_buffer_size: 2097152 # 2M
+              - read_rnd_buffer_size: 8388608 # 8M
+              - sort_buffer_size: 2097152 # 2M
+              - max_heap_table_size: 100663296 # 96M
+              - tmp_table_size: 100663296 # 96M
+              - max_connections: 500
+              - max_user_connections: 400
+              - max_connect_errors: 1000000
+              - max_allowed_packet: 268435456 # 256M
+              - wait_timeout: 600
+              - key_buffer_size: 33554432 # 32M
+              - myisam_sort_buffer_size: 268435456 # 256M
+              - innodb_buffer_pool_size: 805306368 # 6G
+              - innodb_file_per_table: 1
+              - innodb_thread_concurrency: 32
+              - innodb_lock_wait_timeout: 300
+              - long_query_time: 2
+              - slow_query_log: 1
+            relations:
+            - data: mysql
           'session-cache':
             id: redis_cache
             component:
@@ -1086,6 +1123,7 @@ flavors:
           'magento':
             relations:
             - data: mysql
+            - data-slave: mysql
             - shared-storage: nfs
             - logs: logstash
             - session-cache: redis#session-cache
@@ -1094,11 +1132,47 @@ flavors:
           'magento-worker':
             relations:
             - data: mysql
+            - data-slave: mysql
             - shared-storage: nfs
             - logs: logstash
             - session-cache: redis#session-cache
             - object-cache: redis#object-cache
             - page-cache: redis#page-cache
+          'data-slave':
+            component:
+              resource_type: database-replica
+              interface: mysql
+              id: mysql_database
+              constraints:
+              - flavor: percona
+              - version: "5.6"
+              - max_allowed_packet: 268435456 # 256M
+              - table_definition_cache: 4096
+              - table_open_cache: 4096
+              - query_cache_size: 67108864 # 64M
+              - query_cache_type: 1
+              - query_cache_limit: 2097152 # 2M
+              - join_buffer_size: 2097152 # 2M
+              - read_buffer_size: 2097152 # 2M
+              - read_rnd_buffer_size: 8388608 # 8M
+              - sort_buffer_size: 2097152 # 2M
+              - max_heap_table_size: 100663296 # 96M
+              - tmp_table_size: 100663296 # 96M
+              - max_connections: 500
+              - max_user_connections: 400
+              - max_connect_errors: 1000000
+              - max_allowed_packet: 268435456 # 256M
+              - wait_timeout: 600
+              - key_buffer_size: 33554432 # 32M
+              - myisam_sort_buffer_size: 268435456 # 256M
+              - innodb_buffer_pool_size: 805306368 # 6G
+              - innodb_file_per_table: 1
+              - innodb_thread_concurrency: 32
+              - innodb_lock_wait_timeout: 300
+              - long_query_time: 2
+              - slow_query_log: 1
+            relations:
+            - data: mysql
           'session-cache':
             id: redis_cache
             component:
