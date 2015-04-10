@@ -1036,7 +1036,7 @@ flavors:
             - session-cache: redis#session-cache
             - object-cache: redis#object-cache
             - page-cache: redis#page-cache
-          'data-slave':
+          'data-replica':
             component:
               resource_type: database-replica
               interface: mysql
@@ -1138,7 +1138,7 @@ flavors:
             - session-cache: redis#session-cache
             - object-cache: redis#object-cache
             - page-cache: redis#page-cache
-          'data-slave':
+          'data-replica':
             component:
               resource_type: database-replica
               interface: mysql
