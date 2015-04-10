@@ -1,7 +1,7 @@
 blueprint:
   id: 8363F2D2284D4871BC618E92D152994F
   name: "magentostack-cloud"
-  description: "Magento Community Edition installed using Cloud Datastores"
+  description: "Magento install with Cloud Databases."
   version: 1.0.0
   services:
     lb:
@@ -929,6 +929,7 @@ inputs:
 flavors:
   extra-small:
     blueprint:
+      description: "Magento installed with redis on a compute instance."
       options:
         server_size:
           default: compute1-15
@@ -968,6 +969,7 @@ flavors:
         database_size: 2048
   small:
     blueprint:
+      description: "Magento installed with redis on a compute instance."
       options:
         server_size:
           default: compute1-15
@@ -1007,6 +1009,7 @@ flavors:
         database_size: 4096
   medium:
     blueprint:
+      description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
           default: compute1-15
@@ -1109,6 +1112,7 @@ flavors:
         database_size: 4096
   large:
     blueprint:
+      description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
           default: onmetal-compute1
