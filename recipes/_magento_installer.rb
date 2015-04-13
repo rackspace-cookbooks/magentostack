@@ -30,10 +30,16 @@ template setup_script do
   group node['apache']['group']
   mode '0700'
   variables(
-    db_name: node.run_state['magentostack_installer_database_name'],
+    locale: node['magentostack']['config']['locale'],
+    timezone: node['magentostack']['config']['tz'],
+    default_currency: node['magentostack']['config']['default_currency'],
     db_host: node.run_state['magentostack_installer_database_host'],
+    db_model: node['magentostack']['config']['db']['model'],
+    db_name: node.run_state['magentostack_installer_database_name'],
     db_user: node.run_state['magentostack_installer_database_user'],
     db_pass: node.run_state['magentostack_installer_database_pass'],
+    db_prefix: node['magentostack']['config']['db']['prefix'],
+    session_save: node['magentostack']['config']['session']['save'],
     magento_configured_file: node.run_state['magentostack_installer_magento_configured_file']
   )
 end

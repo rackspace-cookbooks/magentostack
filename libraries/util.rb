@@ -4,6 +4,39 @@
 #  within this library.
 # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
 module MagentostackUtil
+  def self.xml_escape_cdata(v)
+    # CDATA for strings
+    if v.is_a?(String)
+      "<![CDATA[#{v}]]>"
+    else
+      v
+    end
+  end
+
+  def self.construct_url(domain, port, prefix)
+    if domain && port && prefix == 'http' && port == 80
+      "#{prefix}://#{domain}/"
+    elsif domain && port && prefix == 'https' && port == 443
+      "#{prefix}://#{domain}/"
+    elsif domain && port
+      "#{prefix}://#{domain}:#{port}/"
+    elsif domain
+      "#{prefix}://#{domain}/"
+    else
+      false
+    end
+  end
+
+  def self.construct_mysql_url(domain, port)
+    if domain && port
+      "#{domain}:#{port}"
+    elsif domain
+      "#{domain}:3306"
+    else
+      false
+    end
+  end
+
   def self.best_redis_session_master(current_node)
     return best_redis_master(current_node, 'session')
   end

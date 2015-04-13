@@ -50,6 +50,19 @@ suites:
     run_list:
       - recipe[wrapper::default]
 
+  - name: community-splitdb
+    provisioner:
+        client_rb:
+          environment: default_single
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      magentostack:
+        config:
+          db_read:
+            model: 'mysql4' # any override of any read parameter or write param
+                            # will trigger the split db behavior
+
   - name: community-php54
     provisioner:
         client_rb:
@@ -95,7 +108,6 @@ suites:
           ssl_custom: true
           ssl_custom_basename: 'test'
 
-  # configures a custom SSL certificate from an encrypted data bag
   - name: community-localxmltemplate
     provisioner:
         client_rb:

@@ -21,7 +21,7 @@ default['magentostack']['git_repository'] = 'git@github.com:example/deployment.g
 default['magentostack']['git_revision'] = 'master' # e.g. staging, testing, dev
 default['magentostack']['git_deploykey'] = nil
 
-# Database creation
+# Database creation by the mysql cookbook
 normal['magentostack']['mysql']['databases']['magento_database']['mysql_user'] = 'magento_user'
 normal['magentostack']['mysql']['databases']['magento_database']['mysql_password'] = 'magento_password'
 normal['magentostack']['mysql']['databases']['magento_database']['privileges'] = ['all']
@@ -34,9 +34,14 @@ default['magentostack']['config']['locale'] = 'en_US'
 default['magentostack']['config']['default_currency'] = 'GBP'
 
 ## Database
-### run_state rather than default?
+### We *do* look in node.run_state first
 default['magentostack']['config']['db']['prefix'] = ''
+default['magentostack']['config']['db']['initStatements'] = 'SET NAMES utf8'
 default['magentostack']['config']['db']['model'] = 'mysql4'
+default['magentostack']['config']['db']['type'] = 'pdo_mysql'
+default['magentostack']['config']['db']['pdoType'] = ''
+default['magentostack']['config']['db']['active'] = 1
+default['magentostack']['config']['db']['persistent'] = 1
 
 ## Admin user
 default['magentostack']['config']['admin_frontname'] = 'admin'
