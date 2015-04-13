@@ -929,6 +929,30 @@ flavors:
   extra-small:
     blueprint:
       name: Performance 1
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - all-redis: redis#all-redis
+        'magento-worker':
+          relations:
+          - data: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - all-redis: redis#all-redis
+        'all-redis':
+          component:
+            resource_type: cache
+            interface: redis
+            id: magentoredisall
+          constraints:
+          - resource_type: compute
+            setting: flavor
+            value: 'compute1-4'
+          relations:
+          - logs: logstash
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -940,36 +964,36 @@ flavors:
         flavor-weight: 2
     inputs:
       blueprint:
-        services:
-          'magento':
-            relations:
-            - data: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - all-redis: redis#all-redis
-          'magento-worker':
-            relations:
-            - data: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - all-redis: redis#all-redis
-          'all-redis':
-            id: magentoredisall
-            component:
-              resource_type: cache
-              interface: redis
-            constraints:
-            - resource_type: compute
-              setting: flavor
-              value: 'compute1-4'
-            relations:
-            - logs: logstash
         server_size: compute1-15
         magento_server_count: 1
         database_size: 2048
   small:
     blueprint:
       name: Performance 2
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - all-redis: redis#all-redis
+        'magento-worker':
+          relations:
+          - data: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - all-redis: redis#all-redis
+        'all-redis':
+          component:
+            resource_type: cache
+            interface: redis
+            id: magentoredisall
+          constraints:
+          - resource_type: compute
+            setting: flavor
+            value: 'compute1-8'
+          relations:
+          - logs: logstash
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -981,36 +1005,99 @@ flavors:
         flavor-weight: 3
     inputs:
       blueprint:
-        services:
-          'magento':
-            relations:
-            - data: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - all-redis: redis#all-redis
-          'magento-worker':
-            relations:
-            - data: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - all-redis: redis#all-redis
-          'all-redis':
-            id: magentoredisall
-            component:
-              resource_type: cache
-              interface: redis
-            constraints:
-            - resource_type: compute
-              setting: flavor
-              value: 'compute1-8'
-            relations:
-            - logs: logstash
         server_size: compute1-15
         magento_server_count: 1
         database_size: 4096
   medium:
     blueprint:
       name: Enterprise 1
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - data-slave: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'magento-worker':
+          relations:
+          - data: mysql
+          - data-slave: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'data-replica':
+          component:
+            resource_type: database-replica
+            interface: mysql
+            id: mysql_database
+            constraints:
+            - flavor: percona
+            - version: "5.6"
+            - max_allowed_packet: 268435456 # 256M
+            - table_definition_cache: 4096
+            - table_open_cache: 4096
+            - query_cache_size: 67108864 # 64M
+            - query_cache_type: 1
+            - query_cache_limit: 2097152 # 2M
+            - join_buffer_size: 2097152 # 2M
+            - read_buffer_size: 2097152 # 2M
+            - read_rnd_buffer_size: 8388608 # 8M
+            - sort_buffer_size: 2097152 # 2M
+            - max_heap_table_size: 100663296 # 96M
+            - tmp_table_size: 100663296 # 96M
+            - max_connections: 500
+            - max_user_connections: 400
+            - max_connect_errors: 1000000
+            - max_allowed_packet: 268435456 # 256M
+            - wait_timeout: 600
+            - key_buffer_size: 33554432 # 32M
+            - myisam_sort_buffer_size: 268435456 # 256M
+            - innodb_buffer_pool_size: 805306368 # 6G
+            - innodb_file_per_table: 1
+            - innodb_thread_concurrency: 32
+            - innodb_lock_wait_timeout: 300
+            - long_query_time: 2
+            - slow_query_log: 1
+          relations:
+          - data: mysql
+        'session-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: sessions
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'object-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: objects
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'page-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: FPC
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 2560
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
@@ -1022,99 +1109,99 @@ flavors:
         flavor-weight: 4
     inputs:
       blueprint:
-        services:
-          'magento':
-            relations:
-            - data: mysql
-            - data-slave: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - session-cache: redis#session-cache
-            - object-cache: redis#object-cache
-            - page-cache: redis#page-cache
-          'magento-worker':
-            relations:
-            - data: mysql
-            - data-slave: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - session-cache: redis#session-cache
-            - object-cache: redis#object-cache
-            - page-cache: redis#page-cache
-          'data-replica':
-            component:
-              resource_type: database-replica
-              interface: mysql
-              id: mysql_database
-              constraints:
-              - flavor: percona
-              - version: "5.6"
-              - max_allowed_packet: 268435456 # 256M
-              - table_definition_cache: 4096
-              - table_open_cache: 4096
-              - query_cache_size: 67108864 # 64M
-              - query_cache_type: 1
-              - query_cache_limit: 2097152 # 2M
-              - join_buffer_size: 2097152 # 2M
-              - read_buffer_size: 2097152 # 2M
-              - read_rnd_buffer_size: 8388608 # 8M
-              - sort_buffer_size: 2097152 # 2M
-              - max_heap_table_size: 100663296 # 96M
-              - tmp_table_size: 100663296 # 96M
-              - max_connections: 500
-              - max_user_connections: 400
-              - max_connect_errors: 1000000
-              - max_allowed_packet: 268435456 # 256M
-              - wait_timeout: 600
-              - key_buffer_size: 33554432 # 32M
-              - myisam_sort_buffer_size: 268435456 # 256M
-              - innodb_buffer_pool_size: 805306368 # 6G
-              - innodb_file_per_table: 1
-              - innodb_thread_concurrency: 32
-              - innodb_lock_wait_timeout: 300
-              - long_query_time: 2
-              - slow_query_log: 1
-            relations:
-            - data: mysql
-          'session-cache':
-            id: redis_cache
-            component:
-              resource_type: cache
-              interface: redis
-              constraints:
-              - name: sessions
-              - version: "2.8"
-              - setting: memory
-                resource_type: cache
-                value: 512
-          'object-cache':
-            id: redis_cache
-            component:
-              resource_type: cache
-              interface: redis
-              constraints:
-              - name: objects
-              - version: "2.8"
-              - setting: memory
-                resource_type: cache
-                value: 512
-          'page-cache':
-            id: redis_cache
-            component:
-              resource_type: cache
-              interface: redis
-              constraints:
-              - name: FPC
-              - version: "2.8"
-              - setting: memory
-                resource_type: cache
-                value: 2560
         server_size: compute1-15
         magento_server_count: 2
         database_size: 4096
   large:
     blueprint:
       name: Enterprise 2
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - data-slave: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'magento-worker':
+          relations:
+          - data: mysql
+          - data-slave: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'data-replica':
+          component:
+            resource_type: database-replica
+            interface: mysql
+            id: mysql_database
+            constraints:
+            - flavor: percona
+            - version: "5.6"
+            - max_allowed_packet: 268435456 # 256M
+            - table_definition_cache: 4096
+            - table_open_cache: 4096
+            - query_cache_size: 67108864 # 64M
+            - query_cache_type: 1
+            - query_cache_limit: 2097152 # 2M
+            - join_buffer_size: 2097152 # 2M
+            - read_buffer_size: 2097152 # 2M
+            - read_rnd_buffer_size: 8388608 # 8M
+            - sort_buffer_size: 2097152 # 2M
+            - max_heap_table_size: 100663296 # 96M
+            - tmp_table_size: 100663296 # 96M
+            - max_connections: 500
+            - max_user_connections: 400
+            - max_connect_errors: 1000000
+            - max_allowed_packet: 268435456 # 256M
+            - wait_timeout: 600
+            - key_buffer_size: 33554432 # 32M
+            - myisam_sort_buffer_size: 268435456 # 256M
+            - innodb_buffer_pool_size: 805306368 # 6G
+            - innodb_file_per_table: 1
+            - innodb_thread_concurrency: 32
+            - innodb_lock_wait_timeout: 300
+            - long_query_time: 2
+            - slow_query_log: 1
+          relations:
+          - data: mysql
+        'session-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: sessions
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'object-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: objects
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'page-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: FPC
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 2560
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
@@ -1126,93 +1213,6 @@ flavors:
         flavor-weight: 5
     inputs:
       blueprint:
-        services:
-          'magento':
-            relations:
-            - data: mysql
-            - data-slave: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - session-cache: redis#session-cache
-            - object-cache: redis#object-cache
-            - page-cache: redis#page-cache
-          'magento-worker':
-            relations:
-            - data: mysql
-            - data-slave: mysql
-            - shared-storage: nfs
-            - logs: logstash
-            - session-cache: redis#session-cache
-            - object-cache: redis#object-cache
-            - page-cache: redis#page-cache
-          'data-replica':
-            component:
-              resource_type: database-replica
-              interface: mysql
-              id: mysql_database
-              constraints:
-              - flavor: percona
-              - version: "5.6"
-              - max_allowed_packet: 268435456 # 256M
-              - table_definition_cache: 4096
-              - table_open_cache: 4096
-              - query_cache_size: 67108864 # 64M
-              - query_cache_type: 1
-              - query_cache_limit: 2097152 # 2M
-              - join_buffer_size: 2097152 # 2M
-              - read_buffer_size: 2097152 # 2M
-              - read_rnd_buffer_size: 8388608 # 8M
-              - sort_buffer_size: 2097152 # 2M
-              - max_heap_table_size: 100663296 # 96M
-              - tmp_table_size: 100663296 # 96M
-              - max_connections: 500
-              - max_user_connections: 400
-              - max_connect_errors: 1000000
-              - max_allowed_packet: 268435456 # 256M
-              - wait_timeout: 600
-              - key_buffer_size: 33554432 # 32M
-              - myisam_sort_buffer_size: 268435456 # 256M
-              - innodb_buffer_pool_size: 805306368 # 6G
-              - innodb_file_per_table: 1
-              - innodb_thread_concurrency: 32
-              - innodb_lock_wait_timeout: 300
-              - long_query_time: 2
-              - slow_query_log: 1
-            relations:
-            - data: mysql
-          'session-cache':
-            id: redis_cache
-            component:
-              resource_type: cache
-              interface: redis
-              constraints:
-              - name: sessions
-              - version: "2.8"
-              - setting: memory
-                resource_type: cache
-                value: 512
-          'object-cache':
-            id: redis_cache
-            component:
-              resource_type: cache
-              interface: redis
-              constraints:
-              - name: objects
-              - version: "2.8"
-              - setting: memory
-                resource_type: cache
-                value: 512
-          'page-cache':
-            id: redis_cache
-            component:
-              resource_type: cache
-              interface: redis
-              constraints:
-              - name: FPC
-              - version: "2.8"
-              - setting: memory
-                resource_type: cache
-                value: 2560
         server_size: onmetal-compute1
         magento_server_count: 2
         database_size: 8192
