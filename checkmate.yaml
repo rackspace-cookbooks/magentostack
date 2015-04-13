@@ -912,7 +912,6 @@ environment:
       vendor: rackspace
 inputs:
   blueprint:
-    redis_type: redis_cache
     url: http://magento.cldsrvr.com/
     newrelic: null
     region: IAD
@@ -961,7 +960,7 @@ flavors:
             constraints:
             - resource_type: compute
               setting: flavor
-              value: 'general1-4'
+              value: 'compute1-4'
             relations:
             - logs: logstash
         server_size: compute1-15
@@ -1001,7 +1000,7 @@ flavors:
             constraints:
             - resource_type: compute
               setting: flavor
-              value: 'general1-4'
+              value: 'compute1-8'
             relations:
             - logs: logstash
         server_size: compute1-15
