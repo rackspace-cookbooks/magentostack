@@ -19,16 +19,16 @@ fi
 # run the installer
 php -f install.php -- \
 --license_agreement_accepted "yes" \
---locale "<%= node['magentostack']['config']['locale'] %>" \
---timezone "<%= node['magentostack']['config']['tz'] %>" \
---default_currency "<%= node['magentostack']['config']['default_currency'] %>" \
+--locale "<%= @locale %>" \
+--timezone "<%= @timezone %>" \
+--default_currency "<%= @default_currency %>" \
 --db_host "<%= @db_host %>" \
---db_model "<%= node['magentostack']['config']['db']['model'] %>" \
+--db_model "<%= @db_model %>" \
 --db_name "<%= @db_name %>" \
 --db_user "<%= @db_user %>" \
 --db_pass "<%= @db_pass %>" \
---db_prefix "<%= node['magentostack']['config']['db']['prefix'] %>" \
---session_save "<%= node['magentostack']['config']['session']['save'] %>" \
+--db_prefix "<%= @db_prefix %>" \
+--session_save "<%= @session_save %>" \
 --url "<%= node['magentostack']['config']['url'] %>" \
 --use_rewrites "<%= node['magentostack']['config']['use_rewrites'] %>" \
 --use_secure "<%= node['magentostack']['config']['use_secure'] %>" \

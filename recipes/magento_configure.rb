@@ -28,22 +28,18 @@ case configure_method
 when 'installer'
 
   # 'installer' - run installer script with provided values
-  include_recipe 'magentostack::_magento_localxml_installer'
+  include_recipe 'magentostack::_magento_installer'
 
   # then do the template behavior! it won't overwrite the local.xml from the installer
-  include_recipe 'magentostack::_magento_localxml_template'
+  include_recipe 'magentostack::_magento_localxml'
 
 when 'template'
 
   # 'template' - copy local.xml from local.xml.template
-  include_recipe 'magentostack::_magento_localxml_template'
+  include_recipe 'magentostack::_magento_localxml'
 
 when 'none'
   Chef::Log.info('Magento configure method none was requested, not configuring magento')
 else
   fail "You have specified to configure magento with method #{configure_method}, which is not valid."
 end
-
-# things below this point need an existing local.xml
-include_recipe 'magentostack::_magento_mysql' # enable persistent connections to mysql
-include_recipe 'magentostack::_magento_redis' # enable redis caching
