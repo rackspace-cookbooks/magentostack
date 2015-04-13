@@ -928,6 +928,7 @@ inputs:
 flavors:
   extra-small:
     blueprint:
+      name: Performance 1
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -968,6 +969,7 @@ flavors:
         database_size: 2048
   small:
     blueprint:
+      name: Performance 2
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -1008,6 +1010,7 @@ flavors:
         database_size: 4096
   medium:
     blueprint:
+      name: Enterprise 1
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
@@ -1111,6 +1114,7 @@ flavors:
         database_size: 4096
   large:
     blueprint:
+      name: Enterprise 2
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
