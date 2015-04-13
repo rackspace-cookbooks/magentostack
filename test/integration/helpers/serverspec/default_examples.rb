@@ -1,3 +1,24 @@
+shared_examples_for 'magento database configuration' do
+  describe file('/var/www/html/magento/app/etc/local.xml') do
+    parts_expected = [
+      %r{<host><!\[CDATA\[.*\]\]></host>},
+      %r{<username><!\[CDATA\[.*\]\]></username>},
+      %r{<password><!\[CDATA\[.*\]\]></password>},
+      %r{<dbname><!\[CDATA\[.*\]\]></dbname>},
+      %r{<initStatements><!\[CDATA\[SET NAMES utf8\]\]></initStatements>},
+      %r{<model><!\[CDATA\[mysql4\]\]></model>},
+      %r{<type><!\[CDATA\[pdo_mysql\]\]></type>},
+      %r{<pdoType><!\[CDATA\[.*\]\]></pdoType>},
+      %r{<active>1</active>},
+      %r{<persistent>1</persistent>}
+    ]
+
+    parts_expected.each do |r|
+      its(:content) { should match(r) }
+    end
+  end
+end
+
 shared_examples_for 'magento enterprise edition' do
   # page hit to populate caches
   describe command('wget -qO- localhost:8080') do
@@ -7,6 +28,8 @@ shared_examples_for 'magento enterprise edition' do
   describe file('/mnt/magento_media') do
     it { should be_directory }
   end
+
+  it_behaves_like 'magento database configuration'
 end
 
 shared_examples_for 'magento community edition' do
@@ -18,6 +41,8 @@ shared_examples_for 'magento community edition' do
   describe file('/mnt/magento_media') do
     it { should be_directory }
   end
+
+  it_behaves_like 'magento database configuration'
 end
 
 shared_examples_for 'magento any edition' do
@@ -29,4 +54,6 @@ shared_examples_for 'magento any edition' do
   describe file('/mnt/magento_media') do
     it { should be_directory }
   end
+
+  it_behaves_like 'magento database configuration'
 end
