@@ -55,11 +55,6 @@ default['magentostack']['nfs_client']['symlink_target'] = 'media' # within /var/
 # newrelic
 default['newrelic_meetme_plugin']['user'] = 'newrelic'
 
-# local.xml
-default['magentostack']['localxml']['connection']['initStatements'] = 'SET NAMES utf8'
-default['magentostack']['localxml']['connection']['type'] = 'pdo_mysql'
-default['magentostack']['localxml']['connection']['pdoType'] = ''
-
 # redis cleanup cron job
 default['magentostack']['redis']['tag_cleanup']['minute'] = '0'
 default['magentostack']['redis']['tag_cleanup']['hour'] = '3'

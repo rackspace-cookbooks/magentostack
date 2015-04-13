@@ -20,12 +20,11 @@
 
 # search for Mysql node
 begin
+  # will return this already if set: node['mysql-multi']['master']
   include_recipe 'mysql-multi::_find_master'
-  node.default['magentostack']['config']['db']['host'] = node['mysql-multi']['master']
-  Chef::Log.info("magentostack::_find_mysql selected #{node['mysql-multi']['master']} as the mysql master IP to connect to")
+
+  node.default['magentostack']['config']['db']['host'] = MagentostackUtil.construct_mysql_url(node['mysql-multi']['master'], node['mysql']['port'])
+  Chef::Log.info("magentostack::_find_mysql selected #{node['mysql-multi']['master']}:#{node['mysql']['port']} as the mysql master connect string")
 rescue
   Chef::Log.warn('magentostack::_find_mysql did not find a mysql master to use for magento. You may need to reconverge.')
 end
-
-# define computed attributes in the recipe
-node.default['magentostack']['config']['db']['port'] = node['mysql']['port']

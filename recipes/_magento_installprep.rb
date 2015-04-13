@@ -25,36 +25,35 @@
 node.run_state['magentostack_installer_magento_configured_file'] = "#{node['magentostack']['web']['dir']}/.magento_configured"
 
 # determine plain URL
-http_port = node['magentostack']['web']['http_port']
-url = if http_port == 80
-        "http://#{node['magentostack']['web']['domain']}/"
-      else
-        "http://#{node['magentostack']['web']['domain']}:#{http_port}/"
-      end
-node.default['magentostack']['config']['url'] = url
+node.default['magentostack']['config']['url'] =
+  MagentostackUtil.construct_url(
+    node['magentostack']['web']['domain'],
+    node['magentostack']['web']['http_port'],
+    'http'
+  )
 
 # determine URL with SSL enabled
-https_port = node['magentostack']['web']['https_port']
-secure_base_url = if https_port == 443
-                    "https://#{node['magentostack']['web']['domain']}/"
-                  else
-                    "https://#{node['magentostack']['web']['domain']}:#{https_port}/"
-                  end
-node.default['magentostack']['config']['secure_base_url'] = secure_base_url
+node.default['magentostack']['config']['secure_base_url'] =
+  MagentostackUtil.construct_url(
+    node['magentostack']['web']['domain'],
+    node['magentostack']['web']['https_port'],
+    'https'
+  )
 
 # Configure all the database things
-include_recipe 'magentostack::_find_mysql'
-node.run_state['magentostack_installer_database_name'] = node['magentostack']['mysql']['databases'].keys[0]
-dbh = node['magentostack']['config']['db']['host']
-dbp = node['magentostack']['config']['db']['port']
+include_recipe 'magentostack::_find_mysql' # let us search for a database
 
-node.run_state['magentostack_installer_database_host'] = if dbh && dbp
-                                                           "#{dbh}:#{dbp}"
-                                                         elsif dbh
-                                                           dbh
-                                                         else
-                                                           false
-                                                         end
+dbname = node['magentostack']['mysql']['databases'].keys[0]
+node.run_state['magentostack_installer_database_name'] = dbname # for installer
+node.default['magentostack']['config']['db']['dbname'] = dbname # for local.xml
+
+# port is included here.
+node.run_state['magentostack_installer_database_host'] = node['magentostack']['config']['db']['host']
+
 database_name = node.run_state['magentostack_installer_database_name']
 node.run_state['magentostack_installer_database_user'] = node['magentostack']['mysql']['databases'][database_name]['mysql_user']
 node.run_state['magentostack_installer_database_pass'] = node['magentostack']['mysql']['databases'][database_name]['mysql_password']
+
+# unless we override through chef attributes or node.run_state, default to the username and password used for the installer
+node.default['magentostack']['config']['db']['username'] = node.run_state['magentostack_installer_database_user']
+node.default['magentostack']['config']['db']['password'] = node.run_state['magentostack_installer_database_pass']
