@@ -81,12 +81,9 @@ blueprint:
         - slow_query_log: 1
     'all-redis':
       component:
+        id: magentoredisall
         resource_type: cache
         interface: redis
-      constraints:
-      - resource_type: compute
-        setting: flavor
-        value: 'general1-4'
       relations:
       - logs: logstash
     'shared-storage':
@@ -648,21 +645,22 @@ blueprint:
       - setting: disk
         service: data
         resource_type: compute
-    redis_type:
-      label: Cache Type
+    redis_size:
+      label: Cache Server Size
       type: string
-      default: redis_cache
+      default: compute1-4
       display-hints:
         group: database
         order: 4
         choice:
-        - name: Cloud Redis
-          value: redis_cache
-        - name: Redis Server w/ Chef
-          value: magentoredisall
+        - name: Compute 4G
+          value: compute1-4
+        - name: Compute 8G
+          value: compute1-8
       constrains:
-      - setting: id
+      - setting: flavor
         service: all-redis
+        resource_type: compute
     kibana_username:
       label: Kibana Username
       type: string
