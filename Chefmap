@@ -815,3 +815,88 @@ maps:
   targets:
   - attributes://openssh/server/password_authentication
   - attributes://openssh/server/permit_root_login
+
+---
+id: magento-utility
+name: utility
+roles: [server]
+is: volume
+provides:
+- volume: nfs
+- logging: logstash
+requires:
+- host: linux
+options:
+  "disk_filesystem":
+    type: string
+    default: ext4
+    required: true
+  "export_name":
+    type: string
+    default: magento_media
+    required: true
+  "export_root":
+    type: string
+    default: /mnt
+    required: true
+  "username":
+    type: string
+    default: kibana
+  "password":
+    type: string
+    required: true
+run-list:
+  recipes:
+  - apt
+  - parted
+  - platformstack
+  - platformstack::rackops_rolebook
+  - magentostack::partition_nfs_disk
+  - magentostack::nfs_server
+  - elkstack::java
+  - elkstack::cluster
+  - elkstack::agent
+  - elkstack::acl
+maps:
+- value: "/dev/xvdb"
+# - source: requirements://host:linux/instance/devices/data
+  targets:
+  - attributes://disk/device
+- value: {{ setting('disk_filesystem') }}
+  targets:
+  - attributes://disk/fs
+#- source: clients://volume:nfs/private_ip
+- value: ['*']
+  targets:
+  - attributes://magentostack/nfs_server/override_allow
+- value: {{ setting('export_name') }}
+  targets:
+  - attributes://magentostack/nfs_server/export_name
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_name
+- value: {{ setting('export_root') }}
+  targets:
+  - attributes://magentostack/nfs_server/export_root
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/export_root
+- source: requirements://host:linux/private_ip
+  targets:
+  - outputs://resources/{{resource.index}}/instance/interfaces/nfs/ip
+- value: {{ setting('username') }}
+  targets:
+  - attributes://elkstack/config/kibana/username
+  - outputs://resources/{{resource.index}}/instance/interfaces/kibana/username
+- value: {{ setting('password') }}
+  targets:
+  - attributes://elkstack/config/kibana/password
+  - outputs://resources/{{resource.index}}/instance/interfaces/kibana/password
+- value: "{{ setting('export_root') }}/elasticsearch"
+  targets:
+  - attributes://elasticsearch/path/data
+## Platformstack
+- value: false
+  targets:
+  - attributes://platformstack/omnibus_updater/enabled
+  - attributes://platformstack/consul/enabled
+- value: "yes"
+  targets:
+  - attributes://openssh/server/password_authentication
+  - attributes://openssh/server/permit_root_login

@@ -77,35 +77,6 @@ blueprint:
         - innodb_lock_wait_timeout: 300
         - long_query_time: 2
         - slow_query_log: 1
-    'shared-storage':
-      component:
-        resource_type: volume
-        interface: nfs
-      constraints:
-      - count: 1
-      - resource_type: volume
-        setting: dedicated  # <-- 100Gb attached disk
-        value: true
-      - resource_type: volume
-        setting: device-name
-        value: /dev/xvdb
-      - resource_type: volume
-        setting: size
-        value: 100
-      - resource_type: compute
-        setting: memory
-        value: 2048
-      relations:
-      - logs: logstash
-    'logs':
-      component:
-        resource_type: logging
-        interface: logstash
-      constraints:
-      - count: 1
-      - resource_type: compute
-        setting: flavor
-        value: general1-8
 
   options:
 
@@ -910,21 +881,6 @@ environment:
     block: {}
     common:
       vendor: rackspace
-inputs:
-  blueprint:
-    url: http://magento.cldsrvr.com/
-    newrelic: null
-    region: IAD
-    terms: true
-    sampledata: false
-    server_size: compute1-8
-    username: "MagentoAdmin"
-    password: "Mag!345678"
-    email: "chkmate@example.com"
-    magento_server_count: 1
-    database_size: 8000
-    firstname: "Test"
-    lastname: "Deployment"
 flavors:
   extra-small:
     blueprint:
@@ -953,6 +909,28 @@ flavors:
             value: 'compute1-4'
           relations:
           - logs: logstash
+        'logs':
+          component:
+            resource_type: volume
+            interface: nfs
+            id: magento-utility
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: volume_type
+            value: SATA
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -994,6 +972,50 @@ flavors:
             value: 'compute1-8'
           relations:
           - logs: logstash
+        'shared-storage':
+          component:
+            resource_type: volume
+            interface: nfs
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: volume_type
+            value: SATA
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
+          relations:
+          - logs: logstash
+        'logs':
+          component:
+            resource_type: logging
+            interface: logstash
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 50
+          - resource_type: volume
+            setting: volume_type
+            value: SATA
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -1098,6 +1120,50 @@ flavors:
             - setting: memory
               resource_type: cache
               value: 2560
+        'shared-storage':
+          component:
+            resource_type: volume
+            interface: nfs
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: volume_type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
+          relations:
+          - logs: logstash
+        'logs':
+          component:
+            resource_type: logging
+            interface: logstash
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: volume_type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
@@ -1202,6 +1268,50 @@ flavors:
             - setting: memory
               resource_type: cache
               value: 2560
+        'shared-storage':
+          component:
+            resource_type: volume
+            interface: nfs
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: volume_type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
+          relations:
+          - logs: logstash
+        'logs':
+          component:
+            resource_type: logging
+            interface: logstash
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: volume_type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
