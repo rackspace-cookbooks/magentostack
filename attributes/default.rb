@@ -45,7 +45,7 @@ default['mysql-multi']['templates']['my.cnf']['source'] = 'mysql/my.cnf.erb'
 
 # search query for discovery of nfs server
 default['magentostack']['nfs_server']['export_name'] = 'magento_media'
-default['magentostack']['nfs_server']['export_root'] = '/export'
+default['magentostack']['nfs_server']['export_root'] = '/export/data'
 default['magentostack']['nfs_server']['discovery_query'] = "tags:magentostack_nfs_server AND chef_environment:#{node.chef_environment}"
 
 # clients
@@ -64,3 +64,7 @@ default['magentostack']['redis']['tag_cleanup']['month'] = '*'
 default['magentostack']['redis']['tag_cleanup']['databases'] = '0,1'
 # sticking to this revision to avoid pulling breaking changes
 default['magentostack']['redis']['tag_cleanup']['revision'] = '065b6e0b35517f2eae95f366ecd72010e7616ea2'
+
+# disk related options
+default['magentostack']['disk']['mount_root'] = '/export'
+default['magentostack']['disk']['mount_point'] = '/export/data'
