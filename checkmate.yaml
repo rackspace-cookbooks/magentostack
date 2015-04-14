@@ -926,7 +926,7 @@ flavors:
             setting: size
             value: 100
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SATA
           - resource_type: compute
             setting: flavor
@@ -988,7 +988,7 @@ flavors:
             setting: size
             value: 100
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SATA
           - resource_type: compute
             setting: flavor
@@ -1011,7 +1011,7 @@ flavors:
             setting: size
             value: 50
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SATA
           - resource_type: compute
             setting: flavor
@@ -1136,7 +1136,7 @@ flavors:
             setting: size
             value: 100
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SSD
           - resource_type: compute
             setting: flavor
@@ -1159,7 +1159,7 @@ flavors:
             setting: size
             value: 100
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SSD
           - resource_type: compute
             setting: flavor
@@ -1284,7 +1284,7 @@ flavors:
             setting: size
             value: 100
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SSD
           - resource_type: compute
             setting: flavor
@@ -1307,7 +1307,7 @@ flavors:
             setting: size
             value: 100
           - resource_type: volume
-            setting: volume_type
+            setting: type
             value: SSD
           - resource_type: compute
             setting: flavor
