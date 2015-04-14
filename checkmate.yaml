@@ -1054,9 +1054,8 @@ flavors:
           - page-cache: redis#page-cache
         'data-replica':
           component:
-            resource_type: database-replica
+            type: database-replica
             interface: mysql
-            id: mysql_database
             constraints:
             - flavor: percona
             - version: "5.6"
@@ -1202,9 +1201,8 @@ flavors:
           - page-cache: redis#page-cache
         'data-replica':
           component:
-            resource_type: database-replica
+            type: database-replica
             interface: mysql
-            id: mysql_database
             constraints:
             - flavor: percona
             - version: "5.6"
