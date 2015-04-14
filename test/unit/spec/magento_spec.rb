@@ -48,13 +48,13 @@ describe 'magentostack::magento recipes' do
         end
 
         it 'should manage the nfs media directory and link it' do
-          %w(/export /export/magento_media /mnt/magento_media).each do |dir|
+          %w(/export/data/magento_media /mnt/magento_media).each do |dir|
             expect(chef_run).to create_directory(dir)
           end
         end
 
         it 'should create nfs export' do
-          expect(chef_run).to create_nfs_export('/export/magento_media')
+          expect(chef_run).to create_nfs_export('/export/data/magento_media')
         end
 
         # has :action none and we can't step into the ruby
