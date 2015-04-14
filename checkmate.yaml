@@ -1009,7 +1009,7 @@ flavors:
             value: /dev/xvdb
           - resource_type: volume
             setting: size
-            value: 50
+            value: 75
           - resource_type: volume
             setting: type
             value: SATA
