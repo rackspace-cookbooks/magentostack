@@ -890,13 +890,13 @@ flavors:
           relations:
           - data: mysql
           - shared-storage: nfs
-          - logs: logstash
+          - utility: logstash
           - all-redis: redis#all-redis
         'magento-worker':
           relations:
           - data: mysql
           - shared-storage: nfs
-          - logs: logstash
+          - utility: logstash
           - all-redis: redis#all-redis
         'all-redis':
           component:
@@ -908,8 +908,8 @@ flavors:
             setting: flavor
             value: 'compute1-4'
           relations:
-          - logs: logstash
-        'logs':
+          - utility: logstash
+        'utility':
           component:
             resource_type: volume
             interface: nfs
