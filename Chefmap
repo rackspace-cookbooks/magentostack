@@ -731,15 +731,14 @@ options:
     required: true
   "export_root":
     type: string
-    default: /mnt
+    default: /export/data
     required: true
 run-list:
   recipes:
   - apt
-  - parted
   - platformstack
   - platformstack::rackops_rolebook
-  - magentostack::partition_nfs_disk
+  - magentostack::configure_disk
   - magentostack::nfs_server
   - elkstack::java
   - elkstack::agent
