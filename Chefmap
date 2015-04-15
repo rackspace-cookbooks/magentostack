@@ -9,6 +9,7 @@ requires:
 - host: linux
 - database: mysql
 supports:
+- database-replica: mysql
 - session-cache:
     interface: redis
     resource_type: cache
@@ -287,6 +288,7 @@ requires:
 - host: linux
 - database: mysql
 supports:
+- database-replica: mysql
 - session-cache:
     interface: redis
     resource_type: cache
