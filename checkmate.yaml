@@ -26,8 +26,6 @@ blueprint:
         value: 50
       relations:
       - data: mysql
-      - shared-storage: nfs
-      - logs: logstash
     'magento-worker':
       component:
         name: magento
@@ -42,8 +40,6 @@ blueprint:
         value: 50
       relations:
       - data: mysql
-      - shared-storage: nfs
-      - logs: logstash
     'data':
       component:
         resource_type: database
@@ -889,14 +885,12 @@ flavors:
         'magento':
           relations:
           - data: mysql
-          - shared-storage: nfs
-          - utility: logstash
+          - utility: nfs
           - all-redis: redis#all-redis
         'magento-worker':
           relations:
           - data: mysql
-          - shared-storage: nfs
-          - utility: logstash
+          - utility: nfs
           - all-redis: redis#all-redis
         'all-redis':
           component:
@@ -908,7 +902,7 @@ flavors:
             setting: flavor
             value: 'compute1-4'
           relations:
-          - utility: logstash
+          - utility: nfs
         'utility':
           component:
             resource_type: volume
