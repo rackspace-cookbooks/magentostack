@@ -948,6 +948,7 @@ flavors:
           component:
             resource_type: volume
             interface: nfs
+            id: magentonfs-server
           constraints:
           - count: 1
           - resource_type: volume
@@ -971,6 +972,7 @@ flavors:
           component:
             resource_type: logging
             interface: logstash
+            id: magento-elkstack
           constraints:
           - count: 1
           - resource_type: volume
@@ -1095,6 +1097,7 @@ flavors:
           component:
             resource_type: volume
             interface: nfs
+            id: magentonfs-server
           constraints:
           - count: 1
           - resource_type: volume
@@ -1118,6 +1121,7 @@ flavors:
           component:
             resource_type: logging
             interface: logstash
+            id: magento-elkstack
           constraints:
           - count: 1
           - resource_type: volume
@@ -1242,6 +1246,7 @@ flavors:
           component:
             resource_type: volume
             interface: nfs
+            id: magentonfs-server
           constraints:
           - count: 1
           - resource_type: volume
@@ -1265,6 +1270,7 @@ flavors:
           component:
             resource_type: logging
             interface: logstash
+            id: magento-elkstack
           constraints:
           - count: 1
           - resource_type: volume
