@@ -687,6 +687,7 @@ requires:
 - host: linux
 supports:
 - logging: logstash
+- utility: utility
 run-list:
   recipes:
   - platformstack
@@ -822,7 +823,7 @@ maps:
 id: magento-utility
 name: utility
 roles: [server]
-is: volume
+is: utility
 provides:
 - volume: nfs
 - logging: logstash

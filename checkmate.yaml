@@ -863,12 +863,12 @@ flavors:
         'magento':
           relations:
           - data: mysql
-          - utility: nfs
+          - utility: utility
           - all-redis: redis#all-redis
         'magento-worker':
           relations:
           - data: mysql
-          - utility: nfs
+          - utility: utility
           - all-redis: redis#all-redis
         'all-redis':
           component:
@@ -880,11 +880,11 @@ flavors:
             setting: flavor
             value: 'compute1-4'
           relations:
-          - utility: nfs
+          - utility: utility
         'utility':
           component:
             resource_type: volume
-            interface: nfs
+            interface: utility
             id: magento-utility
           constraints:
           - count: 1
