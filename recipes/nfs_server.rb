@@ -48,6 +48,7 @@ export_directory = node['magentostack']['nfs_server']['export_root']
 directory export_directory do
   user 'root'
   mode '0755'
+  recursive true
 end
 
 export_name = node['magentostack']['nfs_server']['export_name']
@@ -55,6 +56,7 @@ export_full_path = "#{export_directory}/#{export_name}"
 directory export_full_path do
   user 'root'
   mode '0755'
+  recursive true
 end
 
 nfs_export export_full_path do

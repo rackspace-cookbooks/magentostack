@@ -2,7 +2,7 @@
 
 require_relative 'spec_helper'
 
-describe 'magentostack::partition_nfs_disk' do
+describe 'magentostack::configure_disk' do
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|
@@ -19,16 +19,16 @@ describe 'magentostack::partition_nfs_disk' do
         end
 
         it 'includes recipes' do
-          expect(chef_run).to include_recipe('magentostack::format_disk')
+          expect(chef_run).to include_recipe('stack_commons::format_disk')
         end
 
-        it 'creates the directory /export/magento_media' do
-          expect(chef_run).to create_directory('/export/magento_media')
+        it 'creates the directory /export/data' do
+          expect(chef_run).to create_directory('/export/data')
         end
 
         it 'mounts and enables /export/magento_media' do
-          expect(chef_run).to mount_mount('/export/magento_media')
-          expect(chef_run).to enable_mount('/export/magento_media')
+          expect(chef_run).to mount_mount('/export/data')
+          expect(chef_run).to enable_mount('/export/data')
         end
       end
     end
