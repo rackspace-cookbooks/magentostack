@@ -705,13 +705,9 @@ blueprint:
           gui-y: 933.002
   documentation:
     abstract: |
-      Linux with [Magento Community
-      Edition](http://www.magentocommerce.com/product/community-edition/)
-      installed with [nginx](http://nginx.org/en/), [PHP
-      FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
+      Linux with Magento Enterprise Edition
 
-      This deployment is intended for simple test cases and low traffic
-      scenarios.  It is not for high traffic events and is not easily scalable.
+      This deployment is intended for deployments of the Managed Cloud for Magento (Project Analog)
     instructions: |
       #### Getting Started
       If you're new to Magento Community Edition, the [Magento User
