@@ -863,12 +863,12 @@ flavors:
         'magento':
           relations:
           - data: mysql
-          - utility: utility
+          - utility: logstash
           - all-redis: redis#all-redis
         'magento-worker':
           relations:
           - data: mysql
-          - utility: utility
+          - utility: logstash
           - all-redis: redis#all-redis
         'all-redis':
           component:
@@ -880,11 +880,11 @@ flavors:
             setting: flavor
             value: 'compute1-4'
           relations:
-          - utility: utility
+          - utility: logstash
         'utility':
           component:
-            resource_type: volume
-            interface: logging
+            resource_type: logging
+            interface: logstash
             id: magento-utility
           constraints:
           - count: 1
