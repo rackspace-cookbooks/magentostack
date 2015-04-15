@@ -1009,7 +1009,7 @@ flavors:
         'magento':
           relations:
           - data: mysql
-          - data-replica: mysql#data-replica
+          - data-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
@@ -1018,7 +1018,7 @@ flavors:
         'magento-worker':
           relations:
           - data: mysql
-          - data-replica: mysql#data-replica
+          - data-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
@@ -1156,7 +1156,7 @@ flavors:
         'magento':
           relations:
           - data: mysql
-          - data-replica: mysql#data-replica
+          - data-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
@@ -1165,7 +1165,7 @@ flavors:
         'magento-worker':
           relations:
           - data: mysql
-          - data-replica: mysql#data-replica
+          - data-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
