@@ -52,7 +52,7 @@ default['magentostack']['config']['admin_user']['username'] = 'MagentoAdmin'
 default['magentostack']['config']['admin_user']['password'] = 'magPass.123'
 
 ## Other configs
-default['magentostack']['config']['crypt_key'] = nil
+default['magentostack']['config']['encryption_key'] = nil
 default['magentostack']['config']['session']['save'] = 'db'
 
 default['magentostack']['config']['use_rewrites'] = 'yes'
