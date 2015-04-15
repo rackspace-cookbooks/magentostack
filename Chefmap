@@ -34,12 +34,12 @@ options:
     default: 443
   "install_flavor":
     type: string
-    default: community
+    default: enterprise
   "php_version":
     type: string
   "install_method":
     type: string
-    default: ark
+    default: git
   "git_repo":
     type: string
   "git_revision":
@@ -312,12 +312,12 @@ options:
     default: 443
   "install_flavor":
     type: string
-    default: community
+    default: enterprise
   "php_version":
     type: string
   "install_method":
     type: string
-    default: ark
+    default: git
   "git_repo":
     type: string
   "git_revision":
