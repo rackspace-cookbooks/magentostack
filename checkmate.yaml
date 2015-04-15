@@ -884,7 +884,7 @@ flavors:
         'utility':
           component:
             resource_type: volume
-            interface: utility
+            interface: logging
             id: magento-utility
           constraints:
           - count: 1
