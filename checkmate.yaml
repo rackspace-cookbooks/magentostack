@@ -236,35 +236,19 @@ blueprint:
       - service: lb
         resource_type: load-balancer
         setting: create_dns
-    terms:
-      label: Agree to Terms
-      description: You must agree to the Magento Community Edition License.
-      type: boolean
-      help: |
-        Required: You must agree to the Magento Community Edition License which
-        can be found here: http://opensource.org/licenses/osl-3.0.php
-      required: true
-      display-hints:
-        group: application
-        order: 3
-      constrains:
-      - setting: terms
-        resource_type: application
     install_flavor:
-      label: Community or Enterprise
-      description: Choose whether to install Community or Enterprise.
+      label: Magento Version
+      description: Installation is for Magento Enterprise Edition
       type: string
-      default: community
+      default: enterprise
       display-hints:
         group: application
         order: 3
         choice:
-        - name: "Community"
-          value: community
         - name: "Enterprise"
           value: enterprise
       constraints:
-      - in: ['community', 'enterprise']
+      - in: ['enterprise']
         message: unsupported install flavor
     php_version:
       label: Version of PHP
@@ -289,17 +273,15 @@ blueprint:
       label: Install Method
       description: Choose where the install is coming from.
       type: string
-      default: ark
+      default: git
       display-hints:
         group: application
         order: 4
         choice:
-        - name: "Ark"
-          value: ark
         - name: "Git"
           value: git
       constraints:
-      - in: ["ark", "git"]
+      - in: ["git"]
         message: unsupported install method
       constrains:
       - setting: install_method
