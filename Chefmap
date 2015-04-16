@@ -825,6 +825,7 @@ roles: [server]
 is: logging
 provides:
 - logging: logstash
+- volume: nfs
 requires:
 - host: linux
 options:
