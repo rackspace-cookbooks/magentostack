@@ -902,7 +902,7 @@ flavors:
             value: SATA
           - resource_type: compute
             setting: flavor
-            value: general1-2
+            value: compute1-4
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -989,7 +989,7 @@ flavors:
             value: SATA
           - resource_type: compute
             setting: flavor
-            value: general1-4
+            value: compute1-4
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -1138,7 +1138,7 @@ flavors:
             value: SSD
           - resource_type: compute
             setting: flavor
-            value: general1-4
+            value: compute1-4
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
@@ -1287,7 +1287,7 @@ flavors:
             value: SSD
           - resource_type: compute
             setting: flavor
-            value: general1-4
+            value: compute1-4
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
