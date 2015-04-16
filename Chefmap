@@ -856,7 +856,6 @@ run-list:
   - magentostack::nfs_server
   - elkstack::java
   - elkstack::cluster
-  - elkstack::agent
   - elkstack::acl
 maps:
 - value: "/dev/xvdb"
