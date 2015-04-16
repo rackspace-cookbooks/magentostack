@@ -1,7 +1,7 @@
 blueprint:
   id: 8363F2D2284D4871BC618E92D152994F
   name: "magentostack-cloud"
-  description: "Magento Community Edition installed using Cloud Datastores"
+  description: "Magento install with Cloud Databases."
   version: 1.0.0
   services:
     lb:
@@ -26,9 +26,6 @@ blueprint:
         value: 50
       relations:
       - data: mysql
-      - all-redis: redis#all-redis
-      - shared-storage: nfs
-      - logs: logstash
     'magento-worker':
       component:
         name: magento
@@ -43,9 +40,6 @@ blueprint:
         value: 50
       relations:
       - data: mysql
-      - all-redis: redis#all-redis
-      - shared-storage: nfs
-      - logs: logstash
     'data':
       component:
         resource_type: database
@@ -79,42 +73,6 @@ blueprint:
         - innodb_lock_wait_timeout: 300
         - long_query_time: 2
         - slow_query_log: 1
-    'all-redis':
-      component:
-        id: magentoredisall
-        resource_type: cache
-        interface: redis
-      relations:
-      - logs: logstash
-    'shared-storage':
-      component:
-        resource_type: volume
-        interface: nfs
-      constraints:
-      - count: 1
-      - resource_type: volume
-        setting: dedicated  # <-- 100Gb attached disk
-        value: true
-      - resource_type: volume
-        setting: device-name
-        value: /dev/xvdb
-      - resource_type: volume
-        setting: size
-        value: 100
-      - resource_type: compute
-        setting: memory
-        value: 2048
-      relations:
-      - logs: logstash
-    'logs':
-      component:
-        resource_type: logging
-        interface: logstash
-      constraints:
-      - count: 1
-      - resource_type: compute
-        setting: flavor
-        value: general1-8
 
   options:
 
@@ -278,35 +236,19 @@ blueprint:
       - service: lb
         resource_type: load-balancer
         setting: create_dns
-    terms:
-      label: Agree to Terms
-      description: You must agree to the Magento Community Edition License.
-      type: boolean
-      help: |
-        Required: You must agree to the Magento Community Edition License which
-        can be found here: http://opensource.org/licenses/osl-3.0.php
-      required: true
-      display-hints:
-        group: application
-        order: 3
-      constrains:
-      - setting: terms
-        resource_type: application
     install_flavor:
-      label: Community or Enterprise
-      description: Choose whether to install Community or Enterprise.
+      label: Magento Version
+      description: Installation is for Magento Enterprise Edition
       type: string
-      default: community
+      default: enterprise
       display-hints:
         group: application
         order: 3
         choice:
-        - name: "Community"
-          value: community
         - name: "Enterprise"
           value: enterprise
       constraints:
-      - in: ['community', 'enterprise']
+      - in: ['enterprise']
         message: unsupported install flavor
     php_version:
       label: Version of PHP
@@ -331,17 +273,15 @@ blueprint:
       label: Install Method
       description: Choose where the install is coming from.
       type: string
-      default: ark
+      default: git
       display-hints:
         group: application
         order: 4
         choice:
-        - name: "Ark"
-          value: ark
         - name: "Git"
           value: git
       constraints:
-      - in: ["ark", "git"]
+      - in: ["git"]
         message: unsupported install method
       constrains:
       - setting: install_method
@@ -645,22 +585,6 @@ blueprint:
       - setting: disk
         service: data
         resource_type: compute
-    redis_size:
-      label: Cache Server Size
-      type: string
-      default: compute1-4
-      display-hints:
-        group: database
-        order: 4
-        choice:
-        - name: Compute 4G
-          value: compute1-4
-        - name: Compute 8G
-          value: compute1-8
-      constrains:
-      - setting: flavor
-        service: all-redis
-        resource_type: compute
     kibana_username:
       label: Kibana Username
       type: string
@@ -781,13 +705,9 @@ blueprint:
           gui-y: 933.002
   documentation:
     abstract: |
-      Linux with [Magento Community
-      Edition](http://www.magentocommerce.com/product/community-edition/)
-      installed with [nginx](http://nginx.org/en/), [PHP
-      FPM](http://php-fpm.org/about/), and [MySQL 5.5](http://www.mysql.com/).
+      Linux with Magento Enterprise Edition
 
-      This deployment is intended for simple test cases and low traffic
-      scenarios.  It is not for high traffic events and is not easily scalable.
+      This deployment is intended for deployments of the Managed Cloud for Magento (Project Analog)
     instructions: |
       #### Getting Started
       If you're new to Magento Community Edition, the [Magento User
@@ -935,90 +855,440 @@ environment:
     block: {}
     common:
       vendor: rackspace
-inputs:
-  blueprint:
-    redis_type: redis_cache
-    url: http://magento.cldsrvr.com/
-    newrelic: null
-    region: IAD
-    terms: true
-    sampledata: false
-    server_size: compute1-8
-    username: "MagentoAdmin"
-    password: "Mag!345678"
-    email: "chkmate@example.com"
-    magento_server_count: 1
-    database_size: 8000
-    firstname: "Test"
-    lastname: "Deployment"
 flavors:
   extra-small:
     blueprint:
+      name: Performance 1
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - utility: logstash
+          - all-redis: redis#all-redis
+        'magento-worker':
+          relations:
+          - data: mysql
+          - utility: logstash
+          - all-redis: redis#all-redis
+        'all-redis':
+          component:
+            resource_type: cache
+            interface: redis
+            id: magentoredisall
+          constraints:
+          - resource_type: compute
+            setting: flavor
+            value: 'compute1-4'
+          relations:
+          - utility: logstash
+        'utility':
+          component:
+            resource_type: logging
+            interface: logstash
+            id: magento-utility
+          constraints:
+          - count: 1
+          - resource_type: compute
+            setting: flavor
+            setting: disk
+            value: 70
+            value: compute1-4
+      description: "Magento installed with redis on a compute instance."
       options:
         server_size:
-          default: 8192
+          default: compute1-15
         magento_server_count:
           default: 1
       meta-data:
-        flavor: Magento for 100 Concurrent Users (Extra Small)
+        flavor: Performance 1
         flavor-weight: 2
     inputs:
       blueprint:
-        server_size: 8192
+        server_size: compute1-15
         magento_server_count: 1
+        database_size: 2048
   small:
     blueprint:
+      name: Performance 2
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - all-redis: redis#all-redis
+        'magento-worker':
+          relations:
+          - data: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - all-redis: redis#all-redis
+        'all-redis':
+          component:
+            resource_type: cache
+            interface: redis
+            id: magentoredisall
+          constraints:
+          - resource_type: compute
+            setting: flavor
+            value: 'compute1-8'
+          relations:
+          - logs: logstash
+        'shared-storage':
+          component:
+            resource_type: volume
+            interface: nfs
+            id: magentonfs-server
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: type
+            value: SATA
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
+          relations:
+          - logs: logstash
+        'logs':
+          component:
+            resource_type: logging
+            interface: logstash
+            id: magento-elkstack
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 75
+          - resource_type: volume
+            setting: type
+            value: SATA
+          - resource_type: compute
+            setting: flavor
+            value: compute1-4
+      description: "Magento installed with redis on a compute instance."
       options:
         server_size:
-          default: 15360
+          default: compute1-15
         magento_server_count:
           default: 1
       meta-data:
-        flavor: Magento for 200 Concurrent Users (Small)
+        flavor: Performance 2
         flavor-weight: 3
     inputs:
       blueprint:
-        server_size: 15360
+        server_size: compute1-15
         magento_server_count: 1
+        database_size: 4096
   medium:
     blueprint:
+      name: Enterprise 1
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - data-replica: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'magento-worker':
+          relations:
+          - data: mysql
+          - data-replica: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'data-replica':
+          component:
+            type: database-replica
+            interface: mysql
+            constraints:
+            - flavor: percona
+            - version: "5.6"
+            - max_allowed_packet: 268435456 # 256M
+            - table_definition_cache: 4096
+            - table_open_cache: 4096
+            - query_cache_size: 67108864 # 64M
+            - query_cache_type: 1
+            - query_cache_limit: 2097152 # 2M
+            - join_buffer_size: 2097152 # 2M
+            - read_buffer_size: 2097152 # 2M
+            - read_rnd_buffer_size: 8388608 # 8M
+            - sort_buffer_size: 2097152 # 2M
+            - max_heap_table_size: 100663296 # 96M
+            - tmp_table_size: 100663296 # 96M
+            - max_connections: 500
+            - max_user_connections: 400
+            - max_connect_errors: 1000000
+            - max_allowed_packet: 268435456 # 256M
+            - wait_timeout: 600
+            - key_buffer_size: 33554432 # 32M
+            - myisam_sort_buffer_size: 268435456 # 256M
+            - innodb_buffer_pool_size: 805306368 # 6G
+            - innodb_file_per_table: 1
+            - innodb_thread_concurrency: 32
+            - innodb_lock_wait_timeout: 300
+            - long_query_time: 2
+            - slow_query_log: 1
+          relations:
+          - data: mysql
+        'session-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: sessions
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'object-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: objects
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'page-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: FPC
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 2560
+        'shared-storage':
+          component:
+            resource_type: volume
+            interface: nfs
+            id: magentonfs-server
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
+          relations:
+          - logs: logstash
+        'logs':
+          component:
+            resource_type: logging
+            interface: logstash
+            id: magento-elkstack
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: compute1-4
+      description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
-          default: 15360
+          default: compute1-15
         magento_server_count:
           default: 2
       meta-data:
-        flavor: Magento for 400 Concurrent Users (Medium)
+        flavor: Enterprise 1
         flavor-weight: 4
     inputs:
       blueprint:
-        server_size: 15360
+        server_size: compute1-15
         magento_server_count: 2
+        database_size: 4096
   large:
     blueprint:
+      name: Enterprise 2
+      services:
+        'magento':
+          relations:
+          - data: mysql
+          - data-replica: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'magento-worker':
+          relations:
+          - data: mysql
+          - data-replica: mysql
+          - shared-storage: nfs
+          - logs: logstash
+          - session-cache: redis#session-cache
+          - object-cache: redis#object-cache
+          - page-cache: redis#page-cache
+        'data-replica':
+          component:
+            type: database-replica
+            interface: mysql
+            constraints:
+            - flavor: percona
+            - version: "5.6"
+            - max_allowed_packet: 268435456 # 256M
+            - table_definition_cache: 4096
+            - table_open_cache: 4096
+            - query_cache_size: 67108864 # 64M
+            - query_cache_type: 1
+            - query_cache_limit: 2097152 # 2M
+            - join_buffer_size: 2097152 # 2M
+            - read_buffer_size: 2097152 # 2M
+            - read_rnd_buffer_size: 8388608 # 8M
+            - sort_buffer_size: 2097152 # 2M
+            - max_heap_table_size: 100663296 # 96M
+            - tmp_table_size: 100663296 # 96M
+            - max_connections: 500
+            - max_user_connections: 400
+            - max_connect_errors: 1000000
+            - max_allowed_packet: 268435456 # 256M
+            - wait_timeout: 600
+            - key_buffer_size: 33554432 # 32M
+            - myisam_sort_buffer_size: 268435456 # 256M
+            - innodb_buffer_pool_size: 805306368 # 6G
+            - innodb_file_per_table: 1
+            - innodb_thread_concurrency: 32
+            - innodb_lock_wait_timeout: 300
+            - long_query_time: 2
+            - slow_query_log: 1
+          relations:
+          - data: mysql
+        'session-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: sessions
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'object-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: objects
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 512
+        'page-cache':
+          component:
+            id: redis_cache
+            resource_type: cache
+            interface: redis
+            constraints:
+            - name: FPC
+            - version: "2.8"
+            - setting: memory
+              resource_type: cache
+              value: 2560
+        'shared-storage':
+          component:
+            resource_type: volume
+            interface: nfs
+            id: magentonfs-server
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: general1-2
+          relations:
+          - logs: logstash
+        'logs':
+          component:
+            resource_type: logging
+            interface: logstash
+            id: magento-elkstack
+          constraints:
+          - count: 1
+          - resource_type: volume
+            setting: dedicated
+            value: true
+          - resource_type: volume
+            setting: device-name
+            value: /dev/xvdb
+          - resource_type: volume
+            setting: size
+            value: 100
+          - resource_type: volume
+            setting: type
+            value: SSD
+          - resource_type: compute
+            setting: flavor
+            value: compute1-4
+      description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
-          default: 30720
+          default: onmetal-compute1
         magento_server_count:
           default: 2
       meta-data:
-        flavor: Magento for 750 Concurrent Users (Large)
+        flavor: Enterprise 2
         flavor-weight: 5
     inputs:
       blueprint:
-        server_size: 30720
+        server_size: onmetal-compute1
         magento_server_count: 2
-  extra-large:
-    blueprint:
-      options:
-        server_size:
-          default: 30720
-        magento_server_count:
-          default: 3
-      meta-data:
-        flavor: Magento for 1125 Concurrent Users (Extra Large)
-        flavor-weight: 6
-    inputs:
-      blueprint:
-        server_size: 30720
-        magento_server_count: 3
+        database_size: 8192
