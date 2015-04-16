@@ -1,6 +1,14 @@
 magentostack CHANGELOG
 ==================
 
+1.1.1
+-----
+- Keep consistent naming for encryption key. (#163)
+
+1.1.0
+-----
+- Allow ES and NFS data to live under one mount (#161)
+
 1.0.0
 -----
 - Add split read and write behavior, move some attribute namespaces (#177)
