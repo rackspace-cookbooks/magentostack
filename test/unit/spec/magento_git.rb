@@ -8,10 +8,8 @@ describe 'magentostack::magento enterprise with git install' do
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
         cached(:chef_run) do
-          ChefSpec::ServerRunner.new(platform: platform, version: version) do |node, server|
+          ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
             node_resources(node) # stub this node
-            stub_nodes(platform, version, server) # stub other nodes for chef-zero
-            stub_environments(server)
 
             node.set['rackspace']['cloud_credentials']['username'] = 'foo'
             node.set['rackspace']['cloud_credentials']['api_key'] = 'bar'
