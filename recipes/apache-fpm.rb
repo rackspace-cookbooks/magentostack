@@ -99,6 +99,13 @@ end
   include_recipe recipe
 end
 
+# why this happens for default.conf and not ssl.conf is beyond me
+link "#{node['apache']['dir']}/sites-enabled/ssl.conf" do
+  action :delete
+  not_if { node['apache']['default_site_enabled'] }
+  notifies :restart, 'service[apache2]', :delayed
+end
+
 # create self signed certificate (enable by default)
 openssl_x509 node['magentostack']['web']['ssl_cert'] do
   common_name node.name
@@ -141,7 +148,7 @@ directory node['magentostack']['web']['dir'] do
 end
 
 # Create vhost
-%w(default ssl).each do |site|
+%w(magento_vhost magento_ssl_vhost).each do |site|
   web_app site do
     template node['magentostack']['web']['template']
     cookbook node['magentostack']['web']['cookbook']
@@ -150,12 +157,14 @@ end
     server_name node['magentostack']['web']['domain']
     server_aliases node['magentostack']['web']['server_aliases']
     if node['magentostack']['web']['ssl']
-      ssl true if site == 'ssl'
+      ssl true if site == 'magento_ssl_vhost'
       https_port node['magentostack']['web']['https_port']
       ssl_cert node['magentostack']['web']['ssl_cert']
       ssl_key node['magentostack']['web']['ssl_key']
       lazy { ssl_chain node['magentostack']['web']['ssl_chain'] if ::File.exist?(node.set['magentostack']['web']['ssl_chain']) }
     end
+    notifies :restart, 'service[apache2]', :delayed
+    notifies :restart, 'service[php-fpm]', :delayed
   end
 end
 

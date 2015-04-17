@@ -108,7 +108,7 @@ xml_edit 'add default_setup to local.xml' do
 end
 
 # if database_split_read_write, add resources/core_read
-xml_edit 'add use to local.xml under core_read' do
+xml_edit 'add core_read to local.xml under config/global/resources' do
   path localxml_path
   target '/config/global/resources/core_read'
   parent '/config/global/resources'
@@ -118,7 +118,7 @@ xml_edit 'add use to local.xml under core_read' do
 end
 
 # if database_split_read_write, resources/add core_read/connection
-xml_edit 'add use to local.xml under core_read' do
+xml_edit 'add connection to local.xml under config/global/resources/core_read' do
   path localxml_path
   target '/config/global/resources/core_read/connection'
   parent '/config/global/resources/core_read'
@@ -128,7 +128,7 @@ xml_edit 'add use to local.xml under core_read' do
 end
 
 # if database_split_read_write, add resources/add core_read/connection/use
-xml_edit 'add use to local.xml under core_read' do
+xml_edit 'add use to local.xml under config/global/resources/core_read/connection' do
   path localxml_path
   target '/config/global/resources/core_read/connection/use'
   parent '/config/global/resources/core_read/connection'
@@ -138,7 +138,7 @@ xml_edit 'add use to local.xml under core_read' do
 end
 
 # if database_split_read_write, add resources/core_write
-xml_edit 'add use to local.xml under core_read' do
+xml_edit 'add core_write to local.xml under config/global/resources' do
   path localxml_path
   target '/config/global/resources/core_write'
   parent '/config/global/resources'
@@ -148,7 +148,7 @@ xml_edit 'add use to local.xml under core_read' do
 end
 
 # if database_split_read_write, add resources/core_write/connection
-xml_edit 'add use to local.xml under core_read' do
+xml_edit 'add connection to local.xml under config/global/resources/core_write' do
   path localxml_path
   target '/config/global/resources/core_write/connection'
   parent '/config/global/resources/core_write'
@@ -158,7 +158,7 @@ xml_edit 'add use to local.xml under core_read' do
 end
 
 # if database_split_read_write, add resources/core_write/connection/use
-xml_edit 'add use to local.xml under core_write' do
+xml_edit 'add use to local.xml under config/global/resources/core_write/connection' do
   path localxml_path
   target '/config/global/resources/core_write/connection/use'
   parent '/config/global/resources/core_write/connection'
