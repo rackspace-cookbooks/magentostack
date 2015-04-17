@@ -68,7 +68,7 @@ test-cases:
           count: 6
           type1: compute
           type2: application
-        'data':
+        'db-master':
           count: 2
           type1: compute
           type2: database
@@ -216,7 +216,7 @@ test-cases:
           os: Centos 6.6
           flavor: compute1-15
       '15':
-        dns-name: data01.checkmate.local
+        dns-name: db-master01.checkmate.local
         instance:
           interfaces:
             mysql:
@@ -225,7 +225,7 @@ test-cases:
               password: =verify(exists=True)
               database_name: db1
       '16':
-        dns-name: data01.magento.cldsrvr.com
+        dns-name: db-mastera01.magento.cldsrvr.com
         instance:
           interfaces:
             mysql:
