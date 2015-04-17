@@ -78,7 +78,7 @@ options:
     required: true
   "newrelic":
     type: boolean
-    default: false
+    default: ''
     required: true
 #  "database_privileges":
 #    type: string
