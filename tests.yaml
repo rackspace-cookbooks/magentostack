@@ -7,7 +7,7 @@ test-cases:
       region: IAD
       terms: true
       sampledata: false
-      server_size: 4096
+      server_size: compute1-8
       username: "MagentoAdmin"
       password: "Mag!345678"
       encryption_key: 3fdsk3Ajf77aFEDS
@@ -20,7 +20,7 @@ test-cases:
       chef-server-username: chefuser
       install_method: git
       git_repo: git@github.com:doesnotexist/enterprise-magento.git
-      install_flvor: enterprise
+      install_flavor: enterprise
       php_version: php54
       validator-username: chef-validator
       validator-pem: &rsakey |
@@ -274,7 +274,7 @@ test-cases:
       region: IAD
       terms: true
       sampledata: false
-      server_size: 4096
+      server_size: onmetal-compute1
       username: "MagentoAdmin"
       password: "Mag!345678"
       encryption_key: 3fdsk3Ajf77aFEDS
@@ -287,7 +287,7 @@ test-cases:
       chef-server-username: chefuser
       install_method: git
       git_repo: git@github.com:doesnotexist/enterprise-magento.git
-      install_flvor: enterprise
+      install_flavor: enterprise
       php_version: php54
       validator-username: chef-validator
       validator-pem: *rsakey
