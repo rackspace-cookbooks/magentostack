@@ -164,6 +164,7 @@ end
       lazy { ssl_chain node['magentostack']['web']['ssl_chain'] if ::File.exist?(node.set['magentostack']['web']['ssl_chain']) }
     end
     notifies :restart, 'service[apache2]', :delayed
+    notifies :restart, 'service[php-fpm]', :delayed
   end
 end
 
