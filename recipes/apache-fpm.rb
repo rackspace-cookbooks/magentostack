@@ -163,6 +163,7 @@ end
       ssl_key node['magentostack']['web']['ssl_key']
       lazy { ssl_chain node['magentostack']['web']['ssl_chain'] if ::File.exist?(node.set['magentostack']['web']['ssl_chain']) }
     end
+    notifies :restart, 'service[apache2]', :delayed
   end
 end
 
