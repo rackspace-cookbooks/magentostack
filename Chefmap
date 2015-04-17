@@ -202,6 +202,12 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
+- source: requirements://database-replica:mysql/host
+  targets:
+  - attributes://magentostack/config/db_read/host
+- source: requirements://database-replica:mysql/port
+  targets:
+  - attributes://magentostack/config/db_read/port
 - value: "sessions"
   targets:
   - attributes://magentostack/redis/override_session_name
@@ -480,6 +486,12 @@ maps:
   targets:
   - attributes://magentostack/mysql/databases/db1/mysql_password
   - outputs://resources/{{resource.index}}/instance/interfaces/mysql/magento/password
+- source: requirements://database-replica:mysql/host
+  targets:
+  - attributes://magentostack/config/db_read/host
+- source: requirements://database-replica:mysql/port
+  targets:
+  - attributes://magentostack/config/db_read/port
 - value: "session"
   targets:
   - attributes://magentostack/redis/override_session_name
