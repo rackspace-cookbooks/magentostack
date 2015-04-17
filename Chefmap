@@ -829,10 +829,6 @@ provides:
 requires:
 - host: linux
 options:
-  "disk_filesystem":
-    type: string
-    default: ext4
-    required: true
   "export_name":
     type: string
     default: magento_media
@@ -852,19 +848,11 @@ run-list:
   - apt
   - platformstack
   - platformstack::rackops_rolebook
-  - magentostack::configure_disk
   - magentostack::nfs_server
   - elkstack::java
   - elkstack::cluster
   - elkstack::acl
 maps:
-- value: "/dev/xvdb"
-# - source: requirements://host:linux/instance/devices/data
-  targets:
-  - attributes://disk/device
-- value: {{ setting('disk_filesystem') }}
-  targets:
-  - attributes://disk/fs
 #- source: clients://volume:nfs/private_ip
 - value: ['*']
   targets:
