@@ -24,10 +24,12 @@ include_recipe 'nfs::server' # ~RACK002
 found_clients = []
 override_allow = node['magentostack']['nfs_server']['override_allow']
 
-if override_allow || Chef::Config[:solo]
+if override_allow
   override_allow.each do |ip|
     found_clients << ip
   end
+elsif Chef::Config[:solo]
+  Chef::Log.warn('You are using chef-solo, but have no overridden the nfs server search for clients')
 else
   found_clients = partial_search(:node, "chef_environment:#{node.chef_environment}",
                                  keys: {

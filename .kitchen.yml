@@ -63,24 +63,6 @@ suites:
             model: 'mysql4' # any override of any read parameter or write param
                             # will trigger the split db behavior
 
-  - name: community-php54
-    provisioner:
-        client_rb:
-          environment: default_single
-    run_list:
-      - recipe[wrapper::default]
-    attributes:
-      magentostack:
-        php:
-          version: 'php54'
-
-  - name: community-redis
-    provisioner:
-        client_rb:
-          environment: default_expanded
-    run_list:
-      - recipe[wrapper::default_expanded]
-
   # disables SSL entirely for those who want to do SSL offloading
   - name: community-nossl
     provisioner:
@@ -150,38 +132,6 @@ suites:
         git_revision: 'v1.14.1.0'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
 
-  - name: enterprise-php54
-    run_list:
-      - recipe[wrapper::default]
-    attributes:
-      rackspace:
-        cloud_credentials:
-          username: <%= ENV['RACKSPACE_USERNAME'] %>
-          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
-      magentostack:
-        flavor: 'enterprise'
-        install_method: 'git'
-        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
-        git_revision: 'v1.14.1.0'
-        git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
-        php:
-          version: 'php54'
-
-  - name: enterprise-v113
-    run_list:
-      - recipe[wrapper::default]
-    attributes:
-      rackspace:
-        cloud_credentials:
-          username: <%= ENV['RACKSPACE_USERNAME'] %>
-          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
-      magentostack:
-        flavor: 'enterprise'
-        install_method: 'git'
-        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
-        git_revision: 'v1.13.1.0'
-        git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
-
   - name: enterprise-php54-v113
     run_list:
       - recipe[wrapper::default]
@@ -198,6 +148,17 @@ suites:
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
         php:
           version: 'php54'
+
+# we are assuming any failure of php54 OR v1.13.1.0 will show up in the combined
+# test enterprise-php54-v113, but if for some reason you have to split them out
+# again, use these for php54 and v1.13 respectively:
+#      magentostack:
+#        php:
+#          version: 'php54'
+#
+#      magentostack:
+#        git_revision: 'v1.13.1.0'
+
 <% end %>
 <% if ENV['RACKSPACE_API_KEY'] %>
   - name: enterprise-cloudfiles
