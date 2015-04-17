@@ -888,21 +888,12 @@ flavors:
             id: magento-utility
           constraints:
           - count: 1
-          - resource_type: volume
-            setting: dedicated
-            value: true
-          - resource_type: volume
-            setting: device-name
-            value: /dev/xvdb
-          - resource_type: volume
-            setting: size
-            value: 100
-          - resource_type: volume
-            setting: type
-            value: SATA
           - resource_type: compute
             setting: flavor
-            value: general1-2
+            value: compute1-4
+          - resource_type: compute
+            setting: disk
+            value: 70
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -989,7 +980,7 @@ flavors:
             value: SATA
           - resource_type: compute
             setting: flavor
-            value: general1-4
+            value: compute1-4
       description: "Magento installed with redis on a compute instance."
       options:
         server_size:
@@ -1138,7 +1129,7 @@ flavors:
             value: SSD
           - resource_type: compute
             setting: flavor
-            value: general1-4
+            value: compute1-4
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
@@ -1287,7 +1278,7 @@ flavors:
             value: SSD
           - resource_type: compute
             setting: flavor
-            value: general1-4
+            value: compute1-4
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
         server_size:
