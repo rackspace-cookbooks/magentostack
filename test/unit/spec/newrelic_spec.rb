@@ -8,7 +8,7 @@ describe 'magentostack::newrelic' do
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
         let(:chef_run) do
-          ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
+          ChefSpec::SoloRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node|
             node_resources(node)
           end.converge(described_recipe)
         end

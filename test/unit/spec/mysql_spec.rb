@@ -76,7 +76,7 @@ describe 'magentostack::mysql' do
         end
         context 'for mysql_master' do
           cached(:chef_run) do
-            ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
+            ChefSpec::SoloRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node|
               node_resources(node)
             end.converge('magentostack::mysql_master')
           end
@@ -93,8 +93,8 @@ describe 'magentostack::mysql' do
 
         context 'for mysql_slave' do
           cached(:chef_run) do
-            ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
-              stub_nodes(platform, version, server)
+            ChefSpec::SoloRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node|
+              # stub_nodes(platform, version, server)
               node_resources(node)
             end.converge('magentostack::mysql_slave')
           end
@@ -108,7 +108,7 @@ describe 'magentostack::mysql' do
 
         context 'for mysql_holland' do
           cached(:chef_run) do
-            ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
+            ChefSpec::SoloRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node|
               node_resources(node)
             end.converge('magentostack::mysql_holland')
           end
@@ -120,7 +120,7 @@ describe 'magentostack::mysql' do
 
         context 'for mysql_add_drive' do
           cached(:chef_run) do
-            ChefSpec::ServerRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node, server|
+            ChefSpec::SoloRunner.new(platform: platform, version: version, log_level: ::LOG_LEVEL) do |node|
               node_resources(node)
             end.converge('magentostack::mysql_add_drive')
           end
