@@ -24,8 +24,6 @@ blueprint:
       - resource_type: compute
         setting: disk
         value: 50
-      relations:
-      - data: mysql
     'magento-worker':
       component:
         name: magento
@@ -38,8 +36,6 @@ blueprint:
       - resource_type: compute
         setting: disk
         value: 50
-      relations:
-      - data: mysql
 
   options:
 
@@ -647,7 +643,7 @@ blueprint:
         magento-worker:
           gui-x: 610.02
           gui-y: 262.757
-        data:
+        db-master:
           gui-x: 509.039
           gui-y: 727.599
         session-cache:
@@ -821,15 +817,15 @@ flavors:
       services:
         'magento':
           relations:
-          - data: mysql
+          - db-master: mysql
           - utility: logstash
           - all-redis: redis#all-redis
         'magento-worker':
           relations:
-          - data: mysql
+          - db-master: mysql
           - utility: logstash
           - all-redis: redis#all-redis
-        'data':
+        'db-master':
           component:
             resource_type: database
             interface: mysql
@@ -896,13 +892,13 @@ flavors:
           default: 2048
           constrains:
           - setting: memory
-            service: data
+            service: db-master
             resource_type: compute
         database_disk:
           default: 45
           constrains:
           - setting: disk
-            service: data
+            service: db-master
             resource_type: compute
       meta-data:
         flavor: Performance 1
@@ -919,17 +915,17 @@ flavors:
       services:
         'magento':
           relations:
-          - data: mysql
+          - db-master: mysql
           - shared-storage: nfs
           - logs: logstash
           - all-redis: redis#all-redis
         'magento-worker':
           relations:
-          - data: mysql
+          - db-master: mysql
           - shared-storage: nfs
           - logs: logstash
           - all-redis: redis#all-redis
-        'data':
+        'db-master':
           component:
             resource_type: database
             interface: mysql
@@ -1020,13 +1016,13 @@ flavors:
           default: 4096
           constrains:
           - setting: memory
-            service: data
+            service: db-master
             resource_type: compute
         database_disk:
           default: 100
           constrains:
           - setting: disk
-            service: data
+            service: db-master
             resource_type: compute
       meta-data:
         flavor: Performance 2
@@ -1043,8 +1039,8 @@ flavors:
       services:
         'magento':
           relations:
-          - data: mysql
-          - data-replica: mysql
+          - db-master: mysql
+          - db-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
@@ -1052,14 +1048,14 @@ flavors:
           - page-cache: redis#page-cache
         'magento-worker':
           relations:
-          - data: mysql
-          - data-replica: mysql
+          - db-master: mysql
+          - db-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
           - object-cache: redis#object-cache
           - page-cache: redis#page-cache
-        'data':
+        'db-master':
           component:
             resource_type: database
             interface: mysql
@@ -1092,7 +1088,7 @@ flavors:
             - innodb_lock_wait_timeout: 300
             - long_query_time: 2
             - slow_query_log: 1
-        'data-replica':
+        'db-replica':
           component:
             type: database-replica
             interface: mysql
@@ -1125,7 +1121,7 @@ flavors:
             - long_query_time: 2
             - slow_query_log: 1
           relations:
-          - data: mysql
+          - db-master: mysql
         'session-cache':
           component:
             id: redis_cache
@@ -1215,19 +1211,19 @@ flavors:
           default: 4096
           constrains:
           - setting: memory
-            service: data
+            service: db-master
             resource_type: compute
           - setting: memory
-            service: data-replica
+            service: db-replica
             resource_type: compute
         database_disk:
           default: 100
           constrains:
           - setting: disk
-            service: data
+            service: db-master
             resource_type: compute
           - setting: disk
-            service: data-replica
+            service: db-replica
             resource_type: compute
       meta-data:
         flavor: Enterprise 1
@@ -1244,8 +1240,8 @@ flavors:
       services:
         'magento':
           relations:
-          - data: mysql
-          - data-replica: mysql
+          - db-master: mysql
+          - db-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
@@ -1253,14 +1249,14 @@ flavors:
           - page-cache: redis#page-cache
         'magento-worker':
           relations:
-          - data: mysql
-          - data-replica: mysql
+          - db-master: mysql
+          - db-replica: mysql
           - shared-storage: nfs
           - logs: logstash
           - session-cache: redis#session-cache
           - object-cache: redis#object-cache
           - page-cache: redis#page-cache
-        'data':
+        'db-master':
           component:
             resource_type: database
             interface: mysql
@@ -1293,7 +1289,7 @@ flavors:
             - innodb_lock_wait_timeout: 300
             - long_query_time: 2
             - slow_query_log: 1
-        'data-replica':
+        'db-replica':
           component:
             type: database-replica
             interface: mysql
@@ -1326,7 +1322,7 @@ flavors:
             - long_query_time: 2
             - slow_query_log: 1
           relations:
-          - data: mysql
+          - db-master: mysql
         'session-cache':
           component:
             id: redis_cache
@@ -1416,19 +1412,19 @@ flavors:
           default: 8192
           constrains:
           - setting: memory
-            service: data
+            service: db-master
             resource_type: compute
           - setting: memory
-            service: data-replica
+            service: db-replica
             resource_type: compute
         database_disk:
           default: 100
           constrains:
           - setting: disk
-            service: data
+            service: db-master
             resource_type: compute
           - setting: disk
-            service: data-replica
+            service: db-replica
             resource_type: compute
       meta-data:
         flavor: Enterprise 2
