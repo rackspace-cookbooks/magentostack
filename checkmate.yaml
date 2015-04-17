@@ -232,6 +232,12 @@ blueprint:
       constrains:
       - setting: php_version
         resource_type: application
+    php_max_children:
+      type: string
+      default: '32'
+      constrains:
+      - setting: php_max_children
+        resource_type: application
     install_method:
       label: Install Method
       description: Choose where the install is coming from.
@@ -909,6 +915,7 @@ flavors:
         magento_server_count: 1
         database_size: 2048
         database_disk: 45
+        php_max_children: '32'
   small:
     blueprint:
       name: Performance 2
@@ -1033,9 +1040,10 @@ flavors:
         magento_server_count: 1
         database_size: 4096
         database_disk: 100
+        php_max_children: '40'
   medium:
     blueprint:
-      name: Enterprise 1
+      name: Enhanced 1
       services:
         'magento':
           relations:
@@ -1234,9 +1242,10 @@ flavors:
         magento_server_count: 1
         database_size: 4096
         database_disk: 100
+        php_max_children: '32'
   large:
     blueprint:
-      name: Enterprise 2
+      name: Enhanced 2
       services:
         'magento':
           relations:
@@ -1435,3 +1444,4 @@ flavors:
         magento_server_count: 1
         database_size: 8192
         database_disk: 100
+        php_max_children: '40'
