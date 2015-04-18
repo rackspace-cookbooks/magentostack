@@ -851,14 +851,14 @@ flavors:
             - sort_buffer_size: 2097152 # 2M
             - max_heap_table_size: 100663296 # 96M
             - tmp_table_size: 100663296 # 96M
-            - max_connections: 500
+            - max_connections: 84
             - max_user_connections: 400
             - max_connect_errors: 1000000
             - max_allowed_packet: 268435456 # 256M
-            - wait_timeout: 600
+            - wait_timeout: 300
             - key_buffer_size: 33554432 # 32M
             - myisam_sort_buffer_size: 268435456 # 256M
-            - innodb_buffer_pool_size: 805306368 # 6G
+            - innodb_buffer_pool_size: 638006368
             - innodb_file_per_table: 1
             - innodb_thread_concurrency: 32
             - innodb_lock_wait_timeout: 300
@@ -915,7 +915,7 @@ flavors:
         magento_server_count: 1
         database_size: 2048
         database_disk: 45
-        php_max_children: '32'
+        php_max_children: '27'
   small:
     blueprint:
       name: Performance 2
