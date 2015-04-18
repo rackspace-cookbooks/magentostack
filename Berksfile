@@ -24,3 +24,6 @@ cookbook 'chef-provisioning'
 
 # pin newrelic until the releases stabalize
 cookbook 'newrelic', '<= 2.10'
+
+# pin git until https://github.com/chef-cookbooks/mysql/issues/328 truly resolved
+cookbook 'git', '= 4.1.0'
