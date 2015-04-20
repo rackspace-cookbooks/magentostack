@@ -89,7 +89,7 @@ options:
     type: string
   "php_max_children":
     type: string
-    default: '32'
+    default: "32"
 run-list:
   recipes:
   - platformstack
@@ -144,7 +144,7 @@ maps:
 - value: 'static'
   targets:
   - attributes://php-fpm/pools/www/process_manager
-- value: '{{ setting('php_max_children') }}'
+- value: {{ setting('php_max_children') }}
   targets:
   - attributes://php-fpm/pools/www/max_children
 - value: {{ setting('git_repo') }}
@@ -383,7 +383,7 @@ options:
     type: string
   "php_max_children":
     type: string
-    default: '32'
+    default: "32"
 run-list:
   recipes:
   - platformstack
@@ -437,7 +437,7 @@ maps:
 - value: 'static'
   targets:
   - attributes://php-fpm/pools/www/process_manager
-- value: '{{ setting('php_max_children') }}'
+- value: {{ setting('php_max_children') }}
   targets:
   - attributes://php-fpm/pools/www/max_children
 - value: {{ setting('git_repo') }}
