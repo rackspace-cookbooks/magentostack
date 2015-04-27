@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+1.1.2
+-----
+- Ensure we list most relevant dependencies first, to make Berkshelf solve for them first (#173)
+
 1.1.1
 -----
 - Keep consistent naming for encryption key. (#163)
