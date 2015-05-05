@@ -8,6 +8,11 @@
 # This wrapper's default recipe is intended to build a single node magento installation.
 # Add more recipes in the wrapper for other topologies/configurations of magentostack.
 
+def enterprise?
+  node['magentostack'] && node['magentostack']['flavor'] == 'enterprise'
+end
+
+# we still install redis for sessions and objects, even in CE
 %w(
   wrapper::_redis_password_single
   magentostack::redis_single
@@ -29,6 +34,8 @@
 end
 
 # if enterprise edition, also enable the FPC for testing
-if node['magentostack'] && node['magentostack']['flavor'] == 'enterprise'
+if enterprise?
   include_recipe 'magentostack::_magento_fpc'
+else
+  include_recipe 'magentostack::varnish'
 end

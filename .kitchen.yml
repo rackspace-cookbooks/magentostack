@@ -2,6 +2,7 @@
 driver:
   name: vagrant
   network:
+  - ["forwarded_port", {guest: 8181,   host: 8181, auto_correct: true}]
   - ["forwarded_port", {guest: 8080,   host: 8080, auto_correct: true}]
   - ["forwarded_port", {guest: 8443,   host: 8443, auto_correct: true}]
   customize:
@@ -13,6 +14,9 @@ provisioner:
   require_chef_omnibus: true
   attributes:
     magentostack:
+      varnish:
+        secret: "9a160c7a-22f2-45a7-b5ab-ec32dc060714\n"
+        listen_port: 8181
       web:
         http_port: '8080'
         https_port: '8443'

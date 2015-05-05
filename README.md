@@ -3,8 +3,8 @@
 ## Supported Platforms
 
 - CentOS 6.5
-- Ubuntu 12.04 (partially, not for Mysql)
-- Ubuntu 14.04 (partially, not for Mysql)
+- Ubuntu 12.04 (untested)
+- Ubuntu 14.04 (untested)
 
 ## Supported Magento version
 Community Edition >= 1.9
@@ -64,6 +64,15 @@ See instructions in [the certificate cookbook](https://github.com/atomic-penguin
 # Only for Magento CE <1.9 or EE < 1.14 (not supported yet)
 apache2::mod_fastcgi doesn't allow to compile mod_Fastcgi from source, therefore it will not use the mod_fastcgi patched version. It means Ubuntu with Magento CE <1.9 or EE < 1.14 might have some bugs. [References](http://www.magentocommerce.com/boards/m/viewthread/229253/)
 --->
+
+### varnish and modman
+In order to use Varnish, include the varnish recipe in your wrapper or ensure you're set to community edition, where Varnish is enabled by default. This installs varnish using default settings, as well as modman and installs the turpentine module for Magento.
+
+Under `System > Configuration > Web > Secure` change the Offloader header value to `HTTP_X_FORWARDED_PROTO` (from the default SSL_OFFLOADED) and make sure the Base URL has `https` for the protocol, then save.
+
+You should also ensure you set `node['magentostack']['varnish']['secret']` to something on each server, and then also set that value in the Administration GUI in Magento, and do an initial flush of the Varnish cache.
+
+See the [main page about turpentine](http://www.magentocommerce.com/magento-connect/turpentine-varnish-cache.html), the [installation instructions for turpentine](https://github.com/nexcess/magento-turpentine/wiki/Installation), and the [modman Github site](https://github.com/colinmollenhour/modman), for more information and documentation.
 
 ### gluster
 - what it does
