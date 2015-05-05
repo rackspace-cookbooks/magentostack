@@ -11,6 +11,8 @@ depends 'stack_commons', '>= 0.0.50'
 depends 'platformstack', '~> 3.1'
 depends 'rackspacecloud', '~> 0.1'
 depends 'rackspace_iptables', '~> 1.7'
+depends 'varnish', '~> 2.2.0'
+depends 'modman', '~> 2.2.1'
 
 depends 'apache2', '~> 3.0'
 depends 'apt', '~> 2.7'
