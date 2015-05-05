@@ -45,6 +45,12 @@ UnusedBlockArgument:
 CyclomaticComplexity:
   Max: 20
 
+Metrics/ModuleLength:
+  Max: 250
+
+Performance/ParallelAssignment:
+  Enabled: false
+
 AllCops:
   Include:
     - '**/metadata.rb'
