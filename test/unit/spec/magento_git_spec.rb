@@ -2,22 +2,24 @@
 
 require_relative 'spec_helper'
 
-describe 'magentostack::magento enterprise with cloudfiles install' do
+describe 'magentostack::magento enterprise with git install' do
   before { stub_resources }
   supported_platforms.each do |platform, versions|
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
         cached(:chef_run) do
-          ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
+          ChefSpec::SoloRunner.new(platform: platform, version: version, file_cache_path: '/tmp/chefspec/var/chef/cache') do |node|
             node_resources(node) # stub this node
 
             node.set['rackspace']['cloud_credentials']['username'] = 'foo'
             node.set['rackspace']['cloud_credentials']['api_key'] = 'bar'
 
             node.set['magentostack']['flavor'] = 'enterprise'
-            node.set['magentostack']['install_method'] = 'cloudfiles'
-            node.set['magentostack']['download_file'] = 'magento-ee-1.14.0.1.tar.gz'
-            node.set['magentostack']['checksum'] = '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
+            node.set['magentostack']['install_method'] = 'git'
+
+            node.set['magentostack']['git_repository'] = 'git@github.com:org/repo.git'
+            node.set['magentostack']['git_revision'] = 'master'
+            node.set['magentostack']['git_deploykey'] = 'Zm9vCg=='
 
             # Stub the node and any calls to Environment.Load to return this environment
             env = Chef::Environment.new
@@ -31,8 +33,11 @@ describe 'magentostack::magento enterprise with cloudfiles install' do
         end
 
         it 'gets magento and extract it' do
-          expect(chef_run).to create_rackspacecloud_file("#{Chef::Config[:file_cache_path]}/magento-ee-1.14.0.1.tar.gz")
-          expect(chef_run).to put_ark('magento').with(action: [:put], url: "file://#{Chef::Config[:file_cache_path]}/magento-ee-1.14.0.1.tar.gz")
+          expect(chef_run).to sync_git('/var/www/html/magento')
+          expect(chef_run).to render_file('/tmp/chefspec/var/chef/cache/id_deploy')
+          expect(chef_run).to render_file('/tmp/chefspec/var/chef/cache/git_ssh_wrapper.sh')
+          expect(chef_run).to run_ruby_block('evaluate apache homedir')
+          expect(chef_run).to create_directory('apache .ssh')
         end
       end
     end
