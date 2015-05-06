@@ -10,7 +10,7 @@ describe 'magentostack all in one demo' do
     versions.each do |version|
       context "on #{platform.capitalize} #{version}" do
         let(:chef_run) do
-          ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
+          ChefSpec::SoloRunner.new(platform: platform, version: version, file_cache_path: '/tmp/chefspec/var/chef/cache') do |node|
             node_resources(node) # stub this node
 
             # Stub the node and any calls to Environment.Load to return this environment

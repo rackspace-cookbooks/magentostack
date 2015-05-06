@@ -79,6 +79,9 @@ describe 'magentostack::apache-fpm' do
             sslconf.each do |line|
               expect(chef_run).to render_file("#{vhost_path}/magento_ssl_vhost.conf").with_content(line)
             end
+
+            expect(chef_run).to delete_link('/etc/httpd/sites-enabled/ssl.conf')
+            expect(chef_run).to_not openssl_x509('/etc/httpd/ssl/localhost.pem')
           end
         end
 
@@ -121,6 +124,8 @@ describe 'magentostack::apache-fpm' do
             apache_modules.each do |mod|
               expect(chef_run).to run_execute("a2enmod #{mod}")
             end
+
+            expect(chef_run).to_not run_execute('enable mcrypt module')
           end
         end
 
@@ -131,6 +136,17 @@ describe 'magentostack::apache-fpm' do
             expect(chef_run).to include_recipe('yum')
             expect(chef_run).to include_recipe('yum-epel')
             expect(chef_run).to include_recipe('yum-ius')
+
+            # rhel/centos packages
+            expect(chef_run).to install_package('php55u-gd')
+            expect(chef_run).to install_package('php55u-mysqlnd')
+            expect(chef_run).to install_package('php55u-mcrypt')
+            expect(chef_run).to install_package('php55u-xml')
+            expect(chef_run).to install_package('php55u-xmlrpc')
+            expect(chef_run).to install_package('php55u-soap')
+            expect(chef_run).to install_package('php55u-pecl-redis')
+            expect(chef_run).to install_package('php55u-opcache')
+            expect(chef_run).to install_package('php55u-mbstring')
           end
           it_should_behave_like 'all platforms'
           it 'creates document root' do

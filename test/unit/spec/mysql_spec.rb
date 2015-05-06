@@ -22,6 +22,7 @@ describe 'magentostack::mysql' do
             logrotate.each do |line|
               expect(chef_run).to render_file('/etc/logrotate.d/mysql_slow_log').with_content(line)
             end
+            expect(chef_run).to create_directory('/var/log/mysql')
           end
         end
         shared_examples_for 'mysql configuration' do
