@@ -16,34 +16,44 @@ Enterprise Edition >= 1.14.1
 
 ### Cookbooks
 
+- `stack_commons`
+- `platformstack`
+- `rackspacecloud`
+- `rackspace_iptables`
+- `varnish`
+- `modman`
 - `apache2`
 - `apt`
+- `ark`
 - `build-essential`
+- `certificate`
 - `chef-sugar`
+- `cron`
+- `database`
 - `git`
+- `logrotate`
+- `mysql-multi`
+- `nfs`
 - `openssl`
+- `parted`
+- `partial_search`
 - `php-fpm`
-- `platformstack`
+- `redisio`
 - `yum`
 - `yum-ius`
 - `yum-epel`
+- `xml`
+- `xmledit`
 
 ## Recipes
 
-### default
-- what it does
-  - nothing
-- toggles
-  - nothing
-
 ### apache-fpm
 This recipe sets Apache2 configuration so you can deploy your Magento code.
-- what it does
-  - configures Apache with PHP FPM
-  - enables magento required php modules
-  - create a self-signed certificate if node['magentostack']['web']['ssl_autosigned'] (default to true)
-  - create a Vhost for Magento (non-SSL)
-  - create a Vhost for Magento (SSL)
+Configures Apache with PHP FPM.
+Enables magento required php modules.
+Create a self-signed certificate if node['magentostack']['web']['ssl_autosigned'] (default to true).
+Create a Vhost for Magento (non-SSL).
+Create a Vhost for Magento (SSL).
 - toggles
   - certificate generation node['magentostack']['web']['ssl_autosigned']
 
@@ -75,69 +85,52 @@ You should also ensure you set `node['magentostack']['varnish']['secret']` to so
 See the [main page about turpentine](http://www.magentocommerce.com/magento-connect/turpentine-varnish-cache.html), the [installation instructions for turpentine](https://github.com/nexcess/magento-turpentine/wiki/Installation), and the [modman Github site](https://github.com/colinmollenhour/modman), for more information and documentation.
 
 ### gluster
-- what it does
-  - sets up glusterfs based on the `node['rackspace_gluster']['config']['server']['glusters']` attribute
-    - this may involve some manual setup, it is glusterfs afterall
+Sets up glusterfs based on the `node['rackspace_gluster']['config']['server']['glusters']` attribute.
+This may involve some manual setup, it is glusterfs afterall
 
 ### magento_admin
-- what it does
-  - set up a cronjob to run Magento admin tasks
+Set up a cronjob to run Magento admin tasks.
 
 ### magento_install
-- what it does
-  - download and extract Magento, consulting `node['magentostack']['install_method']` for 'cloudfiles', 'ark', or 'git'
+Download and extract Magento, consulting `node['magentostack']['install_method']` for 'cloudfiles', 'ark', or 'git'.
 
 ### magento_configure
-- what it does
-  - install Magento by running install.php (basic configuration, DB bootstrap, SSL url etc...)
-  - or by copying a provided local.xml.template and editing it in-place from there
-  - *Note*: It will always edit the local.xml after the fact with values from chef.
+Install Magento by running install.php (basic configuration, DB bootstrap, SSL url etc...).
+Or by copying a provided local.xml.template and editing it in-place from there.
+*Note*: It will always edit the local.xml after the fact with values from chef.
 
 ### mysql_add_drive
-- what it does
-  - formats /dev/xvde1 and will prepare it for the mysql datadir.
-  - creates the mysql user and manages the /var/lib/mysql mountpoint
+Formats /dev/xvde1 and will prepare it for the mysql datadir.
+Creates the mysql user and manages the /var/lib/mysql mountpoint.
 
 ### mysql_holland
 ---
 Warning
 mysql_holland package will install python-setup tools preventing to apply this fix https://github.com/rackspace-cookbooks/stack_commons/pull/86, so you must include magentostack::mysql_holland as late as possible in your run_list.
 ---
--  what it does
-  -  installs holland
-  -  will set up a backup job based on if you are running as a slave or not
+Installs holland.
+Will set up a backup job based on if you are running as a slave or not.
 
 ### mysql_master
-- what it does
-  - sets up mysql master (runs the mysql_base recipe as well)
-  - will allow slaves to connect (via iptables)
+Sets up mysql master (runs the mysql_base recipe as well).
+Will allow slaves to connect (via iptables).
 
 ### mysql_slave
-- what it does
-  - sets up the mysql slave (runs the mysql_base recipe as well)
-  - allows the master to connect (via iptables)
+Sets up the mysql slave (runs the mysql_base recipe as well).
+Allows the master to connect (via iptables).
 
 ### nfs_client and nfs_server
-- server recipe installs nfs server and configures an export (by default, under /exports)
-  for magento media
-- client recipe creates a mount point, and mounts the export from the server
-  (uses search with a tag to find the server)
+Server recipe installs nfs server and configures an export (by default, under /exports) for magento media.
+Client recipe creates a mount point, and mounts the export from the server (uses search with a tag to find the server).
 
 ### newrelic
-- what it does
-  - sets up newrelic and the php agent for newrelic
+Sets up newrelic and the php agent for newrelic.
 
 ### redis recipes
 
-Please note that the redis recipes use an accumulator pattern, just like their
-upstream cookbook. This means you must include all redis recipes for instances
-and they will build on to the data structure containing all redis instances.
+Please note that the redis recipes use an accumulator pattern, just like their upstream cookbook. This means you must include all redis recipes for instances and they will build on to the data structure containing all redis instances.
 
-Once all redis instances have been defined, call `magentostack::redis_configure`
-to actually install and configure all redis masters, slaves, or sentinels that
-were previously declared using the individual recipes below, as well as
-configure any iptables rules that are required (assuming platformstack has
-iptables turned on).
+Once all redis instances have been defined, call `magentostack::redis_configure` to actually install and configure all redis masters, slaves, or sentinels that were previously declared using the individual recipes below, as well as configure any iptables rules that are required (assuming platformstack has iptables turned on).
 
 For example, this would an appropriate runlist for a single instance, a single
 slave, and the appropriate sentinel:
@@ -166,34 +159,26 @@ Example to get a sentinel only:
 ```
 
 #### redis_single
-- what it does
-  - configures a standalone redis server in `node['redisio']['servers']`
-  - redis server bound to `node['magentostack']['redis']['bind_port_single']`
-  - tags node with `magentostack_redis` and `magentostack_redis_single` for discovery
+Configures a standalone redis server in `node['redisio']['servers']`.
+Redis server bound to `node['magentostack']['redis']['bind_port_single']`.
+Tags node with `magentostack_redis` and `magentostack_redis_single` for discovery.
 
 #### redis_object, redis_page, redis_session
-- what it does
-  - configures a redis server in `node['redisio']['servers']`
-  - instance is bound to `node['magentostack']['redis']['bind_port_X']` where X is object, page, or session
-  - tags node with `magentostack_redis` and `magentostack_redis_X` for later discovery
+Configures a redis server in `node['redisio']['servers']`.
+Instance is bound to `node['magentostack']['redis']['bind_port_X']` where X is object, page, or session.
+Tags node with `magentostack_redis` and `magentostack_redis_X` for later discovery.
 
 #### redis_sentinel
-- what it does
-  - sets up redis sentinel bound to `node['magentostack']['redis']['bind_port_sentinel']`
-  - uses discovery in `libraries/util.rb` to find all redis servers in current chef environment
-  - discovery is based on tags and chef environment, see `node['magentostack']['redis']['discovery_query']` to override
-  - determines a master (using tags) in this order: redis_session.rb, redis_single.rb, `none`
-  - assumes a session store is the most important to monitor (upstream only supports configuring sentinel to monitor one master)
+Sets up redis sentinel bound to `node['magentostack']['redis']['bind_port_sentinel']`.
+Uses discovery in `libraries/util.rb` to find all redis servers in current chef environment.
+Discovery is based on tags and chef environment, see `node['magentostack']['redis']['discovery_query']` to override.
+Determines a master (using tags) in this order: redis_session.rb, redis_single.rb, `none`.
+Assumes a session store is the most important to monitor (upstream only supports configuring sentinel to monitor one master).
 
 #### redis_configure
-- what it does
-  - shortcut to run all of the redisio recipes needed to install & configure redis
-  - should be used after any calls to the redis_(single/object/page/session/sentinel) recipes
-  - build any iptables rules and call `add_iptables_rule` on them
+Shortcut to run all of the redisio recipes needed to install & configure redis.
+Should be used after any calls to the redis_(single/object/page/session/sentinel) recipes build any iptables rules and call `add_iptables_rule` on them.
 
-## Data_Bags
-
-No Data_Bag configured for this cookbook
 
 ## Attributes
 
@@ -285,53 +270,117 @@ node.run_state['magentostack_redis_password_single'] = 'runstatepasswordsingle'
 
 ## Usage
 
-### useful datastructures
+### Suggested datastructures
 
-### magentostack
-
-```
-- MySQL DB Single Node:
+Magento Admin:
 ```json
 {
     "run_list": [
-      "recipe[platformstack::default]",
-      "recipe[platformstack::rackops_rolebook]",
-      "recipe[magentostack::mysql_master]"
+      "recipe[platformstack]",
+      "recipe[magentostack::apache-fpm]",
+      "recipe[magentostack::magento_install]",
+      "recipe[magentostack::newrelic]",
+      "recipe[magentostack::_find_mysql]",
+      "recipe[magentostack::magento_configure]",
+      "recipe[magentostack::magento_admin]",
+      "recipe[magentostack::nfs_client]",
+      "recipe[elkstack::java]",
+      "recipe[elkstack::agent]"
     ]
 }
 ```
 
-- MySQL DB Master Node:
+Magento Worker
 ```json
 {
     "run_list": [
-      "recipe[platformstack::default]",
-      "recipe[platformstack::rackops_rolebook]",
-      "recipe[magentostack::mysql_master]"
+      "recipe[platformstack]",
+      "recipe[magentostack::apache-fpm]",
+      "recipe[magentostack::magento_install]",
+      "recipe[magentostack::newrelic]",
+      "recipe[magentostack::_find_mysql]",
+      "recipe[magentostack::magento_configure]",
+      "recipe[magentostack::nfs_client]",
+      "recipe[elkstack::java]",
+      "recipe[elkstack::agent]"
     ]
 }
 ```
 
-- MySQL DB Slave Node:
+Magento MySQL Master
 ```json
 {
     "run_list": [
-      "recipe[platformstack::default]",
-      "recipe[platformstack::rackops_rolebook]",
-      "recipe[magentostack::mysql_slave]"
+      "recipe[platformstack]",
+      "recipe[magentostack::mysql_master]",
+      "recipe[magentostack::mysql_holland]",
+      "recipe[elkstack::java]",
+      "recipe[elkstack::agent]"
+    ]
+}
+```
+
+Magento Redis
+```json
+{
+    "run_list": [
+      "recipe[platformstack]",
+      "recipe[magentostack::redis_single]",
+      "recipe[magentostack::redis_configure]",
+      "recipe[elkstack::java]",
+      "recipe[elkstack::agent]"
+    ]
+}
+```
+
+Magento Elkstack
+```json
+{
+    "run_list": [
+      "recipe[elkstack::java]",
+      "recipe[elkstack::cluster]",
+      "recipe[elkstack::acl]"
+    ]
+}
+```
+
+Magento NFS Server
+```json
+{
+    "run_list": [
+      "recipe[apt]",
+      "recipe[platformstack]",
+      "recipe[magentostack::configure_disk]",
+      "recipe[magentostack::nfs_server]",
+      "recipe[elkstack::java]",
+      "recipe[elkstack::agent]"
     ]
 }
 ```
 
 ## New Relic Monitoring
-
 To configure New Relic, make sure the `node['newrelic']['license']` attribute is set and include the `platformstack` cookbook in your run_list.  You can also run the `magentostack::newrelic` recipe for some more advanced monitors.
 
-
 # Contributing
-
 https://github.com/rackspace-cookbooks/contributing/blob/master/CONTRIBUTING.md
 
-
 # Authors
-Authors:: Matthew Thode <matt.thode@rackspace.com>
+Authors:: Rackspace <devops-chef@rackspace.com>
+
+## License
+```
+# Copyright 2015, Rackspace Hosting
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+```
