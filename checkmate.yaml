@@ -249,8 +249,10 @@ blueprint:
         choice:
         - name: "Git"
           value: git
+        - name: "No Install"
+          value: "none"
       constraints:
-      - in: ["git"]
+      - in: ["git", "none"]
         message: unsupported install method
       constrains:
       - setting: install_method
