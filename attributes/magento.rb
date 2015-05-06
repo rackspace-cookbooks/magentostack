@@ -5,11 +5,11 @@ default['magentostack']['install_method'] = 'ark' # can be ark, git, cloudfiles,
 default['magentostack']['configure_method'] = 'installer' # can be installer, template, or none
 
 # Distribution of magento and a checksum for that download
-default['magentostack']['checksum'] = '338df88796a445cd3be2a10b5c79c50e9900a4a1b1d8e9113a79014d3186a8e0'
+default['magentostack']['checksum'] = 'e04c75f1be09844b92f5bbae04e417961447908000c591a29471b8634440dd1b'
 default['magentostack']['flavor'] = 'community' # could also be enterprise
 
 # for ark download method
-default['magentostack']['download_url'] = 'http://www.magentocommerce.com/downloads/assets/1.9.0.1/magento-1.9.0.1.tar.gz'
+default['magentostack']['download_url'] = 'http://www.magentocommerce.com/downloads/assets/1.9.1.1/magento-1.9.1.1.tar.gz'
 
 # for cloudfiles download method
 default['magentostack']['download_region'] = 'iad'
