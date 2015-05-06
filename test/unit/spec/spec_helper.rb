@@ -29,6 +29,7 @@ def node_resources(node)
   # disk partitioning and formatting expectations
   node.set['disk']['device'] = '/dev/xvde'
   node.set['disk']['fs'] = 'ext4'
+  node.set['magentostack']['config']['encryption_key'] = 'secret-crypt-key'
 end
 
 # rubocop:disable Metrics/AbcSize
