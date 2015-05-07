@@ -32,7 +32,7 @@ shared_examples_for 'magento under varnish' do |args|
   end
 
   # be sure turpentine created a ruleset in varnish
-  describe command("varnishadm vcl.list | grep -v boot") do
+  describe command('php /var/www/html/magento/enable-magento-turpentine.php >/dev/null 2>&1; varnishadm vcl.list | grep -v boot') do
     its(:stdout) { should match(/active/) }
   end
 end

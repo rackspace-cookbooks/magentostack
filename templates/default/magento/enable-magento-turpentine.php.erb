@@ -7,31 +7,42 @@ require_once $mageFilename;
 umask(0);
 Mage::app('admin');
 
-Mage::app()->cleanAllSessions();
-Mage::app()->getCacheInstance()->flush();
-Mage::app()->cleanCache();
+## now do turpentine-specific operations here
+$varnish_admin = Mage::getModel( 'turpentine/varnish_admin' );
 
-$types = Mage::app()->getCacheInstance()->getTypes();
-$allTypes = Mage::app()->useCache();
 
-print "Enabling turpentine_pages cache\n";
-$allTypes['turpentine_pages'] = 1;
-$tags = Mage::app()->getCacheInstance()->cleanType('turpentine_pages');
-Mage::app()->saveUseCache($allTypes);
+for ($i = 0; $i < 2; $i++) {
+  # do cache work here
+  Mage::app()->cleanAllSessions();
+  Mage::app()->getCacheInstance()->flush();
+  Mage::app()->cleanCache();
 
-print "Configuring turpentine_varnish/servers/auth_key\n";
-$cfg = new Mage_Core_Model_Config();
-$cfg->saveConfig('turpentine_varnish/servers/auth_key', "<%= @auth_key %>", 'default', 0);
+  $types = Mage::app()->getCacheInstance()->getTypes();
+  $allTypes = Mage::app()->useCache();
 
-print "Applying 'turpentine/varnish_admin' VCL rules\n";
-$result = Mage::getModel( 'turpentine/varnish_admin' )->applyConfig();
-foreach( $result as $name => $value ) {
-  if( $value === true ) { echo "Success $name"; } else { echo "Failed $name -> $value"; }
+  print "Enabling turpentine_pages cache\n";
+  $allTypes['turpentine_pages'] = 1;
+  $tags = Mage::app()->getCacheInstance()->cleanType('turpentine_pages');
+  Mage::app()->saveUseCache($allTypes);
+
+  print "Configuring turpentine_varnish/servers/auth_key\n";
+  $cfg = new Mage_Core_Model_Config();
+  if($cfg) {
+    $cfg->saveConfig('turpentine_varnish/servers/auth_key', "<%= @auth_key %>", 'default', 0);
+  }
+
+  print "Flushing all varnish caches\n";
+  $varnish_admin->flushAll();
+
+  print "Applying 'turpentine/varnish_admin' VCL rules\n";
+  $result = $varnish_admin->applyConfig();
+  foreach( $result as $name => $value ) {
+    if( $value === true ) {
+      print "Success $name -> $value\n";
+    } else {
+      print "Failed $name -> $value\n";
+    }
+  }
+
+  sleep(5);
 }
-
-print "Saving 'turpentine/varnish_admin' model configurator\n";
-$cfgr = Mage::getModel( 'turpentine/varnish_admin' )->getConfigurator();
-$result = $cfgr->save( $cfgr->generate(Mage::helper('turpentine')->shouldStripVclWhitespace('save') ) );
-
-print "Flushing all varnish caches\n";
-$result = Mage::getModel( 'turpentine/varnish_admin' )->flushAll();

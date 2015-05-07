@@ -25,10 +25,13 @@ template "#{node['magentostack']['web']['dir']}/enable-magento-turpentine.php" d
   group node['apache']['group']
   mode '0700'
   variables(auth_key: node['magentostack']['varnish']['secret'])
+  notifies :run, 'execute[enable-magento-turpentine.php]', :delayed
 end
 
-execute 'php enable-magento-turpentine.php' do
+execute 'enable-magento-turpentine.php' do
+  command 'php enable-magento-turpentine.php'
   cwd node['magentostack']['web']['dir']
   user node['apache']['user']
   group node['apache']['group']
+  action :nothing
 end
