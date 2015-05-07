@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: php-fpm
+# Attributes:: php-fpm
 #
 # Copyright 2014, Rackspace Hosting
 #

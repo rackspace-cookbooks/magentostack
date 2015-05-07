@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: monitoring
+# Attributes:: monitoring
 #
 # Copyright 2014, Rackspace Hosting
 #
