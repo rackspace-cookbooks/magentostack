@@ -102,12 +102,12 @@ blueprint:
         list-type: region
       constraints:
       - in:
-        #- DFW does not yet support Cloud Redis
-        #- ORD does not yet support Cloud Redis
+        - DFW
+        - ORD
         - IAD
-        # - SYD does not yet support Cloud DBs
-        # - HKG does not yet support Cloud DBs
-        # - LON does not yet support Cloud DBs
+        - SYD
+        - HKG
+        - LON
         message: must be a valid region
       constrains:
       - setting: region
@@ -169,24 +169,6 @@ blueprint:
       - setting: domain
         resource_type: cache
         attribute: hostname
-#    version:
-#      label: Magento Version
-#      help: |
-#        Required: Version of Magento Community Edition to install. If this
-#        deployment is part of a migration, select the version you are currently
-#        using.
-#      required: true
-#      type: string
-#      default: 1.7.0.2
-#      display-hints:
-#        group: application
-#        order: 2
-#      constrains:
-#      - setting: version
-#        service: magento
-#      constraints:
-#      - in: ["1.7.0.2", "1.8.1.0"]
-#        message: unsupported version
 #    create_dns:
 #      label: Create DNS entry
 #      description: Create the DNS entry for this deployment.
@@ -296,19 +278,6 @@ blueprint:
       - regex:
           value: patterns.regex.private_key.required
         message: Must be a valid SSH private key
-#    sampledata:
-#      label: Install Sample Data
-#      description: Determine whether or not to provide sample data
-#      type: boolean
-#      help: |
-#        Optional: If selected, this will install sample data into your Magento
-#        deployment.
-#      display-hints:
-#        group: application
-#        order: 9
-#      constrains:
-#      - setting: sampledata
-#        service: magento
     username:
       label: Admin Username
       type: string
@@ -892,6 +861,14 @@ flavors:
             value: 70
       description: "Magento installed with redis on a compute instance."
       options:
+        region:
+          constraints:
+            - in:
+              - DFW
+              - ORD
+              - IAD
+              - SYD
+              - HKG
         server_size:
           default: compute1-15
         magento_server_count:
@@ -1019,6 +996,10 @@ flavors:
             value: 50
       description: "Magento installed with redis on a compute instance."
       options:
+        region:
+          constraints:
+            - in:
+              - IAD
         server_size:
           default: onmetal-compute1
         magento_server_count:
@@ -1217,6 +1198,10 @@ flavors:
             value: compute1-4
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
+        region:
+          constraints:
+            - in:
+              - IAD
         server_size:
           default: compute1-15
         magento_server_count:
@@ -1421,6 +1406,10 @@ flavors:
             value: compute1-4
       description: "Magento installed with Cloud Redis and DB Replication."
       options:
+        region:
+          constraints:
+            - in:
+              - IAD
         server_size:
           default: onmetal-compute1
         magento_server_count:
