@@ -9,5 +9,6 @@ describe 'Magento web' do
 
   describe 'community magento' do
     it_behaves_like 'magento community edition'
+    it_behaves_like 'magento under varnish'
   end
 end

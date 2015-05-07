@@ -38,4 +38,5 @@ if enterprise?
   include_recipe 'magentostack::_magento_fpc'
 else
   include_recipe 'magentostack::varnish'
+  include_recipe 'magentostack::_magento_turpentine'
 end

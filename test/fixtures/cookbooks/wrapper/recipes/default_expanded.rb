@@ -5,6 +5,10 @@
 # Copyright 2014, Rackspace
 #
 
+def enterprise?
+  node['magentostack'] && node['magentostack']['flavor'] == 'enterprise'
+end
+
 # This wrapper's default recipe is intended to build a single node magento
 # installation with all components split apart (such as separate redis instances)
 #
@@ -34,6 +38,9 @@
 end
 
 # if enterprise edition, also enable the FPC for testing
-if node['magentostack'] && node['magentostack']['flavor'] == 'enterprise'
+if enterprise?
   include_recipe 'magentostack::_magento_fpc'
+else
+  include_recipe 'magentostack::varnish'
+  include_recipe 'magentostack::_magento_turpentine'
 end

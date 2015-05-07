@@ -23,6 +23,7 @@ include_recipe 'magentostack::modman'
 
 varnish_install 'varnish' do
   vendor_repo true # needed for varnish >= 3
+  vendor_version '3.0' # includes point releases
   action :install
 end
 
@@ -42,7 +43,12 @@ varnish_default_config 'varnish-config-magento' do
     'thread_pool_timeout' => '300',
 
     # recommended by turpentine
+
+    # varnish v3
     'esi_syntax' => '0x2',
+
+    # varnish v4 when we get there
+    # 'feature' => '+esi_disable_xml_check',
     'cli_buffer' => '16384'
   )
   action :configure
