@@ -908,6 +908,8 @@ flavors:
           - setting: disk
             service: db-master
             resource_type: compute
+        php_max_children:
+          default: '27'
       meta-data:
         flavor: Performance 1
         flavor-weight: 2
@@ -1033,6 +1035,8 @@ flavors:
           - setting: disk
             service: db-master
             resource_type: compute
+        php_max_children:
+          default: '60'
       meta-data:
         flavor: Performance 2
         flavor-weight: 3
@@ -1235,6 +1239,8 @@ flavors:
           - setting: disk
             service: db-replica
             resource_type: compute
+        php_max_children:
+          default: '32'
       meta-data:
         flavor: Enterprise 1
         flavor-weight: 4
@@ -1437,6 +1443,8 @@ flavors:
           - setting: disk
             service: db-replica
             resource_type: compute
+        php_max_children:
+          default: '40'
       meta-data:
         flavor: Enterprise 2
         flavor-weight: 5
