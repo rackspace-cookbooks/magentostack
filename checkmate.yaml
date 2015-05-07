@@ -22,7 +22,7 @@ blueprint:
       constraints:
       - count: 1
       - resource_type: compute
-        setting: disk
+      - setting: disk
         value: 50
     'magento-worker':
       component:
@@ -34,7 +34,7 @@ blueprint:
         greater-than-or-equal-to: 0
         less-than: 9
       - resource_type: compute
-        setting: disk
+      - setting: disk
         value: 50
 
   options:
