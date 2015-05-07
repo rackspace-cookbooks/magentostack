@@ -44,8 +44,8 @@ template setup_script do
   )
 end
 
-cookbook_file "#{node['magentostack']['web']['dir']}/check-magento-installed.php" do
-  source 'check-magento-installed.php'
+template "#{node['magentostack']['web']['dir']}/check-magento-installed.php" do
+  source 'magento/check-magento-installed.php.erb'
   user node['apache']['user']
   group node['apache']['group']
   mode '0700'
