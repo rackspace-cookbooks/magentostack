@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: holland
+# Attributes:: backups
 #
 # Copyright 2014, Rackspace Hosting
 #
