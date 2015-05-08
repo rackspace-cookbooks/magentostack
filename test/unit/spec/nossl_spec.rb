@@ -25,12 +25,11 @@ describe 'magentostack::apache-fpm' do
         property = load_platform_properties(platform: platform, platform_version: version)
         property.to_s # pacify rubocop
 
-        it 'should not include apache2::mod_ssl' do
+        it 'should not include apache2::mod_ssl or create SSL config file or keypair files' do
           expect(chef_run).to_not include_recipe('apache2::mod_ssl')
-        end
-
-        it 'does not enable ssl module' do
           expect(chef_run).to_not run_execute('a2enmod ssl')
+          expect(chef_run).to_not create_certificate_manage('magento ssl certificate')
+          expect(chef_run).to_not render_file('/etc/httpd/sites-available/magento_ssl_vhost.conf')
         end
       end
     end
