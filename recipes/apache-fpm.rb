@@ -148,7 +148,11 @@ directory node['magentostack']['web']['dir'] do
 end
 
 # Create vhost
-%w(magento_vhost magento_ssl_vhost).each do |site|
+vhosts = ['magento_vhost']
+if node['magentostack']['web']['ssl']
+  vhosts << 'magento_ssl_vhost'
+end
+vhosts.each do |site|
   web_app site do
     template node['magentostack']['web']['template']
     cookbook node['magentostack']['web']['cookbook']

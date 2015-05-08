@@ -35,6 +35,25 @@ describe 'magentostack::apache-fpm' do
 
         it 'should copy the ssl certificate out of an encrypted data bag' do
           expect(chef_run).to create_certificate_manage('magento ssl certificate')
+            .with(
+              cert_path: '/etc/pki/tls',
+              cert_file: 'fauxhai.local.pem',
+              key_file: 'fauxhai.local.key',
+              chain_file: 'Fauxhai-bundle.crt'
+            )
+        end
+
+        it 'should render a virtualhost configuration including the custom ssl' do
+          ssl_lines = [
+            /SSLEngine on/,
+            %r{SSLCertificateFile /etc/pki/tls/certs/.*.pem},
+            %r{SSLCertificateKeyFile /etc/pki/tls/private/.*.key}
+          ]
+
+          ssl_lines.each do |line|
+            expect(chef_run).to render_file('/etc/httpd/sites-available/magento_ssl_vhost.conf')
+              .with_content(line)
+          end
         end
       end
     end
