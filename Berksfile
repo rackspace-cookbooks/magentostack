@@ -21,6 +21,7 @@ cookbook 'elkstack'
 # but not install it; causing it to fail on `upload`
 cookbook 'monit'
 cookbook 'chef-provisioning'
+cookbook 'java'
 
 # pin newrelic until the releases stabalize
 cookbook 'newrelic', '<= 2.10'
