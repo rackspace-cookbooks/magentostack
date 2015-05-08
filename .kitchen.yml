@@ -94,21 +94,6 @@ suites:
           ssl_custom: true
           ssl_custom_basename: 'test'
 
-  - name: community-localxmltemplate
-    provisioner:
-        client_rb:
-          environment: default_single
-    run_list:
-      - recipe[wrapper::default]
-    attributes:
-      magentostack:
-        configure_method: template
-        config:
-          encryption_key: 'abc123'
-          admin_frontname: 'superstore'
-          db:
-            prefix: 'moverride_'
-
 <% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
   - name: enterprise
     run_list:
