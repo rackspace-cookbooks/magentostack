@@ -72,9 +72,9 @@ describe 'magentostack::apache-fpm' do
             end
 
             sslconf = [
-              'SSLEngine on',
-              'SSLCertificateFile /etc/httpd/ssl/localhost.pem',
-              'SSLCertificateKeyFile /etc/httpd/ssl/localhost.key'
+              /SSLEngine on/,
+              %r{SSLCertificateFile /etc/httpd/ssl/.*.pem},
+              %r{SSLCertificateKeyFile /etc/httpd/ssl/.*.key}
             ]
             sslconf.each do |line|
               expect(chef_run).to render_file("#{vhost_path}/magento_ssl_vhost.conf").with_content(line)
