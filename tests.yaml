@@ -131,7 +131,7 @@ test-cases:
               - "magentostack::_find_mysql"
               - "magentostack::magento_configure"
               - "magentostack::nfs_client"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "application"
       "1":
@@ -205,7 +205,7 @@ test-cases:
               - "platformstack::rackops_rolebook"
               - "magentostack::mysql_master"
               - "magentostack::mysql_holland"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "database"
       "3":
@@ -274,7 +274,7 @@ test-cases:
               - "magentostack::_find_mysql"
               - "magentostack::magento_configure"
               - "magentostack::nfs_client"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "application"
       "4":
@@ -348,7 +348,7 @@ test-cases:
               - "platformstack::rackops_rolebook"
               - "magentostack::mysql_master"
               - "magentostack::mysql_holland"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "database"
       "6":
@@ -417,7 +417,7 @@ test-cases:
               - "magentostack::_find_mysql"
               - "magentostack::magento_configure"
               - "magentostack::nfs_client"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "application"
       "7":
@@ -491,7 +491,7 @@ test-cases:
               - "platformstack::rackops_rolebook"
               - "magentostack::mysql_master"
               - "magentostack::mysql_holland"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "database"
       "9":
@@ -603,7 +603,7 @@ test-cases:
               - "magentostack::magento_configure"
               - "magentostack::magento_admin"
               - "magentostack::nfs_client"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "application"
       "11":
@@ -677,7 +677,7 @@ test-cases:
               - "platformstack::rackops_rolebook"
               - "magentostack::mysql_master"
               - "magentostack::mysql_holland"
-              - "elkstack::java"
+              - "java::default"
               - "elkstack::agent"
         "type": "database"
       "kibana user":
