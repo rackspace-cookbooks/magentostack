@@ -1,0 +1,48 @@
+<?php
+
+$mageFilename = 'app/Mage.php';
+
+require_once $mageFilename;
+
+umask(0);
+Mage::app('admin');
+
+## now do turpentine-specific operations here
+$varnish_admin = Mage::getModel( 'turpentine/varnish_admin' );
+
+
+for ($i = 0; $i < 2; $i++) {
+  # do cache work here
+  Mage::app()->cleanAllSessions();
+  Mage::app()->getCacheInstance()->flush();
+  Mage::app()->cleanCache();
+
+  $types = Mage::app()->getCacheInstance()->getTypes();
+  $allTypes = Mage::app()->useCache();
+
+  print "Enabling turpentine_pages cache\n";
+  $allTypes['turpentine_pages'] = 1;
+  $tags = Mage::app()->getCacheInstance()->cleanType('turpentine_pages');
+  Mage::app()->saveUseCache($allTypes);
+
+  print "Configuring turpentine_varnish/servers/auth_key\n";
+  $cfg = new Mage_Core_Model_Config();
+  if($cfg) {
+    $cfg->saveConfig('turpentine_varnish/servers/auth_key', "<%= @auth_key %>", 'default', 0);
+  }
+
+  print "Flushing all varnish caches\n";
+  $varnish_admin->flushAll();
+
+  print "Applying 'turpentine/varnish_admin' VCL rules\n";
+  $result = $varnish_admin->applyConfig();
+  foreach( $result as $name => $value ) {
+    if( $value === true ) {
+      print "Success $name -> $value\n";
+    } else {
+      print "Failed $name -> $value\n";
+    }
+  }
+
+  sleep(5);
+}

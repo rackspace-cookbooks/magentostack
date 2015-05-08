@@ -18,16 +18,20 @@
 # limitations under the License.
 #
 
-# enable full page cache for testing
-template "#{node['magentostack']['web']['dir']}/enable-magento-fpc.php" do
-  source 'magento/enable-magento-fpc.php.erb'
+# enable turpentine plugin's varnish page cache for testing
+template "#{node['magentostack']['web']['dir']}/enable-magento-turpentine.php" do
+  source 'magento/enable-magento-turpentine.php.erb'
   user node['apache']['user']
   group node['apache']['group']
   mode '0700'
+  variables(auth_key: node['magentostack']['varnish']['secret'])
+  notifies :run, 'execute[enable-magento-turpentine.php]', :delayed
 end
 
-execute 'php enable-magento-fpc.php' do
+execute 'enable-magento-turpentine.php' do
+  command 'php enable-magento-turpentine.php'
   cwd node['magentostack']['web']['dir']
   user node['apache']['user']
   group node['apache']['group']
+  action :nothing
 end
