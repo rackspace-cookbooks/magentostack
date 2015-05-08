@@ -284,7 +284,7 @@ Magento Admin:
       "recipe[magentostack::magento_configure]",
       "recipe[magentostack::magento_admin]",
       "recipe[magentostack::nfs_client]",
-      "recipe[elkstack::java]",
+      "recipe[java::default]",
       "recipe[elkstack::agent]"
     ]
 }
@@ -301,7 +301,7 @@ Magento Worker
       "recipe[magentostack::_find_mysql]",
       "recipe[magentostack::magento_configure]",
       "recipe[magentostack::nfs_client]",
-      "recipe[elkstack::java]",
+      "recipe[java::default]",
       "recipe[elkstack::agent]"
     ]
 }
@@ -314,7 +314,7 @@ Magento MySQL Master
       "recipe[platformstack]",
       "recipe[magentostack::mysql_master]",
       "recipe[magentostack::mysql_holland]",
-      "recipe[elkstack::java]",
+      "recipe[java::default]",
       "recipe[elkstack::agent]"
     ]
 }
@@ -327,7 +327,7 @@ Magento Redis
       "recipe[platformstack]",
       "recipe[magentostack::redis_single]",
       "recipe[magentostack::redis_configure]",
-      "recipe[elkstack::java]",
+      "recipe[java::default]",
       "recipe[elkstack::agent]"
     ]
 }
@@ -337,7 +337,7 @@ Magento Elkstack
 ```json
 {
     "run_list": [
-      "recipe[elkstack::java]",
+      "recipe[java::default]",
       "recipe[elkstack::cluster]",
       "recipe[elkstack::acl]"
     ]
@@ -352,7 +352,7 @@ Magento NFS Server
       "recipe[platformstack]",
       "recipe[magentostack::configure_disk]",
       "recipe[magentostack::nfs_server]",
-      "recipe[elkstack::java]",
+      "recipe[java::default]",
       "recipe[elkstack::agent]"
     ]
 }
