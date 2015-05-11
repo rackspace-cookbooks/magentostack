@@ -35,7 +35,7 @@ describe 'magentostack::magento recipes' do
         end
 
         it 'runs Magento installer' do
-          expect(chef_run).to create_cookbook_file('/var/www/html/magento/check-magento-installed.php')
+          expect(chef_run).to create_template('/var/www/html/magento/check-magento-installed.php')
           expect(chef_run).to create_template("#{Chef::Config[:file_cache_path]}/magentostack.sh")
           expect(chef_run).to run_execute("#{Chef::Config[:file_cache_path]}/magentostack.sh")
           expect(chef_run).to run_execute('wait_for_admin_to_start_config')
