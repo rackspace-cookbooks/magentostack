@@ -1,5 +1,8 @@
 magentostack CHANGELOG
 ==================
+2.0.0
+-----
+- Release new version, after moving repository and removing dependency pinning.
 
 1.1.2
 -----
