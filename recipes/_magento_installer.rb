@@ -21,6 +21,10 @@
 # Run install.php script for initial magento setup
 # We must be sure we know all important configuration to pass to magento at this point
 
+if node.run_state['magentostack_installer_database_host'].to_s == 'false'
+  fail 'Could not find a database host for Magento'
+end
+
 # temporary location for script that runs install.php
 setup_script = "#{Chef::Config[:file_cache_path]}/magentostack.sh"
 
