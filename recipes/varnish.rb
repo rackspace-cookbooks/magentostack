@@ -28,7 +28,7 @@ varnish_install 'varnish' do
 end
 
 file '/etc/varnish/secret' do
-  content node['magentostack']['varnish']['secret']
+  content node['magentostack']['varnish']['secret'].to_s # in case it's false
   mode 0600
   only_if { node['magentostack']['varnish']['secret'] }
 end
