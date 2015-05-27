@@ -30,6 +30,8 @@ def node_resources(node)
   node.set['disk']['device'] = '/dev/xvde'
   node.set['disk']['fs'] = 'ext4'
   node.set['magentostack']['config']['encryption_key'] = 'secret-crypt-key'
+  # _magento_installer relies on database host being not false
+  node.set['magentostack']['config']['db']['host'] = '10.0.0.3'
 end
 
 # rubocop:disable Metrics/AbcSize
