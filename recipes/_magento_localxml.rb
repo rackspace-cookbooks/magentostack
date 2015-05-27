@@ -32,8 +32,8 @@ localxml_path = "#{node['magentostack']['web']['dir']}/app/etc/local.xml"
 remote_file 'copy local.xml.template to local.xml' do
   path localxml_path
   source "file://#{node['magentostack']['web']['dir']}/app/etc/local.xml.template"
-  owner node['apache']['user']
-  group node['apache']['group']
+  owner node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   mode 0777
   action :create_if_missing
 end

@@ -1,4 +1,4 @@
-shared_examples_for 'php55 under apache' do |args|
+shared_examples_for 'php55 under php-fpm' do |args|
   describe command('wget -qO- localhost:8080/phpinfo.php') do
     index_php_path = "#{docroot}/phpinfo.php"
     before do
@@ -7,10 +7,10 @@ shared_examples_for 'php55 under apache' do |args|
     its(:stdout) { should match(/PHP Version 5.5/) }
   end
 
-  it_behaves_like 'php under apache'
+  it_behaves_like 'php under php-fpm'
 end
 
-shared_examples_for 'php54 under apache' do |args|
+shared_examples_for 'php54 under php-fpm' do |args|
   describe command('wget -qO- localhost:8080/phpinfo.php') do
     index_php_path = "#{docroot}/phpinfo.php"
     before do
@@ -19,10 +19,10 @@ shared_examples_for 'php54 under apache' do |args|
     its(:stdout) { should match(/PHP Version 5.4/) }
   end
 
-  it_behaves_like 'php under apache'
+  it_behaves_like 'php under php-fpm'
 end
 
-shared_examples_for 'php under apache' do |args|
+shared_examples_for 'php under php-fpm' do |args|
   describe service(fpm_service_name) do
     it { should be_enabled }
     it { should be_running }

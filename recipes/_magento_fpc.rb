@@ -21,13 +21,13 @@
 # enable full page cache for testing
 template "#{node['magentostack']['web']['dir']}/enable-magento-fpc.php" do
   source 'magento/enable-magento-fpc.php.erb'
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   mode '0700'
 end
 
 execute 'php enable-magento-fpc.php' do
   cwd node['magentostack']['web']['dir']
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
 end

@@ -17,3 +17,7 @@ cookbook 'newrelic', '<= 2.10'
 
 # pin git until https://github.com/chef-cookbooks/mysql/issues/328 truly resolved
 cookbook 'git', '= 4.1.0'
+
+# pin back to earlier working poise
+cookbook 'poise', '< 2.0.0'
+cookbook 'xmledit', '<= 1.2.1'

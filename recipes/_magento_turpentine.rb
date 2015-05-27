@@ -21,8 +21,8 @@
 # enable turpentine plugin's varnish page cache for testing
 template "#{node['magentostack']['web']['dir']}/enable-magento-turpentine.php" do
   source 'magento/enable-magento-turpentine.php.erb'
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   mode '0700'
   variables(auth_key: node['magentostack']['varnish']['secret'])
 end
@@ -30,7 +30,7 @@ end
 # we don't run this. but we put it there for the serverspec script to run it
 execute 'php enable-magento-turpentine.php' do
   cwd node['magentostack']['web']['dir']
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   action :nothing
 end

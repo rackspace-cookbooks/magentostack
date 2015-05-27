@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: magentostack
-# Recipe:: apache-fpm
+# Recipe:: nginx-fpm
 #
 # Copyright 2014, Rackspace Hosting
 #
@@ -20,41 +20,19 @@
 
 include_recipe 'chef-sugar'
 
-node.set['magentostack']['web']['user'] = node['apache']['user']
-node.set['magentostack']['web']['group'] = node['apache']['group']
+node.set['magentostack']['web']['user'] = node['nginx']['user']
+node.set['magentostack']['web']['group'] = node['nginx']['group']
+node.set['php-fpm']['user'] = node['nginx']['user']
+node.set['php-fpm']['group'] = node['nginx']['group']
 
-# see recipes/mod_ssl.rb in apache2 for why this is coded this way
-ports = [node['magentostack']['web']['http_port']]
-if node['magentostack']['web']['ssl']
-  ports << node['magentostack']['web']['https_port']
-end
-
-ports.each do |p|
-  unless node['apache']['listen_ports'].include?(p)
-    node.set['apache']['listen_ports'] =  node['apache']['listen_ports'] + [p]
-  end
-end
-
-# Modules dependencies (Magento/Php-fpm)
-apache_modules = %w(
-  status actions alias auth_basic
-  authn_file authz_default
-  authz_groupfile authz_host
-  authz_user autoindex dir env mime
-  negotiation setenvif headers
-  expires
-)
-if node['magentostack']['web']['ssl']
-  apache_modules << 'ssl'
-end
+# no default vhost
+node.set['nginx']['default_site_enabled'] = false
 
 # repo dependencies for php-fpm
 if platform_family?('rhel')
   include_recipe 'yum'
   include_recipe 'yum-epel'
   include_recipe 'yum-ius'
-  # manually installed modules for rhel only
-  apache_modules.concat %w( log_config logio)
 elsif platform_family?('debian')
   include_recipe 'apt'
   if ubuntu_precise?
@@ -76,8 +54,6 @@ elsif platform_family?('debian')
   end
 end
 
-node.default['apache']['default_modules'] = apache_modules
-
 # install php libraries requirements
 php_version = node['magentostack']['php']['version']
 node['magentostack'][php_version]['packages'].each do |phplib|
@@ -95,18 +71,10 @@ execute 'enable mcrypt module' do
 end
 
 %w(
-  apache2
-  apache2::mod_fastcgi
+  nginx
   php-fpm
 ).each do |recipe|
   include_recipe recipe
-end
-
-# why this happens for default.conf and not ssl.conf is beyond me
-link "#{node['apache']['dir']}/sites-enabled/ssl.conf" do
-  action :delete
-  not_if { node['apache']['default_site_enabled'] }
-  notifies :restart, 'service[apache2]', :delayed
 end
 
 # create self signed certificate (enable by default)
@@ -139,15 +107,38 @@ if node['magentostack']['web']['ssl_custom']
 
 end
 
-# Fast-cgi configuration
-apache_conf 'fastcgi' do
-  enable true
-end
-
 # Create documentroot
 directory node['magentostack']['web']['dir'] do
   action :create
   not_if { File.exist?(node['magentostack']['web']['dir']) }
+end
+
+# disable/delete the default vhost (why does nginx leave this?)
+file '/etc/nginx/conf.d/default.conf' do
+  action :delete
+  notifies :reload, 'service[nginx]'
+  only_if { rhel? }
+end
+nginx_site '000-default' do
+  enable false
+  notifies :reload, 'service[nginx]'
+end
+
+file '/etc/nginx/conf.d/map_https_fastcgi.conf' do
+  action :create
+  notifies :reload, 'service[nginx]'
+  content <<-eos
+map $scheme $https {
+  default off;
+  https on;
+}
+
+map $http_x_forwarded_proto $https {
+  default off;
+  https on;
+}
+  eos
+
 end
 
 # Create vhost
@@ -156,26 +147,35 @@ if node['magentostack']['web']['ssl']
   vhosts << 'magento_ssl_vhost'
 end
 vhosts.each do |site|
-  web_app site do
-    template node['magentostack']['apache']['template']
-    cookbook node['magentostack']['web']['cookbook']
-    http_port node['magentostack']['web']['http_port']
-    docroot node['magentostack']['web']['dir']
-    server_name node['magentostack']['web']['domain']
-    server_aliases node['magentostack']['web']['server_aliases']
-    if node['magentostack']['web']['ssl']
-      ssl true if site == 'magento_ssl_vhost'
-      https_port node['magentostack']['web']['https_port']
-      ssl_cert node['magentostack']['web']['ssl_cert']
-      ssl_key node['magentostack']['web']['ssl_key']
-      lazy { ssl_chain node['magentostack']['web']['ssl_chain'] if ::File.exist?(node['magentostack']['web']['ssl_chain']) }
+
+  variables = {
+    http_port: node['magentostack']['web']['http_port'],
+    docroot: node['magentostack']['web']['dir'],
+    server_name: node['magentostack']['web']['domain'],
+    server_aliases: node['magentostack']['web']['server_aliases']
+  }
+
+  if node['magentostack']['web']['ssl']
+    variables[:ssl] = true if site == 'magento_ssl_vhost'
+    variables[:https_port] = node['magentostack']['web']['https_port']
+    variables[:ssl_cert] = node['magentostack']['web']['ssl_cert']
+    variables[:ssl_key] = node['magentostack']['web']['ssl_key']
+    if node['magentostack']['web']['ssl_chain'] && ::File.exist?(node['magentostack']['web']['ssl_chain'])
+      variables[:ssl_chain] = node['magentostack']['web']['ssl_chain']
     end
-    notifies :restart, 'service[apache2]', :delayed
+  end
+
+  nginx_site site do
+    template node['magentostack']['nginx']['template']
+    cookbook node['magentostack']['web']['cookbook']
+    variables(variables)
+    enable true
+    notifies :restart, 'service[nginx]', :delayed
     notifies :restart, 'service[php-fpm]', :delayed
   end
 end
 
-# Open ports for Apache
+# Open ports for Nginx
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['http_port']} -j ACCEPT", 100, 'Allow access to apache')
 if node['magentostack']['web']['ssl']
   add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['web']['https_port']} -j ACCEPT", 100, 'Allow access to apache')

@@ -28,7 +28,7 @@ cron 'magento_cron' do
   action :create
   path '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin'
   minute '*/5'
-  user node['apache']['user']
+  user node['magentostack']['web']['user']
   command "#{node['apache']['docroot_dir']}/magento/cron.sh"
 end
 

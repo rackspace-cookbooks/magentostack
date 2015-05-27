@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'community magento under apache with single redis' do
-  it_behaves_like 'magento under apache'
+describe 'community magento under nginx with single redis' do
+  it_behaves_like 'magento under nginx'
 end
 
 describe 'community magento under mysql with single redis' do

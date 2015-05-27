@@ -3,13 +3,10 @@ require 'serverspec'
 require 'net/http'
 require 'openssl'
 
-require_relative 'default_examples'
-require_relative 'cache_examples'
-require_relative 'apache_examples'
-require_relative 'php_examples'
-require_relative 'mysql_examples'
-require_relative 'magento_admin_examples'
-require_relative 'varnish_examples'
+base_path = File.dirname(__FILE__)
+Dir["#{base_path}/*_examples.rb"].each do |ex|
+  require_relative ex
+end
 
 set :backend, :exec
 set :path, '/sbin:/usr/local/sbin:/bin:/usr/bin:$PATH'
