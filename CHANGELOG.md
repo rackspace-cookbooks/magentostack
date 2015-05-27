@@ -1,5 +1,11 @@
 magentostack CHANGELOG
 ==================
+
+2.0.1
+-----
+- We should not pass `false` to the file resource, while configuring the Varnish secret.
+  This prevents that while still guarding against a missing value.
+
 2.0.0
 -----
 - Release new version, after moving repository and removing dependency pinning.
