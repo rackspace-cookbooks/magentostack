@@ -49,8 +49,8 @@ when 'cloudfiles'
   ark 'magento' do
     url "file://#{Chef::Config[:file_cache_path]}/#{download_file}"
     path node['apache']['docroot_dir']
-    owner node['apache']['user']
-    group node['apache']['group']
+    owner node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
     checksum node['magentostack']['checksum']
     action :put
   end
@@ -58,8 +58,8 @@ when 'ark'
   ark 'magento' do
     url node['magentostack']['download_url']
     path node['apache']['docroot_dir']
-    owner node['apache']['user']
-    group node['apache']['group']
+    owner node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
     checksum node['magentostack']['checksum']
     action :put
   end
@@ -75,8 +75,8 @@ when 'git'
 
   # Write the actual keyfile
   file id_deploy do
-    owner node['apache']['user']
-    group node['apache']['group']
+    owner node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
     mode '0600'
     content deploy_key
   end
@@ -86,22 +86,22 @@ when 'git'
   ruby_block 'evaluate apache homedir' do
     block do
       apache_ssh_dir = run_context.resource_collection.find(directory: 'apache .ssh')
-      apache_ssh_dir.path File.expand_path("~#{node['apache']['user']}")
+      apache_ssh_dir.path File.expand_path("~#{node['magentostack']['web']['user']}")
     end
   end
 
   # /var/www is owned by root, even though it's the home directory for the apache user
   directory 'apache .ssh' do
-    owner node['apache']['user']
-    group node['apache']['group']
+    owner node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
     mode '0700'
   end
 
   # Write an SSH wrapper for git checkouts
   git_ssh_wrapper = "#{Chef::Config[:file_cache_path]}/git_ssh_wrapper.sh"
   template git_ssh_wrapper do
-    user node['apache']['user']
-    group node['apache']['group']
+    user node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
     mode '0700'
     variables(keyfile: id_deploy)
   end
@@ -109,16 +109,16 @@ when 'git'
   # Run the checkout into /var/www/html/magento
   magento_dir = "#{node['apache']['docroot_dir']}/magento"
   directory magento_dir do
-    user node['apache']['user']
-    group node['apache']['group']
+    user node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
   end
   git magento_dir do
     repository node['magentostack']['git_repository']
     revision node['magentostack']['git_revision']
     ssh_wrapper git_ssh_wrapper
     action :sync
-    user node['apache']['user']
-    group node['apache']['group']
+    user node['magentostack']['web']['user']
+    group node['magentostack']['web']['group']
   end
 when 'none'
   Chef::Log.info('Magento install method none was requested, not installing magento')

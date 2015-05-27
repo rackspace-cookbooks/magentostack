@@ -2,5 +2,5 @@
 require 'spec_helper'
 
 describe 'Magento admin recipe' do
-  it_behaves_like 'magento admin'
+  it_behaves_like 'magento admin under apache'
 end

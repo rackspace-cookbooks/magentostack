@@ -28,7 +28,7 @@ varnish_install 'varnish' do
 end
 
 file '/etc/varnish/secret' do
-  content node['magentostack']['varnish']['secret']
+  content node['magentostack']['varnish']['secret'].to_s
   mode 0600
   only_if { node['magentostack']['varnish']['secret'] }
 end
@@ -54,7 +54,7 @@ varnish_default_config 'varnish-config-magento' do
   action :configure
 end
 
-# Apache on :80, but LBs point at Varnish on :8080
+# Webserver on :80, but LBs point at Varnish on :8080
 varnish_default_vcl 'varnish-vcl' do
   backend_port node['magentostack']['web']['http_port'].to_i
   action :configure

@@ -9,5 +9,5 @@ describe 'enterprise magento under mysql with single redis' do
 end
 
 describe 'community magento with php55' do
-  it_behaves_like 'php55 under apache'
+  it_behaves_like 'php55 under php-fpm'
 end

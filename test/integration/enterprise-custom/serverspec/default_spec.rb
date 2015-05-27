@@ -10,5 +10,5 @@ describe description do
 end
 
 describe description do
-  it_behaves_like 'php54 under apache'
+  it_behaves_like 'php54 under php-fpm'
 end

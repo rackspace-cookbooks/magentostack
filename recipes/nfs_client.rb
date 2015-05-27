@@ -26,8 +26,8 @@ return unless nfs_server_node && export_name && export_root
 mount_point_path = node['magentostack']['nfs_client']['mount_point']
 
 directory mount_point_path do
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
 end
 
 target_media_dir = "#{node['magentostack']['web']['dir']}/media"
@@ -52,18 +52,18 @@ end
 
 directory target_media_dir do
   recursive true
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   action :nothing # see ruby block above
 end
 
 directory "#{mount_point_path}/media" do
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
 end
 
 link target_media_dir do
   to "#{mount_point_path}/media"
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  node['magentostack']['web']['group']
 end

@@ -26,8 +26,8 @@ setup_script = "#{Chef::Config[:file_cache_path]}/magentostack.sh"
 
 template setup_script do
   source 'magentostack.sh.erb'
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   mode '0700'
   variables(
     locale: node['magentostack']['config']['locale'],
@@ -46,8 +46,8 @@ end
 
 template "#{node['magentostack']['web']['dir']}/check-magento-installed.php" do
   source 'magento/check-magento-installed.php.erb'
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   mode '0700'
 end
 
@@ -60,7 +60,7 @@ end
 
 execute setup_script do
   cwd node['magentostack']['web']['dir']
-  user node['apache']['user']
-  group node['apache']['group']
+  user node['magentostack']['web']['user']
+  group node['magentostack']['web']['group']
   not_if { File.exist?(node.run_state['magentostack_installer_magento_configured_file']) }
 end

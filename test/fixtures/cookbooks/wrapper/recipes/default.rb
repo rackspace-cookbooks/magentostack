@@ -7,19 +7,29 @@
 
 # This wrapper's default recipe is intended to build a single node magento installation.
 # Add more recipes in the wrapper for other topologies/configurations of magentostack.
-
 def enterprise?
   node['magentostack'] && node['magentostack']['flavor'] == 'enterprise'
 end
 
+include_recipe 'chef-sugar'
 # we still install redis for sessions and objects, even in CE
-%w(
+recipes_to_run = []
+
+recipes_to_run << %w(
   wrapper::_redis_password_single
   magentostack::redis_single
   magentostack::redis_single_slave
   magentostack::redis_sentinel
   magentostack::redis_configure
-  magentostack::apache-fpm
+)
+
+if node.deep_fetch('magentostack_wrapper', 'webserver') == 'nginx'
+  recipes_to_run << 'magentostack::nginx-fpm'
+else
+  recipes_to_run << 'magentostack::apache-fpm'
+end
+
+recipes_to_run << %w(
   magentostack::magento_install
   magentostack::nfs_server
   magentostack::nfs_client
@@ -29,14 +39,18 @@ end
   magentostack::magento_configure
   magentostack::magento_admin
   magentostack::mysql_holland
-).each do |recipe|
-  include_recipe recipe
-end
+)
 
 # if enterprise edition, also enable the FPC for testing
 if enterprise?
-  include_recipe 'magentostack::_magento_fpc'
+  recipes_to_run << 'magentostack::_magento_fpc'
 else
-  include_recipe 'magentostack::varnish'
-  include_recipe 'magentostack::_magento_turpentine'
+  recipes_to_run << %w(
+    magentostack::varnish
+    magentostack::_magento_turpentine
+  )
+end
+
+recipes_to_run.flatten.each do |recipe|
+  include_recipe recipe
 end

@@ -54,6 +54,16 @@ suites:
     run_list:
       - recipe[wrapper::default]
 
+  - name: community-nginx
+    provisioner:
+        client_rb:
+          environment: default_single
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      magentostack_wrapper:
+        webserver: 'nginx'
+
 <% if ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
   - name: enterprise
     run_list:
