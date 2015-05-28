@@ -14,6 +14,8 @@ module MagentostackUtil
   end
 
   def self.construct_url(domain, port, prefix)
+    fail "MagentostackUtil#construct_url was passed a falsey domain (#{domain}) and port (#{port}) and prefix (#{prefix})" unless domain || port || prefix
+
     if domain && port && prefix == 'http' && port == 80
       "#{prefix}://#{domain}/"
     elsif domain && port && prefix == 'https' && port == 443
@@ -22,18 +24,16 @@ module MagentostackUtil
       "#{prefix}://#{domain}:#{port}/"
     elsif domain
       "#{prefix}://#{domain}/"
-    else
-      false
     end
   end
 
   def self.construct_mysql_url(domain, port)
     if domain && port
       "#{domain}:#{port}"
-    elsif domain
+    elsif domain && !port
       "#{domain}:3306"
     else
-      false
+      fail "MagentostackUtil#construct_mysql_url was passed a falsey domain (#{domain}) and possibly falsey port (#{port})"
     end
   end
 
