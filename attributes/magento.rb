@@ -40,6 +40,7 @@ default['magentostack']['download_file'] = 'magento.tar.gz'
 default['magentostack']['git_repository'] = 'git@github.com:example/deployment.git'
 default['magentostack']['git_revision'] = 'master' # e.g. staging, testing, dev
 default['magentostack']['git_deploykey'] = nil
+default['magentostack']['git_submodules'] = false
 
 # Database creation by the mysql cookbook
 normal['magentostack']['mysql']['databases']['magento_database']['mysql_user'] = 'magento_user'

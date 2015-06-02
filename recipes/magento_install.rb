@@ -117,6 +117,7 @@ when 'git'
     revision node['magentostack']['git_revision']
     ssh_wrapper git_ssh_wrapper
     action :sync
+    enable_submodules true if node['magentostack']['git_submodules']
     user node['apache']['user']
     group node['apache']['group']
   end
