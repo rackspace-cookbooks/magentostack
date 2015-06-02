@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+2.0.2
+-----
+- Feature: Add option to enable git submodules when using git as the `install_method`.
+
 2.0.1
 -----
 - We should not pass `false` to the file resource, while configuring the Varnish secret.
