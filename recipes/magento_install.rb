@@ -108,10 +108,6 @@ when 'git'
 
   # Run the checkout into /var/www/html/magento
   magento_dir = "#{node['apache']['docroot_dir']}/magento"
-  directory magento_dir do
-    user node['apache']['user']
-    group node['apache']['group']
-  end
   git magento_dir do
     repository node['magentostack']['git_repository']
     revision node['magentostack']['git_revision']
