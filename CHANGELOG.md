@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+2.0.3
+-----
+- Do not pre-create magento dir if a git checkout is intended.
+
 2.0.2
 -----
 - Feature: Add option to enable git submodules when using git as the `install_method`.
