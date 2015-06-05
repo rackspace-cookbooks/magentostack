@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+2.0.4
+-----
+- Grab the crypt key from run_state as well as node attributes.
+
 2.0.3
 -----
 - Do not pre-create magento dir if a git checkout is intended.

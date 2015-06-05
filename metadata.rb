@@ -5,7 +5,7 @@ maintainer_email 'rackspace-cookbooks@rackspace.com'
 license 'Apache 2.0'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 description 'Provides a full Magento stack'
-version '2.0.3'
+version '2.0.4'
 
 depends 'stack_commons', '>= 0.0.50'
 depends 'platformstack', '>= 3.1.4'
