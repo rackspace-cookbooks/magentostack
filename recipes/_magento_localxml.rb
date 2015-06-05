@@ -60,7 +60,7 @@ xml_edit 'add crypt key to local.xml' do
   path localxml_path
   target '/config/global/crypt/key'
   parent '/config/global/crypt'
-  fragment "<key>#{MagentostackUtil.xml_escape_cdata(node['magentostack']['config']['encryption_key'])}</key>"
+  fragment "<key>#{MagentostackUtil.xml_escape_cdata(MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'encryption_key'))}</key>"
   action :replace
   only_if { node['magentostack']['config']['encryption_key'] }
 end
