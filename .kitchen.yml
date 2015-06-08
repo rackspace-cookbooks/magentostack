@@ -115,3 +115,16 @@ suites:
         download_file: 'magento-ee-1.14.0.1.tar.gz'
         checksum: '1e3657778ecac9f1d0470326afdaddad36a88e2fa58b650749eb35d446e71868'
 <% end %>
+<% if ENV['RACKSPACE_MAGENTOSTACK_SVNTOKEN'] %>
+  - name: enterprise-svn
+    run_list:
+      - recipe[wrapper::default]
+    attributes:
+      magentostack:
+        flavor: 'enterprise'
+        install_method: 'svn'
+        svn_username: 'devopsbot'
+        svn_password: <%= ENV['RACKSPACE_MAGENTOSTACK_SVNTOKEN'] %>
+        svn_repository: 'https://github.com/rackerlabs/enterprise-magento-chef-demo/trunk'
+        svn_revision: HEAD
+<% end %>

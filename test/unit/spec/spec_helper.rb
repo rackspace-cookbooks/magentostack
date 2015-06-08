@@ -34,7 +34,6 @@ def node_resources(node)
   node.set['magentostack']['config']['db']['host'] = '10.0.0.3'
 end
 
-# rubocop:disable Metrics/AbcSize
 def stub_resources
   stub_command('/usr/sbin/httpd -t').and_return(0)
   stub_command('/usr/sbin/apache2 -t').and_return(0)
@@ -53,7 +52,6 @@ def stub_resources
   allow(shellout).to receive(:error!).and_return(true)
   allow(shellout).to receive(:error?).and_return(true)
 end
-# rubocop:enable Metrics/AbcSize
 
 def stub_nodes(platform, version, server)
   Dir['./test/integration/nodes/*.json'].sort.each do |f|

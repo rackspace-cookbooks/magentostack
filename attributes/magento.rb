@@ -19,7 +19,7 @@
 #
 
 # Where to get Magento, can be http link or git path
-default['magentostack']['install_method'] = 'ark' # can be ark, git, cloudfiles, or none
+default['magentostack']['install_method'] = 'ark' # can be ark, git, svn, cloudfiles, or none
 
 # How to configure magento initially
 default['magentostack']['configure_method'] = 'installer' # can be installer, template, or none

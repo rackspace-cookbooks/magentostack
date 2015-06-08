@@ -48,7 +48,7 @@ CyclomaticComplexity:
 Metrics/ModuleLength:
   Max: 250
 
-Performance/ParallelAssignment:
+Style/ParallelAssignment:
   Enabled: false
 
 AllCops:

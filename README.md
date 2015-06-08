@@ -25,6 +25,8 @@ Enterprise Edition >= 1.14.1
 - `apache2`
 - `apt`
 - `ark`
+- `git`
+- `svn`
 - `build-essential`
 - `certificate`
 - `chef-sugar`
