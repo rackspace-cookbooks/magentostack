@@ -4,6 +4,7 @@ magentostack CHANGELOG
 2.0.4
 -----
 - Grab the crypt key from run_state as well as node attributes.
+- Add support for SVN deploy method
 
 2.0.3
 -----
