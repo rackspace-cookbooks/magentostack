@@ -2,7 +2,7 @@
 #  Be wary of the node variable here. Prefer to pass node in and out of your
 #  methods to allow wrappers to override node values and have them take effect
 #  within this library.
-# rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+# rubocop:disable Metrics/PerceivedComplexity
 module MagentostackUtil
   def self.xml_escape_cdata(v)
     # CDATA for strings
@@ -343,4 +343,4 @@ module MagentostackUtil
     end
   end
 end
-# rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
+# rubocop:enable Metrics/PerceivedComplexity

@@ -117,10 +117,41 @@ when 'git'
     user node['apache']['user']
     group node['apache']['group']
   end
+when 'svn'
+  include_recipe 'subversion'
+
+  # need to determine apache's homedir, but we need to do it at convergence, not compile
+  # since the user may not exist yet when the chef run is in the compile phase
+  ruby_block 'evaluate apache homedir' do
+    block do
+      apache_ssh_dir = run_context.resource_collection.find(directory: 'apache .ssh')
+      apache_ssh_dir.path File.expand_path("~#{node['apache']['user']}")
+    end
+  end
+
+  # /var/www is owned by root, even though it's the home directory for the apache user
+  directory 'apache .ssh' do
+    owner node['apache']['user']
+    group node['apache']['group']
+    mode '0700'
+  end
+
+  # Run the checkout into /var/www/html/magento
+  magento_dir = "#{node['apache']['docroot_dir']}/magento"
+  subversion magento_dir do
+    repository MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_repository')
+    revision MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_revision')
+    svn_username MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_username')
+    svn_password MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_password')
+    svn_arguments MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_arguments')
+    action :sync
+    user node['apache']['user']
+    group node['apache']['group']
+  end
 when 'none'
   Chef::Log.info('Magento install method none was requested, not installing magento')
 else
-  fail "You have specified to install magento with method #{install_method}, which is not valid."
+  fail "You have specified to install magento with method '#{install_method}', which is not valid. Try 'none'."
 end
 
 # required for stack_commons::mysql_base to find the app nodes
