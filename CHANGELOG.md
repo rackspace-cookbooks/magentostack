@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+2.0.6
+-----
+- Support passing 'timeout' to the subversion resource for deployment type 'svn'
+
 2.0.5
 -----
 - Support passing svn_info to the subversion resource for deployment type 'svn'
