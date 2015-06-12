@@ -144,6 +144,7 @@ when 'svn'
     svn_username MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_username')
     svn_password MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_password')
     svn_arguments MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_arguments')
+    svn_info_args MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'svn_info_args')
     action :sync
     user node['apache']['user']
     group node['apache']['group']
