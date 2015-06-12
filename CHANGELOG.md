@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+2.0.5
+-----
+- Support passing svn_info to the subversion resource for deployment type 'svn'
+
 2.0.4
 -----
 - Grab the crypt key from run_state as well as node attributes.
