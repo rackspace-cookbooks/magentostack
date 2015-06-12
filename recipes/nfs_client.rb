@@ -57,13 +57,13 @@ directory target_media_dir do
   action :nothing # see ruby block above
 end
 
-directory "#{mount_point_path}/media" do
+directory mount_point_path do
   user node['apache']['user']
   group node['apache']['group']
 end
 
 link target_media_dir do
-  to "#{mount_point_path}/media"
+  to mount_point_path
   user node['apache']['user']
   group node['apache']['group']
 end
