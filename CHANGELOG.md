@@ -1,6 +1,11 @@
 magentostack CHANGELOG
 ==================
 
+2.0.7
+-----
+- Use existing node.run_state values if they are already set. We should clean this up in general, more, but this is a quick fix for a specific issue I ran into.
+- Allow git branch to be specified when deploying via Git.
+
 2.0.6
 -----
 - Support passing 'timeout' to the subversion resource for deployment type 'svn'
