@@ -109,8 +109,9 @@ when 'git'
   # Run the checkout into /var/www/html/magento
   magento_dir = "#{node['apache']['docroot_dir']}/magento"
   git magento_dir do
-    repository node['magentostack']['git_repository']
-    revision node['magentostack']['git_revision']
+    repository node['magentostack']['git_repository'] if node['magentostack']['git_repository']
+    revision node['magentostack']['git_revision'] if node['magentostack']['git_revision']
+    checkout_branch node['magentostack']['git_branch'] if node['magentostack']['git_branch']
     ssh_wrapper git_ssh_wrapper
     action :sync
     enable_submodules true if node['magentostack']['git_submodules']

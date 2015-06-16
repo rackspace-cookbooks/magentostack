@@ -43,16 +43,24 @@ node.default['magentostack']['config']['secure_base_url'] =
 # Configure all the database things
 include_recipe 'magentostack::_find_mysql' # let us search for a database
 
-dbname = node['magentostack']['mysql']['databases'].keys[0]
+if node.run_state['magentostack_installer_database_name']
+  dbname = node.run_state['magentostack_installer_database_name']
+else
+  dbname = node['magentostack']['mysql']['databases'].keys[0]
+end
 node.run_state['magentostack_installer_database_name'] = dbname # for installer
 node.default['magentostack']['config']['db']['dbname'] = dbname # for local.xml
 
-# port is included here.
-node.run_state['magentostack_installer_database_host'] = node['magentostack']['config']['db']['host']
-
-database_name = node.run_state['magentostack_installer_database_name']
-node.run_state['magentostack_installer_database_user'] = node['magentostack']['mysql']['databases'][database_name]['mysql_user']
-node.run_state['magentostack_installer_database_pass'] = node['magentostack']['mysql']['databases'][database_name]['mysql_password']
+# port is included here. thanks rubocop for complaining about the lines below being too long.
+unless node.run_state['magentostack_installer_database_host']
+  node.run_state['magentostack_installer_database_host'] = node['magentostack']['config']['db']['host']
+end
+unless node.run_state['magentostack_installer_database_user']
+  node.run_state['magentostack_installer_database_user'] = node['magentostack']['mysql']['databases'][dbname]['mysql_user']
+end
+unless node.run_state['magentostack_installer_database_pass']
+  node.run_state['magentostack_installer_database_pass'] = node['magentostack']['mysql']['databases'][dbname]['mysql_password']
+end
 
 # unless we override through chef attributes or node.run_state, default to the username and password used for the installer
 node.default['magentostack']['config']['db']['username'] = node.run_state['magentostack_installer_database_user']
