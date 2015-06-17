@@ -69,3 +69,5 @@ modman 'https://github.com/nexcess/magento-turpentine.git' do
   path node['apache']['docroot_dir']
   not_if { ::File.exist?("#{node['apache']['docroot_dir']}/.modman/magento-turpentine") }
 end
+
+add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['magentostack']['varnish']['listen_port']} -j ACCEPT", 100, 'Allow access to varnish')
