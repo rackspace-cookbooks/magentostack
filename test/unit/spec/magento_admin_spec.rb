@@ -21,11 +21,11 @@ describe 'magentostack::magento_admin' do
         it 'creates redis clean magento cronjob' do
           expect(chef_run).to install_yum_package('git')
           expect(chef_run).to checkout_git('/root/cm_redis_tools')
-          expect(chef_run).to create_cron('redis_tag_cleanup').with(action: [:create])
+          expect(chef_run).to create_cron('redis_tag_cleanup').with(action: :create)
         end
         it 'creates normal magento cronjob and set permissions on cron.sh' do
           expect(chef_run).to touch_file('/var/www/html/magento/cron.sh').with(mode: '755')
-          expect(chef_run).to create_cron('magento_cron').with(minute: '*/5', user: 'apache', command: '/var/www/html/magento/cron.sh', action: [:create])
+          expect(chef_run).to create_cron('magento_cron').with(minute: '*/5', user: 'apache', command: '/var/www/html/magento/cron.sh', action: :create)
         end
       end
     end
