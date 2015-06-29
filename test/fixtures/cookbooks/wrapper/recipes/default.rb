@@ -29,6 +29,7 @@ end
   magentostack::magento_configure
   magentostack::magento_admin
   magentostack::mysql_holland
+  magentostack::users
 ).each do |recipe|
   include_recipe recipe
 end

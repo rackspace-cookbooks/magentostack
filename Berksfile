@@ -17,3 +17,6 @@ cookbook 'newrelic', '<= 2.10'
 
 # pin git until https://github.com/chef-cookbooks/mysql/issues/328 truly resolved
 cookbook 'git', '= 4.1.0'
+
+# waiting for a release on nfs cookbook
+cookbook 'nfs', '= 2.2.0', git: 'git@github.com:atomic-penguin/cookbook-nfs.git'

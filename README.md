@@ -360,6 +360,29 @@ Magento NFS Server
 }
 ```
 
+## Users
+
+To add users to the servers, you will need to set an attribute and add the user information to an encrypted or normal data bag.
+
+`node['magentostack']['users'] = true`
+
+Example user entry in data bag:
+
+```json
+{
+    "jsmith": {
+        "username": "jsmith",
+        "shell": "/bin/bash",
+        "sudo": true,
+        "ssh_keys": "ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA john.smith",
+        "groups": ["apache", "wheel"]
+    }
+}
+```
+
+The supported options are: `comment uid home shell password system_user manage_home create_group ssh_keys ssh_keygen non_unique action username groups`
+
+
 ## New Relic Monitoring
 To configure New Relic, make sure the `node['newrelic']['license']` attribute is set and include the `platformstack` cookbook in your run_list.  You can also run the `magentostack::newrelic` recipe for some more advanced monitors.
 

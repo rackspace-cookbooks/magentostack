@@ -12,7 +12,7 @@ require_relative 'magento_admin_examples'
 require_relative 'varnish_examples'
 
 set :backend, :exec
-set :path, '/sbin:/usr/local/sbin:/bin:/usr/bin:$PATH'
+set :path, '/usr/sbin:/sbin:/usr/local/sbin:/bin:/usr/bin:$PATH'
 
 def redhat_family_values
   res = {}
