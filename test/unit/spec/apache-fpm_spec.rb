@@ -81,7 +81,7 @@ describe 'magentostack::apache-fpm' do
             end
 
             expect(chef_run).to delete_link('/etc/httpd/sites-enabled/ssl.conf')
-            expect(chef_run).to_not openssl_x509('/etc/httpd/ssl/localhost.pem')
+            expect(chef_run).to openssl_x509('/etc/httpd/ssl/localhost.pem')
           end
         end
 

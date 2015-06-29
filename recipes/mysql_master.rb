@@ -18,6 +18,6 @@
 # limitations under the License.
 #
 
-include_recipe 'magentostack::_mysql_logging'
 include_recipe 'stack_commons::mysql_master'
+include_recipe 'magentostack::_mysql_logging'
 node.save unless Chef::Config[:solo] # make me searchable right away!
