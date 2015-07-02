@@ -1,3 +1,10 @@
+#
+# Cookbook Name:: magentostack
+# Recipe :: users
+#
+# Copyright 2015, Rackspace
+#
+
 return if node['magentostack']['users'] == false || node['magentostack']['users'] == 'false'
 
 begin
