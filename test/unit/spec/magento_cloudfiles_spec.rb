@@ -32,7 +32,7 @@ describe 'magentostack::magento enterprise with cloudfiles install' do
 
         it 'gets magento and extract it' do
           expect(chef_run).to create_rackspacecloud_file("#{Chef::Config[:file_cache_path]}/magento-ee-1.14.0.1.tar.gz")
-          expect(chef_run).to put_ark('magento').with(action: :put, url: "file://#{Chef::Config[:file_cache_path]}/magento-ee-1.14.0.1.tar.gz")
+          expect(chef_run).to put_ark('magento').with(action: [:put], url: "file://#{Chef::Config[:file_cache_path]}/magento-ee-1.14.0.1.tar.gz")
         end
       end
     end
