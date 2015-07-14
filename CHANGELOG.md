@@ -1,6 +1,13 @@
 magentostack CHANGELOG
 ==================
 
+2.1.0
+----
+- Feature: add users from databag
+- Feature: add cloud monitoring
+- Fix: Update path; mysqld is apparently now in /usr/sbin
+- Fix: add missing users dependency
+
 2.0.8
 ----
 - Open up the port for varnish.
