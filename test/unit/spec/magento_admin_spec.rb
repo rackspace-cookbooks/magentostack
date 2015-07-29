@@ -19,7 +19,7 @@ describe 'magentostack::magento_admin' do
           end.converge(described_recipe)
         end
         it 'creates redis clean magento cronjob' do
-          expect(chef_run).to install_yum_package('git')
+          expect(chef_run).to install_package('git')
           expect(chef_run).to checkout_git('/root/cm_redis_tools')
           expect(chef_run).to create_cron('redis_tag_cleanup').with(action: [:create])
         end
