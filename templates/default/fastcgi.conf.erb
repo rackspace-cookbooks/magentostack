@@ -1,5 +1,5 @@
 <IfModule mod_fastcgi.c>
-  AddHandler php5-fcgi <% node['magentostack']['web']['fastcgi']['add_handler_options'] %>
+  AddHandler php5-fcgi <%= node['magentostack']['web']['fastcgi']['add_handler_options'] %>
   Action php5-fcgi /php5-fcgi
   Alias /php5-fcgi /var/run/php5-fcgi
   FastCgiExternalServer /var/run/php5-fcgi -host 127.0.0.1:9000 -flush -idle-timeout 1800
