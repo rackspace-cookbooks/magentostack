@@ -58,4 +58,22 @@
     Require host 127.0.0.1
     <% end -%>
   </Location>
+
+  # hide .git and .git+ (gitignore, gitmodules, etc)
+  # do not allow .git version control files to be issued
+  <DirectoryMatch "^/.*/\.git+/">
+    Order deny,allow
+    Deny from all
+  </DirectoryMatch>
+  <Files ~ "^\.git">
+      Order allow,deny
+      Deny from all
+  </Files>
+
+  # also hide .svn directories
+  <DirectoryMatch \.svn>
+    Order allow,deny
+    Deny from all
+  </DirectoryMatch>
+
 </VirtualHost>

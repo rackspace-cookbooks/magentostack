@@ -38,6 +38,14 @@ shared_examples_for 'magento community edition' do
     its(:stdout) { should match(/Magento Demo Store/) }
   end
 
+  # ensure git dirs aren't exposed
+  describe command('wget -O- localhost:8080/.git/ 2>&1') do
+    its(:stdout) { should match(/Forbidden/) }
+    its(:stdout) { should match(/403/) }
+    its(:stdout) { should_not match(/Index of/) }
+    its(:exit_status) { should_not eq 0 }
+  end
+
   describe file('/mnt/magento_media') do
     it { should be_directory }
   end
