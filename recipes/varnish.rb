@@ -58,6 +58,7 @@ end
 varnish_default_vcl 'varnish-vcl' do
   backend_port node['magentostack']['web']['http_port'].to_i
   action :configure
+  only_if { node['magentostack']['varnish']['config'] }
 end
 
 varnish_log 'varnish-log' do
