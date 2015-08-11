@@ -28,7 +28,7 @@ end
 
 ports.each do |p|
   unless node['apache']['listen_ports'].include?(p)
-    node.set['apache']['listen_ports'] =  node['apache']['listen_ports'] + [p]
+    node.set['apache']['listen_ports'] = node['apache']['listen_ports'] + [p]
   end
 end
 

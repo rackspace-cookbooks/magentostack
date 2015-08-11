@@ -24,8 +24,8 @@ directory '/var/log/mysql' do
   action :create
 end
 logrotate_app 'mysql_slow_log' do
-  path      '/var/log/mysql/slow.log'
-  create   '644 mysql mysql'
+  path '/var/log/mysql/slow.log'
+  create '644 mysql mysql'
   options   ['notifempty', 'missingok', 'compress']
   frequency 'daily'
   rotate    5
