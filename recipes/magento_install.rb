@@ -97,13 +97,18 @@ when 'git'
     mode '0700'
   end
 
+  str_ssh_args = ''
+  node['magentostack']['git_ssh_args'].each do |a|
+    str_ssh_args << "-o \"#{a}\" "
+  end
+
   # Write an SSH wrapper for git checkouts
   git_ssh_wrapper = "#{Chef::Config[:file_cache_path]}/git_ssh_wrapper.sh"
   template git_ssh_wrapper do
     user node['apache']['user']
     group node['apache']['group']
     mode '0700'
-    variables(keyfile: id_deploy)
+    variables(keyfile: id_deploy, ssh_args: str_ssh_args)
   end
 
   # Run the checkout into /var/www/html/magento

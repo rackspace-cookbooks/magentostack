@@ -4,4 +4,4 @@
 #
 # Rendered by Chef - local changes will be replaced
 
-/usr/bin/env ssh -o "StrictHostKeyChecking=no" -i "<%= @keyfile %>" $1 $2
+/usr/bin/env ssh <%= @ssh_args %> -i "<%= @keyfile %>" $1 $2
