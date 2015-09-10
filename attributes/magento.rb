@@ -41,6 +41,7 @@ default['magentostack']['git_repository'] = 'git@github.com:example/deployment.g
 default['magentostack']['git_revision'] = 'master' # e.g. staging, testing, dev
 default['magentostack']['git_deploykey'] = nil
 default['magentostack']['git_submodules'] = false
+default['magentostack']['git_ssh_args'] = ['StrictHostKeyChecking=no']
 
 # Database creation by the mysql cookbook
 normal['magentostack']['mysql']['databases']['magento_database']['mysql_user'] = 'magento_user'

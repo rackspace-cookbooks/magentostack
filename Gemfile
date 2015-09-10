@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 group :lint do
   gem 'foodcritic', '>= 4.0'
   gem 'foodcritic-rackspace-rules', '>= 1.3.2'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.33.0', require: false
 end
 
 group :unit do
