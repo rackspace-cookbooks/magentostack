@@ -31,13 +31,8 @@ if override_allow
 elsif Chef::Config[:solo]
   Chef::Log.warn('You are using chef-solo, but have no overridden the nfs server search for clients')
 else
-  found_clients = partial_search(:node, "chef_environment:#{node.chef_environment}",
-                                 keys: {
-                                   'name' => ['name'],
-                                   'ip'   => ['ipaddress'],
-                                   'cloud' => ['provider', 'local_ipv4', 'public_ipv4']
-                                 }
-                                ).map { |n| best_ip_for(n) }
+  client_search_results = search(:node, "chef_environment:#{node.chef_environment}")
+  found_clients = client_search_results.map { |n| best_ip_for(n) }.compact
 end
 
 Chef::Log.warn('Did not find any clients to permit on NFS export of media') unless found_clients && !found_clients.empty?
