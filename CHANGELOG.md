@@ -1,6 +1,14 @@
 magentostack CHANGELOG
 ==================
 
+2.2.0
+-----
+- Allow additional SSH wrapper settings #227
+- Partial search didn't return enough #228
+- Fix style errors #225
+- Add attribute to modify fastcgi AddHandler directive #218
+- removing unused attributes #218
+
 2.1.1
 -----
 - Block .svn and .git directories in Apache vhost, #220
