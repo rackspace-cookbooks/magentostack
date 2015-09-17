@@ -34,17 +34,17 @@ template setup_script do
   group node['apache']['group']
   mode '0700'
   variables(
-    locale: node['magentostack']['config']['locale'],
-    timezone: node['magentostack']['config']['tz'],
-    default_currency: node['magentostack']['config']['default_currency'],
-    db_host: node.run_state['magentostack_installer_database_host'],
-    db_model: node['magentostack']['config']['db']['model'],
-    db_name: node.run_state['magentostack_installer_database_name'],
-    db_user: node.run_state['magentostack_installer_database_user'],
-    db_pass: node.run_state['magentostack_installer_database_pass'],
-    db_prefix: node['magentostack']['config']['db']['prefix'],
-    session_save: node['magentostack']['config']['session']['save'],
-    magento_configured_file: node.run_state['magentostack_installer_magento_configured_file']
+    locale: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'locale'),
+    timezone: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'tz'),
+    default_currency: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'default_currency'),
+    db_host: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database', 'host'),
+    db_model: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'db', 'model'),
+    db_name: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database', 'name'),
+    db_user: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database', 'user'),
+    db_pass: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database_pass'),
+    db_prefix: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'db', 'prefix'),
+    session_save: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'session', 'save'),
+    magento_configured_file: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'magento', 'configured_file')
   )
 end
 
