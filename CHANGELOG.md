@@ -1,6 +1,11 @@
 magentostack CHANGELOG
 ==================
 
+2.2.1
+-----
+- Add execution logic to varnish_cookbook.
+- Use helper method to read values for magento_installer
+
 2.2.0
 -----
 - Allow additional SSH wrapper settings #227
