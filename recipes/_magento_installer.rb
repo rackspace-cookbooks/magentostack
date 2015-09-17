@@ -41,7 +41,7 @@ template setup_script do
     db_model: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'db', 'model'),
     db_name: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database', 'name'),
     db_user: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database', 'user'),
-    db_pass: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database_pass'),
+    db_pass: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'database', 'pass'),
     db_prefix: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'db', 'prefix'),
     session_save: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'config', 'session', 'save'),
     magento_configured_file: MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'installer', 'magento', 'configured_file')
