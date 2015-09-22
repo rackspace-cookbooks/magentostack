@@ -133,7 +133,6 @@ if node['magentostack']['web']['ssl_custom']
   node.set['magentostack']['web']['ssl_cert'] = custom_ssl.certificate
   node.set['magentostack']['web']['ssl_key'] = custom_ssl.key
   node.set['magentostack']['web']['ssl_chain'] = custom_ssl.chain
-
 end
 
 # Fast-cgi configuration
@@ -167,7 +166,7 @@ vhosts.each do |site|
       https_port node['magentostack']['web']['https_port']
       ssl_cert node['magentostack']['web']['ssl_cert']
       ssl_key node['magentostack']['web']['ssl_key']
-      lazy { ssl_chain node['magentostack']['web']['ssl_chain'] if ::File.exist?(node.set['magentostack']['web']['ssl_chain']) }
+      ssl_chain node['magentostack']['web']['ssl_chain']
     end
     notifies :restart, 'service[apache2]', :delayed
     notifies :restart, 'service[php-fpm]', :delayed
