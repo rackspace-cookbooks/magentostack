@@ -1,6 +1,10 @@
 magentostack CHANGELOG
 ==================
 
+2.2.2
+-----
+- Correctly deploy SSL chain file #233, #234
+
 2.2.1
 -----
 - Add execution logic to varnish_cookbook.
