@@ -44,8 +44,8 @@ default['magentostack']['web']['dir'] = "#{node['apache']['docroot_dir']}/magent
 site_name = node['magentostack']['web']['domain']
 default['magentostack']['web']['ssl_key'] = "#{node['apache']['dir']}/ssl/#{site_name}.key"
 default['magentostack']['web']['ssl_cert'] = "#{node['apache']['dir']}/ssl/#{site_name}.pem"
-# default['magentostack']['web']['ssl_chain'] = nil
-# default['magentostack']['web']['ssl_custom_basename'] = nil
+default['magentostack']['web']['ssl_chain'] = nil
+default['magentostack']['web']['ssl_custom_basename'] = nil
 
 # Install php dependencies for Magento
 default['magentostack']['php']['version'] = 'php55'
