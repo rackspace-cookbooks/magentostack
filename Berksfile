@@ -10,7 +10,7 @@ group :integration do
 end
 
 # Until https://github.com/newrelic-platform/newrelic_plugins_chef/pull/29 is merged
-cookbook 'newrelic_plugins', git: 'git@github.com:rackspace-cookbooks/newrelic_plugins_chef.git'
+#cookbook 'newrelic_plugins', git: 'git@github.com:rackspace-cookbooks/newrelic_plugins_chef.git'
 
 # pin newrelic until the releases stabalize
 cookbook 'newrelic', '<= 2.10'
