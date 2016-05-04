@@ -4,7 +4,7 @@ general:
 
 machine:
   ruby:
-    version: 2.1.5
+    version: 2.2.3
   environment:
     KITCHEN_LOCAL_YAML: .kitchen.cloud.yml
 
