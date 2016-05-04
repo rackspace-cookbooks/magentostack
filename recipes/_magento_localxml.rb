@@ -23,7 +23,7 @@ include_recipe 'xmledit'
 
 ruby_block 'fail at runtime instant if missing local.xml.template' do
   block do
-    fail 'local.xml.template did not exist' \
+    raise 'local.xml.template did not exist' \
       unless File.exist?("#{node['magentostack']['web']['dir']}/app/etc/local.xml.template")
   end
 end

@@ -70,7 +70,7 @@ when 'git'
   # Store deploy key in the chef file cache path, so it is outside of docroot
   id_deploy = "#{Chef::Config[:file_cache_path]}/id_deploy"
   deploy_key = MagentostackUtil.get_runstate_or_attr(node, 'magentostack', 'git_deploykey')
-  fail 'deploy key could not be found' unless deploy_key
+  raise 'deploy key could not be found' unless deploy_key
   deploy_key = Base64.decode64(deploy_key)
 
   # Write the actual keyfile
@@ -159,7 +159,7 @@ when 'svn'
 when 'none'
   Chef::Log.info('Magento install method none was requested, not installing magento')
 else
-  fail "You have specified to install magento with method '#{install_method}', which is not valid. Try 'none'."
+  raise "You have specified to install magento with method '#{install_method}', which is not valid. Try 'none'."
 end
 
 # required for stack_commons::mysql_base to find the app nodes

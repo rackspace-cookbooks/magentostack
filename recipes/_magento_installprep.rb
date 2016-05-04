@@ -43,11 +43,11 @@ node.default['magentostack']['config']['secure_base_url'] =
 # Configure all the database things
 include_recipe 'magentostack::_find_mysql' # let us search for a database
 
-if node.run_state['magentostack_installer_database_name']
-  dbname = node.run_state['magentostack_installer_database_name']
-else
-  dbname = node['magentostack']['mysql']['databases'].keys[0]
-end
+dbname = if node.run_state['magentostack_installer_database_name']
+           node.run_state['magentostack_installer_database_name']
+         else
+           node['magentostack']['mysql']['databases'].keys[0]
+         end
 node.run_state['magentostack_installer_database_name'] = dbname # for installer
 node.default['magentostack']['config']['db']['dbname'] = dbname # for local.xml
 

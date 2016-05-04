@@ -3,14 +3,14 @@ source 'https://rubygems.org'
 group :lint do
   gem 'foodcritic', '>= 4.0'
   gem 'foodcritic-rackspace-rules', '>= 1.3.2'
-  gem 'rubocop', '~> 0.33.0', require: false
+  gem 'rubocop', '~> 0.37.2', require: false
 end
 
 group :unit do
-  gem 'berkshelf', '~> 3'
-  gem 'chefspec', '>= 4.2'
+  gem 'berkshelf', '~> 4.0'
+  gem 'chefspec'
   gem 'chef-sugar'
-  gem 'chef', '>= 12.4.1'
+  gem 'chef', '~> 12.5.1'
 end
 
 group :kitchen_common do

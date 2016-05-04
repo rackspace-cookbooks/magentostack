@@ -58,16 +58,16 @@ elsif platform_family?('debian')
     # force php 5.5 on Ubuntu < 14.04
     # using http://ppa rather than ppa: to be sure it passes firewall
     apt_repository 'php5-5' do
-      uri          'http://ppa.launchpad.net/ondrej/php5/ubuntu'
-      keyserver    'hkp://keyserver.ubuntu.com:80'
-      key          '14AA40EC0831756756D7F66C4F4EA0AAE5267A6C'
-      components   ['main']
+      uri 'http://ppa.launchpad.net/ondrej/php5/ubuntu'
+      keyserver 'hkp://keyserver.ubuntu.com:80'
+      key '14AA40EC0831756756D7F66C4F4EA0AAE5267A6C'
+      components ['main']
       distribution node['lsb']['codename']
     end
     # however we don't want apache from ondrej/php5
     apt_preference 'apache' do
-      glob         '*apache*'
-      pin          'release o=Ubuntu'
+      glob '*apache*'
+      pin 'release o=Ubuntu'
       pin_priority '600'
     end
   end

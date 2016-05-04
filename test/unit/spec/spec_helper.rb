@@ -12,7 +12,7 @@ Dir['./test/unit/spec/support/**/*.rb'].sort.each { |f| require f }
 ::LOG_LEVEL = :fatal
 ::CHEFSPEC_OPTS = {
   log_level: ::LOG_LEVEL
-}
+}.freeze
 
 def node_resources(node)
   # for chefspec, so we don't have to converge elkstack

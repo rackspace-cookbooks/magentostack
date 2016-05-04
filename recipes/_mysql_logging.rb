@@ -26,9 +26,9 @@ end
 logrotate_app 'mysql_slow_log' do
   path '/var/log/mysql/slow.log'
   create '644 mysql mysql'
-  options   ['notifempty', 'missingok', 'compress']
+  options ['notifempty', 'missingok', 'compress']
   frequency 'daily'
-  rotate    5
+  rotate 5
   postrotate <<-EOF
     # just if mysqld is really running
     if test -x /usr/bin/mysqladmin && /usr/bin/mysqladmin ping &>/dev/null

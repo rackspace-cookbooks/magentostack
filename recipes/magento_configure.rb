@@ -41,5 +41,5 @@ when 'template'
 when 'none'
   Chef::Log.info('Magento configure method none was requested, not configuring magento')
 else
-  fail "You have specified to configure magento with method #{configure_method}, which is not valid."
+  raise "You have specified to configure magento with method #{configure_method}, which is not valid."
 end

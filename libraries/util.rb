@@ -268,11 +268,11 @@ module MagentostackUtil
     # the extra condition in the block below covers chef finding nodes with nested name keys that match
     Chef::Search::Query.new.search(:node, "name:#{node_name}") { |o| results << o if node_name == o.name }
 
-    if results.count < 1
-      found = nil
-    else
-      found = Chef::Sugar::IP.best_ip_for(current_node, results.first)
-    end
+    found = if results.count < 1
+              nil
+            else
+              Chef::Sugar::IP.best_ip_for(current_node, results.first)
+            end
     Chef::Log.debug("best_ip_for #{node_name} to be #{found}")
 
     found
