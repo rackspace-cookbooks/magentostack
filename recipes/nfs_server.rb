@@ -65,18 +65,20 @@ end
 
 # Open iptables
 include_recipe 'platformstack::iptables'
-add_iptables_rule('INPUT', '-m tcp -p tcp --dport 111 -j ACCEPT', 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', '-m udp -p udp --dport 111 -j ACCEPT', 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', '-m tcp -p tcp --dport 2049 -j ACCEPT', 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', '-m udp -p udp --dport 2049 -j ACCEPT', 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['lockd']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['lockd']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{node['nfs']['port']['rquotad']} -j ACCEPT", 200, 'Allow access to NFS')
-add_iptables_rule('INPUT', "-m udp -p udp --dport #{node['nfs']['port']['rquotad']} -j ACCEPT", 200, 'Allow access to NFS')
+found_clients.each do |other_node_ip|
+  add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport 111 -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m udp -p udp -s #{other_node_ip} --dport 111 -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport 2049 -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m udp -p udp -s #{other_node_ip} --dport 2049 -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m udp -p udp -s #{other_node_ip} --dport #{node['nfs']['port']['statd']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m udp -p udp -s #{other_node_ip} --dport #{node['nfs']['port']['mountd']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport #{node['nfs']['port']['lockd']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m udp -p udp -s #{other_node_ip} --dport #{node['nfs']['port']['lockd']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m tcp -p tcp -s #{other_node_ip} --dport #{node['nfs']['port']['rquotad']} -j ACCEPT", 200, 'Allow access to NFS')
+  add_iptables_rule('INPUT', "-m udp -p udp -s #{other_node_ip} --dport #{node['nfs']['port']['rquotad']} -j ACCEPT", 200, 'Allow access to NFS')
+end
 
 # save to help the client recipe find me if it's also running on this same node
 tag('magentostack_nfs_server')

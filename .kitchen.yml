@@ -11,9 +11,14 @@ driver:
 provisioner:
   name: chef_zero
   environments_path: test/integration/environments
-  require_chef_omnibus: true
+  require_chef_omnibus: 12.4.1
   attributes:
+    apache:
+      mod_fastcgi:
+        download_url: 'https://s3.amazonaws.com/rackspace-mirrors/www.fastcgi.com/fastcgi.tar.gz'
     magentostack:
+      download_url: 'https://s3.amazonaws.com/rackspace-mirrors/magento/magento-1.9.1.1.tar.gz'
+      checksum: 'e04c75f1be09844b92f5bbae04e417961447908000c591a29471b8634440dd1b'
       varnish:
         secret: "9a160c7a-22f2-45a7-b5ab-ec32dc060714\n"
         listen_port: 8181
@@ -39,7 +44,7 @@ platforms:
   # - name: ubuntu-14.04
   #   run_list:
   #   - recipe[apt]
-  - name: centos-6.6
+  - name: centos-6.7
     run_list:
     - recipe[yum]
 
@@ -65,37 +70,6 @@ suites:
         git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
         git_revision: 'v1.14.1.0'
         git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
-
-  # splitdb, 3 redis, php54, v113 (all the bells and whistles!)
-  - name: enterprise-custom
-    run_list:
-      - recipe[wrapper::default_expanded]
-    attributes:
-      rackspace:
-        cloud_credentials:
-          username: <%= ENV['RACKSPACE_USERNAME'] %>
-          api_key: <%= ENV['RACKSPACE_API_KEY'] %>
-      magentostack:
-        config:
-          db_read:
-            model: 'mysql4' # any override of any read parameter or write param
-        flavor: 'enterprise'
-        install_method: 'git'
-        git_repository: 'git@github.com:rackerlabs/enterprise-magento-chef-demo.git'
-        git_revision: 'v1.13.1.0-php54'
-        git_deploykey: <%= ENV['RACKSPACE_MAGENTOSTACK_DEPLOYKEY'] %>
-        php:
-          version: 'php54'
-
-# we are assuming any failure of php54 OR v1.13.1.0 will show up in the combined
-# test enterprise-php54-v113, but if for some reason you have to split them out
-# again, use these for php54 and v1.13 respectively:
-#      magentostack:
-#        php:
-#          version: 'php54'
-#
-#      magentostack:
-#        git_revision: 'v1.13.1.0'
 
 <% end %>
 <% if ENV['MAGENTOSTACK_CLOUDFILES'] && ENV['RACKSPACE_API_KEY'] %>
