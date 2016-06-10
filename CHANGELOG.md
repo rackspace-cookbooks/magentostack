@@ -1,6 +1,11 @@
 magentostack CHANGELOG
 ==================
 
+2.2.3
+-----
+- Fix a missing underscore in an attribute name (#232)
+- Don't open portmapper to anything but real NFS clients that need it (#238)
+
 2.2.2
 -----
 - Correctly deploy SSL chain file #233, #234
