@@ -62,18 +62,30 @@
   # hide .git and .git+ (gitignore, gitmodules, etc)
   # do not allow .git version control files to be issued
   <DirectoryMatch "^/.*/\.git+/">
+    <% if node['apache']['version'] == '2.2' -%>
     Order deny,allow
     Deny from all
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require all denied
+    <% end -%>
   </DirectoryMatch>
   <Files ~ "^\.git">
-      Order allow,deny
-      Deny from all
+    <% if node['apache']['version'] == '2.2' -%>
+    Order deny,allow
+    Deny from all
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require all denied
+    <% end -%>
   </Files>
 
   # also hide .svn directories
   <DirectoryMatch \.svn>
-    Order allow,deny
+    <% if node['apache']['version'] == '2.2' -%>
+    Order deny,allow
     Deny from all
+    <% elsif node['apache']['version'] == '2.4' -%>
+    Require all denied
+    <% end -%>
   </DirectoryMatch>
 
 </VirtualHost>
